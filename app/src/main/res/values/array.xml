@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="periodArray">
+        <item>本年度</item>
+        <item>本季度</item>
+        <item>近30日</item>
+        <item>近7日</item>
+        <item>今日</item>
+        <item>自定义</item>
+    </string-array>
+</resources>
