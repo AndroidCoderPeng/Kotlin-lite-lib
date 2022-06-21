@@ -12,11 +12,8 @@ import com.pengxh.kt.lite.extensions.isNetworkConnected
 import com.pengxh.kt.lite.utils.BroadcastManager
 import com.pengxh.kt.lite.utils.PageNavigationManager
 import com.pengxh.kt.lite.widget.dialog.NoNetworkDialog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 
-abstract class KotlinBaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+abstract class KotlinBaseActivity : AppCompatActivity() {
 
     private lateinit var broadcastManager: BroadcastManager
 
@@ -78,7 +75,6 @@ abstract class KotlinBaseActivity : AppCompatActivity(), CoroutineScope by MainS
      * */
     override fun onDestroy() {
         broadcastManager.destroy(ConnectivityManager.CONNECTIVITY_ACTION)
-        cancel()
         super.onDestroy()
     }
 }
