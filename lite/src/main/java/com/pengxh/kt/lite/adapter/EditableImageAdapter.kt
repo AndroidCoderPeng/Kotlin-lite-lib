@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.extensions.getScreenWidth
+import com.pengxh.kt.lite.extensions.obtainScreenWidth
 
 /**
  * 数量可编辑图片适配器
@@ -42,7 +42,7 @@ class EditableImageAdapter(private val context: Context, private val imageCountL
          * RelativeLayout水平内边距10dp
          * RecyclerView左边距100dp
          */
-        val realWidth: Int = context.getScreenWidth() - 130f.dp2px(context)
+        val realWidth: Int = context.obtainScreenWidth() - 130f.dp2px(context)
         val margins: Int = 3f.dp2px(context)
         val itemSize = (realWidth - 4 * margins) / 2
         val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(itemSize, itemSize)

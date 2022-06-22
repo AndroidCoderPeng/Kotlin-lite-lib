@@ -144,7 +144,7 @@ fun Context.obtainSimCardSerialNumber(): String? {
  *
  * @return
  */
-fun Context.getScreenWidth(): Int {
+fun Context.obtainScreenWidth(): Int {
     return this.resources.displayMetrics.widthPixels
 }
 
@@ -153,7 +153,7 @@ fun Context.getScreenWidth(): Int {
  *
  * @return
  */
-fun Context.getScreenHeight(): Int {
+fun Context.obtainScreenHeight(): Int {
     var height = 0
     val resourceId = this.resources.getIdentifier("status_bar_height", "dimen", "android")
     if (resourceId > 0) {
@@ -168,7 +168,7 @@ fun Context.getScreenHeight(): Int {
  * Dpi（dots per inch 像素密度）
  * Density 密度
  */
-fun Context.getScreenDensity(): Float {
+fun Context.obtainScreenDensity(): Float {
     val manager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     val dm = DisplayMetrics()
     manager.defaultDisplay.getMetrics(dm)
@@ -209,4 +209,12 @@ fun Context.createDownloadFileDir(): File {
         downloadDir.mkdir()
     }
     return downloadDir
+}
+
+fun Context.createCompressImageDir(): File {
+    val imageDir = File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "CompressImage")
+    if (!imageDir.exists()) {
+        imageDir.mkdir()
+    }
+    return imageDir
 }

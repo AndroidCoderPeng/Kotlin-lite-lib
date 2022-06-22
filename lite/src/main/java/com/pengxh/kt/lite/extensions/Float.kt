@@ -7,7 +7,7 @@ import android.util.TypedValue
  * px转dp
  */
 fun Float.px2dp(context: Context): Int {
-    val scale = context.getScreenDensity()
+    val scale = context.obtainScreenDensity()
     return (this / scale + 0.5f).toInt()
 }
 
@@ -26,6 +26,6 @@ fun Float.dp2px(context: Context): Int {
  * sp转换成px
  */
 fun Float.sp2px(context: Context): Int {
-    val fontScale = context.getScreenDensity()
+    val fontScale = context.obtainScreenDensity()
     return (this * fontScale + 0.5f).toInt()
 }

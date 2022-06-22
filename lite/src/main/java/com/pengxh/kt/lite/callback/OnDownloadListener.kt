@@ -2,7 +2,7 @@ package com.pengxh.kt.lite.callback
 
 import java.io.File
 
-interface IDownloadListener {
+interface OnDownloadListener {
     fun onDownloadStart(totalBytes: Long)
 
     fun onProgressChanged(currentBytes: Long)

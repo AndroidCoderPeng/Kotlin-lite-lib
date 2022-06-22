@@ -1,7 +1,7 @@
 package com.pengxh.kt.lite.extensions
 
 import android.util.Log
-import com.pengxh.kt.lite.callback.IHttpRequestListener
+import com.pengxh.kt.lite.callback.OnHttpRequestListener
 import com.pengxh.kt.lite.utils.Constant
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,7 +14,7 @@ import rx.schedulers.Schedulers
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-fun Request.doRequest(listener: IHttpRequestListener) {
+fun Request.doRequest(listener: OnHttpRequestListener) {
     Observable.create(Observable.OnSubscribe<Response?> { subscriber ->
         val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {

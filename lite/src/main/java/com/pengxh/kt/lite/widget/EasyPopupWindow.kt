@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.getScreenWidth
+import com.pengxh.kt.lite.extensions.obtainScreenWidth
 
 class EasyPopupWindow(context: Context) : PopupWindow() {
     private var clickListener: OnPopupWindowClickListener? = null
 
     init {
-        width = ((context.getScreenWidth() * 0.3).toInt())
+        width = ((context.obtainScreenWidth() * 0.3).toInt())
         height = ViewGroup.LayoutParams.WRAP_CONTENT
         isOutsideTouchable = true
         isFocusable = true
