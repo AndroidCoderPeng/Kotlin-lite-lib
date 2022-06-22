@@ -24,7 +24,7 @@ class NoScrollViewPager : ViewPager {
      * 不拦截:事件传递给ChildView
      */
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return true
+        return false
     }
 
     /**
