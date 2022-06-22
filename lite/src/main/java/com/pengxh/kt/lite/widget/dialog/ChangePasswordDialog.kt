@@ -78,6 +78,6 @@ class ChangePasswordDialog private constructor(builder: Builder) : Dialog(
     }
 
     interface OnDialogButtonClickListener {
-        fun onConfirmClick(oldPwd: String?, newPwd: String?)
+        fun onConfirmClick(oldPwd: String, newPwd: String)
     }
 }
