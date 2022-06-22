@@ -74,6 +74,7 @@ class ChangePasswordDialog private constructor(builder: Builder) : Dialog(
                 return@OnClickListener
             }
             listener.onConfirmClick(oldPwd, newPwd)
+            dismiss()
         })
     }
 
