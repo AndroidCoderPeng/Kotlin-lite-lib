@@ -23,7 +23,7 @@ class EasyPopupWindow(context: Context) : PopupWindow() {
         contentView = view
     }
 
-    fun setPopupMenuItem(imageArray: IntArray, titleArray: Array<String?>) {
+    fun setPopupMenuItem(imageArray: IntArray, titleArray: Array<String>) {
         try {
             val popupListView = contentView.findViewById<ListView>(R.id.popupListView)
             popupListView.adapter = object : BaseAdapter() {
