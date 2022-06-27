@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingHorizontal="20dp"
-            android:paddingVertical="10dp"
+            android:paddingBottom="15dp"
             android:text="请设置弹窗信息"
             android:textColor="@color/lib_text_color" />
 
