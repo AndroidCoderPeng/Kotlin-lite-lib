@@ -5,12 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.pengxh.kt.lite.widget.KeyBoardView
-        android:id="@+id/keyBoardView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
     <Button
         android:id="@+id/testButton"
         android:layout_width="wrap_content"
