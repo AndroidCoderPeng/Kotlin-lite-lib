@@ -141,11 +141,16 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="@color/lib_line_color" />
+
         <Button
             android:id="@+id/confirmButton"
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:layout_marginTop="7dp"
             android:background="@drawable/dialog_button_selector"
             android:text="确定"
             android:textColor="@color/blue"

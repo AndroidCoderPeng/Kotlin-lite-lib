@@ -29,14 +29,14 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingHorizontal="20dp"
-            android:paddingVertical="10dp"
+            android:paddingBottom="15dp"
             android:text="请设置弹窗信息"
             android:textColor="@color/lib_text_color" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#808080" />
+            android:background="@color/lib_line_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,7 +57,7 @@
             <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:background="#808080" />
+                android:background="@color/lib_line_color" />
 
             <Button
                 android:id="@+id/dialogConfirmButton"
