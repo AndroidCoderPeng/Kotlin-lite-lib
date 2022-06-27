@@ -15,9 +15,8 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.ResourcesCompat
 import com.pengxh.kt.lite.R
 
-class DeleteEditText constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.editTextStyle
-) : AppCompatEditText(context, attrs, defStyleAttr), OnFocusChangeListener, TextWatcher {
+class DeleteEditText constructor(context: Context, attrs: AttributeSet) :
+    AppCompatEditText(context, attrs), OnFocusChangeListener, TextWatcher {
 
     /**
      * 删除按钮的引用

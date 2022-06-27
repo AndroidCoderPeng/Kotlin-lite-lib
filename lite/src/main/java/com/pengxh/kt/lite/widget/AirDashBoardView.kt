@@ -15,9 +15,7 @@ import com.pengxh.kt.lite.utils.WeakReferenceHandler
 /**
  * 空气污染指数表盘，仿HUAWEI天气
  */
-class AirDashBoardView constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private val weakReferenceHandler: WeakReferenceHandler
     private val currentValueTextSize: Int
@@ -66,8 +64,7 @@ class AirDashBoardView constructor(
     private lateinit var forePaint: Paint
 
     init {
-        val type: TypedArray =
-            context.obtainStyledAttributes(attrs, R.styleable.AirDashBoardView, defStyleAttr, 0)
+        val type: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.AirDashBoardView)
         /**
          * getDimension()返回的是float
          * getDimensionPixelSize()返回的是实际数值的四舍五入

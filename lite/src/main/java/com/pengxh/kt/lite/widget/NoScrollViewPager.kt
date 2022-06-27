@@ -5,11 +5,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
-class NoScrollViewPager : ViewPager {
-
-    constructor(context: Context?) : super(context!!)
-
-    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs)
+class NoScrollViewPager constructor(context: Context, attrs: AttributeSet) :
+    ViewPager(context, attrs) {
 
     /**
      * dispatchTouchEvent一般情况不做处理，如果修改了默认的返回值,子孩子都无法收到事件

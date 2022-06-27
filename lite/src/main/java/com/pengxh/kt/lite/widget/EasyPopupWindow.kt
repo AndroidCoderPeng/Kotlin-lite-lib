@@ -8,7 +8,7 @@ import android.widget.*
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.obtainScreenWidth
 
-class EasyPopupWindow(context: Context) : PopupWindow() {
+class EasyPopupWindow constructor(context: Context) : PopupWindow() {
     private var clickListener: OnPopupWindowClickListener? = null
 
     init {
@@ -18,8 +18,9 @@ class EasyPopupWindow(context: Context) : PopupWindow() {
         isFocusable = true
         animationStyle = R.style.PopupAnimation
         setBackgroundDrawable(null)
-        val view: View =
-            LayoutInflater.from(context).inflate(R.layout.popup_menu_option, null, false)
+        val view: View = LayoutInflater.from(context).inflate(
+            R.layout.popup_menu_option, null, false
+        )
         contentView = view
     }
 

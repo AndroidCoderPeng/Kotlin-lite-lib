@@ -15,7 +15,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.pengxh.kt.lite.R
 import java.io.IOException
 
-class AudioPlayerView(context: Context, attrs: AttributeSet?) : AppCompatTextView(context, attrs) {
+class AudioPlayerView(context: Context, attrs: AttributeSet) : AppCompatTextView(context, attrs) {
     private var mediaPlayer: MediaPlayer? = null
 
     /**

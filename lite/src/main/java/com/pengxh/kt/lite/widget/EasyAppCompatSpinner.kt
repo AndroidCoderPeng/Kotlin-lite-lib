@@ -7,11 +7,8 @@ import androidx.appcompat.widget.AppCompatSpinner
 /**
  * 选同一位置依旧可以触发事件的Spinner
  * */
-class EasyAppCompatSpinner : AppCompatSpinner {
-
-    constructor(context: Context?) : super(context!!)
-
-    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs)
+class EasyAppCompatSpinner constructor(context: Context, attrs: AttributeSet) :
+    AppCompatSpinner(context, attrs) {
 
     override fun setSelection(position: Int, animate: Boolean) {
         val sameSelected = position == selectedItemPosition

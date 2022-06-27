@@ -17,9 +17,7 @@ import com.pengxh.kt.lite.utils.WeakReferenceHandler
 /**
  * 圆形进度条
  */
-class CircleProgressBar constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private val backgroundColor: Int
     private val foregroundColor: Int
@@ -39,19 +37,18 @@ class CircleProgressBar constructor(
     private val weakReferenceHandler: WeakReferenceHandler
 
     init {
-        val a =
-            context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar, defStyleAttr, 0)
-        backgroundColor = a.getColor(
+        val type = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar)
+        backgroundColor = type.getColor(
             R.styleable.CircleProgressBar_cpb_backgroundColor,
             Color.parseColor("#D3D3D3")
         )
-        foregroundColor = a.getColor(
+        foregroundColor = type.getColor(
             R.styleable.CircleProgressBar_cpb_foregroundColor, R.color.blue.convertColor(
                 context
             )
         )
-        text = a.getString(R.styleable.CircleProgressBar_cpb_text).toString()
-        a.recycle()
+        text = type.getString(R.styleable.CircleProgressBar_cpb_text).toString()
+        type.recycle()
         //初始化画笔
         initPaint()
         weakReferenceHandler = WeakReferenceHandler { msg: Message ->

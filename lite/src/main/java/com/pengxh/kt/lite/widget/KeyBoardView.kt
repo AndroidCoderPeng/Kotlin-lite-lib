@@ -10,8 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.pengxh.kt.lite.R
 
-class KeyBoardView(context: Context?, attrs: AttributeSet?) : LinearLayout(context, attrs),
-    View.OnClickListener {
+class KeyBoardView constructor(context: Context, attrs: AttributeSet) :
+    LinearLayout(context, attrs), View.OnClickListener {
 
     private var listener: KeyboardClickListener? = null
 
