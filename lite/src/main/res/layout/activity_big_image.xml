@@ -17,14 +17,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp">
+            android:paddingVertical="@dimen/lib_dp_10">
 
             <ImageView
                 android:id="@+id/leftBackView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/lib_dp_10"
                 android:src="@drawable/ic_left_white" />
 
             <TextView
@@ -34,7 +34,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="@dimen/lib_sp_16" />
         </RelativeLayout>
     </FrameLayout>
 </LinearLayout>
