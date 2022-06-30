@@ -83,15 +83,12 @@ fun Context.readAssetsFile(fileName: String?): String {
         val inputStreamReader = InputStreamReader(this.assets.open(fileName!!))
         val bufferedReader = BufferedReader(inputStreamReader)
         val data = StringBuilder()
-        var s: String
-        try {
-            while (bufferedReader.readLine().also { s = it } != null) {
-                data.append(s)
-            }
-            return data.toString()
-        } catch (e: IOException) {
-            e.printStackTrace()
+        var line: String
+        while (true) {
+            line = bufferedReader.readLine() ?: break
+            data.append(line)
         }
+        return data.toString()
     } catch (e: IOException) {
         e.printStackTrace()
     }
