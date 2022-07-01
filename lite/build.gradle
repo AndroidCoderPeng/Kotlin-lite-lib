@@ -50,8 +50,6 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    //图片压缩
-    implementation 'top.zibin:Luban:1.1.8'
     //高德导航(高德导航和高德地图会重复，不兼容，只能选其一)
     implementation 'com.amap.api:navi-3dmap:8.1.0_3dmap8.1.0'
     //图表

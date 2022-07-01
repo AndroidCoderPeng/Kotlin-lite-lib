@@ -21,6 +21,9 @@ class EditableImageAdapter(private val context: Context, private val imageCountL
     RecyclerView.Adapter<EditableImageAdapter.ItemViewHolder?>() {
 
     private var imageData: MutableList<String> = ArrayList()
+    private var leftMargin = 0f
+    private var rightMargin = 0f
+    private var padding = 3f
 
     fun setupImage(images: MutableList<String>) {
         imageData = images
@@ -34,28 +37,32 @@ class EditableImageAdapter(private val context: Context, private val imageCountL
         }
     }
 
+    /**
+     * @param leftMargin RecyclerView左边距
+     * @param rightMargin RecyclerView右边距
+     * @param padding RecyclerView内边距
+     * */
+    fun setImageMargins(leftMargin: Float, rightMargin: Float, padding: Float) {
+        this.leftMargin = leftMargin
+        this.rightMargin = rightMargin
+        this.padding = padding
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val imageView = ImageView(context)
-
-        /**
-         * CarrView水平外边距5dp
-         * RelativeLayout水平内边距10dp
-         * RecyclerView左边距100dp
-         */
-        val realWidth: Int = context.obtainScreenWidth() - 130f.dp2px(context)
-        val margins: Int = 3f.dp2px(context)
-        val itemSize = (realWidth - 4 * margins) / 2
+        val realWidth: Int =
+            context.obtainScreenWidth() - (leftMargin.dp2px(context) + rightMargin.dp2px(context))
+        val padding: Int = padding.dp2px(context)
+        val itemSize = (realWidth - 4 * padding) / imageCountLimit
         val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(itemSize, itemSize)
-        params.setMargins(margins, margins, margins, margins)
+        params.setMargins(padding, padding, padding, padding)
         params.gravity = Gravity.CENTER
         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
         imageView.layoutParams = params
         return ItemViewHolder(imageView)
     }
 
-    override fun onBindViewHolder(
-        holder: ItemViewHolder, @SuppressLint("RecyclerView") position: Int
-    ) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         if (position == itemCount - 1 && imageData.size < imageCountLimit) {
             holder.imageView.setImageResource(R.drawable.ic_add_pic)
             holder.imageView.setOnClickListener { //添加图片

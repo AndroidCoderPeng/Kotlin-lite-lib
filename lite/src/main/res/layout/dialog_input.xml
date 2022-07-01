@@ -30,7 +30,6 @@
             android:background="@drawable/dialog_bg_hint_layout">
 
             <com.pengxh.kt.lite.widget.DeleteEditText
-                android:hint="@string/app_name"
                 android:id="@+id/dialogInputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

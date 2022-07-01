@@ -2,16 +2,12 @@ package com.pengxh.kt.lite.extensions
 
 import android.content.Context
 import android.graphics.Color
-import android.text.TextUtils
 import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.callback.OnDownloadListener
-import com.pengxh.kt.lite.callback.OnImageCompressListener
 import okhttp3.*
-import top.zibin.luban.Luban
-import top.zibin.luban.OnCompressListener
 import java.io.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -196,31 +192,8 @@ fun String.show(context: Context) {
     textView.setPadding(
         20f.dp2px(context), 10f.dp2px(context), 20f.dp2px(context), 10f.dp2px(context)
     )
-    toast.setGravity(Gravity.BOTTOM, 0, 80f.dp2px(context))
+    toast.setGravity(Gravity.CENTER, 0, 100f.dp2px(context))
     toast.view = textView
     toast.duration = Toast.LENGTH_SHORT
     toast.show()
-}
-
-fun String.compressImage(context: Context, listener: OnImageCompressListener) {
-    Luban.with(context)
-        .load(this)
-        .ignoreBy(100)
-        .setTargetDir(context.createCompressImageDir().toString())
-        .filter { path ->
-            !(TextUtils.isEmpty(path) || path.lowercase(Locale.getDefault()).endsWith(".gif"))
-        }
-        .setCompressListener(object : OnCompressListener {
-            override fun onStart() {
-
-            }
-
-            override fun onSuccess(file: File) {
-                listener.onSuccess(file)
-            }
-
-            override fun onError(e: Throwable) {
-                listener.onError(e)
-            }
-        }).launch()
 }
