@@ -53,7 +53,7 @@ class EditableImageAdapter(private val context: Context, private val imageCountL
         val realWidth: Int =
             context.obtainScreenWidth() - (leftMargin.dp2px(context) + rightMargin.dp2px(context))
         val padding: Int = padding.dp2px(context)
-        val itemSize = (realWidth - 4 * padding) / imageCountLimit
+        val itemSize = (realWidth - 4 * padding) / 3
         val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(itemSize, itemSize)
         params.setMargins(padding, padding, padding, padding)
         params.gravity = Gravity.CENTER
@@ -96,7 +96,9 @@ class EditableImageAdapter(private val context: Context, private val imageCountL
 
     interface OnItemClickListener {
         fun onAddImageClick()
+
         fun onItemClick(position: Int)
+
         fun onItemLongClick(view: View?, position: Int)
     }
 
