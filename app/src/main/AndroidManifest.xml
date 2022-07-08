@@ -23,9 +23,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="com.pengxh.kt.lite.activity.BigImageActivity"
-            android:theme="@style/Theme.BigImageActivity" />
     </application>
 </manifest>

@@ -1,44 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.pengxh.kt.lite.widget.FlexibleScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/testButton1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:text="OK" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/testButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="OK" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
 
-    <Button
-        android:id="@+id/testButton3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:text="OK" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
 
-    <Button
-        android:id="@+id/testButton4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="D" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
 
-    <Button
-        android:id="@+id/testButton5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="OK" />
-</RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/lib_dp_10"
+            android:background="@drawable/dialog_bg_hint_layout"
+            android:gravity="center"
+            android:paddingVertical="@dimen/lib_dp_10"
+            android:text="弹性布局" />
+    </LinearLayout>
+</com.pengxh.kt.lite.widget.FlexibleScrollView>
