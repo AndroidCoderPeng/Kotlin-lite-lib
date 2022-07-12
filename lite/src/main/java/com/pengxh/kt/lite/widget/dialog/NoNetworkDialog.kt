@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Button
+import android.widget.ImageView
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.resetParams
 
@@ -38,6 +39,10 @@ class NoNetworkDialog private constructor(builder: Builder) : Dialog(
         setContentView(R.layout.dialog_no_network)
         setCancelable(false)
         setCanceledOnTouchOutside(false)
+
+        val dismissView = findViewById<ImageView>(R.id.dismissView)
+        dismissView.setOnClickListener { dismiss() }
+
         val dialogButton = findViewById<Button>(R.id.dialogButton)
         dialogButton.setOnClickListener {
             listener.onButtonClick()

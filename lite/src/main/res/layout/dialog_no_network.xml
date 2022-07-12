@@ -13,16 +13,31 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/dialogTitleView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center_horizontal"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="温馨提示"
-            android:textColor="@color/lib_text_color"
-            android:textSize="@dimen/lib_sp_16" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/dialogTitleView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:paddingVertical="@dimen/lib_dp_10"
+                android:text="温馨提示"
+                android:textColor="@color/lib_text_color"
+                android:textSize="@dimen/lib_sp_16" />
+
+            <ImageView
+                android:id="@+id/dismissView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/lib_dp_10"
+                android:src="@drawable/ic_cancel" />
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
