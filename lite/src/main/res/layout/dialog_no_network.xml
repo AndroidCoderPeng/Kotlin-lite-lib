@@ -57,6 +57,11 @@
             android:text="未发现网络，内容走丢了..."
             android:textColor="@color/lib_hint_color" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lib_px_1"
+            android:background="@color/lib_line_color" />
+
         <Button
             android:id="@+id/dialogButton"
             android:layout_width="match_parent"
