@@ -208,6 +208,14 @@ fun Context.createDownloadFileDir(): File {
     return downloadDir
 }
 
+fun Context.createImageFileDir(): File {
+    val imageDir = File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "")
+    if (!imageDir.exists()) {
+        imageDir.mkdir()
+    }
+    return imageDir
+}
+
 fun Context.createCompressImageDir(): File {
     val imageDir = File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "CompressImage")
     if (!imageDir.exists()) {
