@@ -67,6 +67,7 @@ class BottomActionSheet private constructor(builder: Builder) : Dialog(
                 sheetListener.onActionItemClick(position)
             }
         val sheetCancelView: TextView = findViewById(R.id.sheetCancelView)
+        sheetCancelView.setTextColor(itemTextColor)
         sheetCancelView.setOnClickListener { dismiss() }
     }
 
