@@ -1,112 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.pengxh.kt.lite.widget.FlexibleScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <GridView
+        android:id="@+id/readonlyGridView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:horizontalSpacing="3dp"
+        android:numColumns="3"
+        android:verticalSpacing="3dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/red" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/lib_dp_10"
-            android:background="@drawable/dialog_bg_hint_layout"
-            android:gravity="center"
-            android:paddingVertical="@dimen/lib_dp_10"
-            android:text="弹性布局" />
-    </LinearLayout>
-</com.pengxh.kt.lite.widget.FlexibleScrollView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/editableGridView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3" />
+</LinearLayout>

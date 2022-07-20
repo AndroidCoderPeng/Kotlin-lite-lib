@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.extensions.obtainScreenWidth
 import java.util.*
 
 /**
@@ -17,6 +19,7 @@ import java.util.*
 class ReadOnlyImageAdapter(private val context: Context) : BaseAdapter() {
 
     private val images: MutableList<String> = ArrayList()
+    private val screenWidth = context.obtainScreenWidth()
 
     fun setImageList(imageUrlList: MutableList<String>?) {
         images.clear()
@@ -48,6 +51,12 @@ class ReadOnlyImageAdapter(private val context: Context) : BaseAdapter() {
             .load(images[position])
             .apply(RequestOptions().error(R.mipmap.load_image_error))
             .into(holder.imageView)
+
+        //动态设置图片高度，和图片宽度保持一致
+        val padding = (view.paddingLeft + view.paddingRight) * 3
+        val imageSize = (screenWidth - padding) / 3
+        val params = LinearLayout.LayoutParams(imageSize, imageSize)
+        holder.imageView.layoutParams = params
         return view
     }
 
