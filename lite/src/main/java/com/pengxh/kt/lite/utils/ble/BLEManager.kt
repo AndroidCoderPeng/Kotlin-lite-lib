@@ -36,6 +36,7 @@ object BLEManager {
     private lateinit var writeUuid: UUID
     private lateinit var bleConnectListener: OnBleConnectListener
     private lateinit var bluetoothGatt: BluetoothGatt
+    private lateinit var readCharacteristic: BluetoothGattCharacteristic
     private lateinit var writeCharacteristic: BluetoothGattCharacteristic
     private lateinit var context: Context
     private var isConnecting = false
@@ -333,9 +334,7 @@ object BLEManager {
                     val charaProp = characteristic.properties
                     if (characteristic.uuid == readUUID) {  //读特征
                         //读特征
-                        Log.d(
-                            kTag, "readCharacteristic: " + Arrays.toString(characteristic.value)
-                        )
+                        readCharacteristic = characteristic
                     }
                     if (characteristic.uuid == writeUUID) {  //写特征
                         writeCharacteristic = characteristic

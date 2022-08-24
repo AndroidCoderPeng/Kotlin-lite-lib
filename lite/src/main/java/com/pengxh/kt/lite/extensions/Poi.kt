@@ -8,12 +8,21 @@ import com.amap.api.navi.AmapNaviType
 import com.amap.api.navi.AmapPageType
 
 /**
- * 步行导航扩展函数
+ * 导航扩展函数
  * */
 fun Poi.showRouteOnMap(context: Context) {
     val params = AmapNaviParams(
         null, null, this,
         AmapNaviType.WALK,
+        AmapPageType.ROUTE
+    )
+    AmapNaviPage.getInstance().showRouteActivity(context, params, null)
+}
+
+fun Poi.showBusRouteOnMap(context: Context) {
+    val params = AmapNaviParams(
+        null, null, this,
+        AmapNaviType.DRIVER,
         AmapPageType.ROUTE
     )
     AmapNaviPage.getInstance().showRouteActivity(context, params, null)
