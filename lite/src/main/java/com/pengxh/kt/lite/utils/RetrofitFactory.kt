@@ -32,9 +32,9 @@ object RetrofitFactory {
         })
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         val builder = OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(Constant.HTTP_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(Constant.HTTP_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(Constant.HTTP_TIMEOUT, TimeUnit.SECONDS)
         return builder.addInterceptor(interceptor).build()
     }
 }

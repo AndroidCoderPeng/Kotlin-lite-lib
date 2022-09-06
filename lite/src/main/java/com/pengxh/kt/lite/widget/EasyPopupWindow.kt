@@ -18,10 +18,9 @@ class EasyPopupWindow constructor(context: Context) : PopupWindow() {
         isFocusable = true
         animationStyle = R.style.PopupAnimation
         setBackgroundDrawable(null)
-        val view: View = LayoutInflater.from(context).inflate(
+        contentView = LayoutInflater.from(context).inflate(
             R.layout.popup_menu_option, null, false
         )
-        contentView = view
     }
 
     fun setPopupMenuItem(imageArray: IntArray, titleArray: Array<String>) {

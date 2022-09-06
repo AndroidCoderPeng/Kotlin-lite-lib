@@ -95,17 +95,17 @@ fun String.isEmail(): Boolean {
 /**
  * 过滤空格，回车
  */
-//fun String.filterString(): String {
-//    if (this.isBlank()) {
-//        return this
-//    }
-//    //先过滤回车换行
-//    val p = Pattern.compile("\\s*|\t|\r|\n")
-//    val m = p.matcher(this)
-//    s = m.replaceAll("")
-//    //再过滤空格
-//    return this.trim { it <= ' ' }.replace(" ", "")
-//}
+fun String.filterSpaceOrEnter(): String {
+    if (this.isBlank()) {
+        return this
+    }
+    //先过滤回车换行
+    val p = Pattern.compile("\\s*|\\t|\\r|\\n")
+    val m = p.matcher(this)
+    m.replaceAll("")
+    //再过滤空格
+    return this.trim { it <= ' ' }.replace(" ", "")
+}
 
 fun String.writeToFile(file: File?) {
     try {
