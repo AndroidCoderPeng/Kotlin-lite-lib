@@ -22,6 +22,7 @@ abstract class KotlinBaseActivity : AppCompatActivity() {
         setContentView(initLayoutView())
         setupTopBarLayout()
         initData()
+        observeRequestState()
         initEvent()
         PageNavigationManager.addActivity(this)
         broadcastManager = BroadcastManager.obtainInstance(this)
@@ -64,6 +65,11 @@ abstract class KotlinBaseActivity : AppCompatActivity() {
      * 初始化默认数据
      */
     abstract fun initData()
+
+    /**
+     * 数据请求状态监听
+     */
+    abstract fun observeRequestState()
 
     /**
      * 初始化业务逻辑

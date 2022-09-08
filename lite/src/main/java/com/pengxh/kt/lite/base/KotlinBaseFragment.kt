@@ -18,14 +18,32 @@ abstract class KotlinBaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupTopBarLayout()
         initData()
+        observeRequestState()
         initEvent()
     }
 
+    /**
+     * 初始化xml布局
+     */
     abstract fun initLayoutView(): Int
 
+    /**
+     * 特定页面定制沉浸式状态栏
+     */
     abstract fun setupTopBarLayout()
 
+    /**
+     * 初始化默认数据
+     */
     abstract fun initData()
 
+    /**
+     * 数据请求状态监听
+     */
+    abstract fun observeRequestState()
+
+    /**
+     * 初始化业务逻辑
+     */
     abstract fun initEvent()
 }
