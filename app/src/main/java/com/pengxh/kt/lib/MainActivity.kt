@@ -13,6 +13,10 @@ class MainActivity : KotlinBaseActivity() {
 
     }
 
+    override fun observeRequestState() {
+
+    }
+
     override fun initData() {
 
     }
