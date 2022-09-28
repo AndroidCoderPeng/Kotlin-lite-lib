@@ -24,10 +24,6 @@ class MainActivity : KotlinBaseActivity() {
 
     }
 
-    override fun observeRequestState() {
-
-    }
-
     override fun initEvent() {
         clickButton.setOnClickListener {
             BottomActionSheet.Builder()
