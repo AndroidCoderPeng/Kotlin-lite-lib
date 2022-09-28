@@ -6,4 +6,9 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/clickButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试" />
 </LinearLayout>

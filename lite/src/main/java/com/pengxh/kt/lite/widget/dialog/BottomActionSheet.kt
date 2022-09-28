@@ -4,11 +4,15 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.*
+import android.widget.AbsListView
+import android.widget.AdapterView
+import android.widget.BaseAdapter
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.resetParams
+import kotlinx.android.synthetic.main.bottom_action_sheet.*
 
 /**
  * 底部列表Sheet
@@ -59,14 +63,12 @@ class BottomActionSheet private constructor(builder: Builder) : Dialog(
         setCancelable(true)
         setCanceledOnTouchOutside(true)
 
-        val itemListView = findViewById<ListView>(R.id.itemListView)
         itemListView.adapter = ItemListAdapter(ctx)
         itemListView.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 dismiss()
                 sheetListener.onActionItemClick(position)
             }
-        val sheetCancelView: TextView = findViewById(R.id.sheetCancelView)
         sheetCancelView.setTextColor(itemTextColor)
         sheetCancelView.setOnClickListener { dismiss() }
     }
