@@ -1,11 +1,22 @@
 package com.pengxh.kt.lib
 
+import android.util.Log
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.pengxh.kt.lite.adapter.SingleChoiceAdapter
+import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseActivity
+import com.pengxh.kt.lite.extensions.readAssetsFile
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : KotlinBaseActivity() {
 
     private val kTag = "MainActivity"
+    private val gson by lazy { Gson() }
+    private var models: List<SampleListModel.DataModel.RowsModel> = ArrayList()
 
     override fun initLayoutView(): Int = R.layout.activity_main
 
@@ -18,10 +29,35 @@ class MainActivity : KotlinBaseActivity() {
     }
 
     override fun initData() {
-
+        val data = readAssetsFile("TestData.json")
+        models = gson.fromJson<SampleListModel>(
+            data, object : TypeToken<SampleListModel>() {}.type
+        ).data.rows
     }
 
     override fun initEvent() {
-
+        val singleChoiceAdapter = object : SingleChoiceAdapter<SampleListModel.DataModel.RowsModel>(
+            R.layout.item_select_sample_lv, models
+        ) {
+            override fun convertView(
+                viewHolder: ViewHolder, position: Int, item: SampleListModel.DataModel.RowsModel
+            ) {
+                viewHolder.setText(R.id.sampleNameView, "${item.sampleName}【${item.sampleModel}】")
+                    .setText(R.id.manufacturingCodeView, "出厂编号：${item.manufacturingNo}")
+                    .setText(R.id.sampleCodeView, "样品编号：${item.sampleNo}")
+                    .setText(R.id.validDateView, "有效期至：${item.validDeadline}")
+            }
+        }
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        )
+        (recyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
+        recyclerView.adapter = singleChoiceAdapter
+        singleChoiceAdapter.setOnCheckedListener(object :
+            SingleChoiceAdapter.OnItemCheckedListener<SampleListModel.DataModel.RowsModel> {
+            override fun onItemChecked(position: Int, t: SampleListModel.DataModel.RowsModel) {
+                Log.d(kTag, t.id)
+            }
+        })
     }
 }
