@@ -24,4 +24,11 @@
         <attr name="air_ring_width" format="dimension" />
         <attr name="air_ring_radius" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="SteeringWheelController">
+        <attr name="controller_backgroundColor" format="color" />
+        <attr name="controller_borderColor" format="color" />
+        <attr name="controller_outerCircleDiameter" format="integer" />
+        <attr name="controller_borderStroke" format="integer" />
+    </declare-styleable>
 </resources>
