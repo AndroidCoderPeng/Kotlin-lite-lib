@@ -1,15 +1,13 @@
 package com.pengxh.kt.lib
 
-import android.util.Log
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
+import android.graphics.Color
+import android.view.View
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.pengxh.kt.lite.adapter.MultipleChoiceAdapter
+import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.extensions.readAssetsFile
-import com.pengxh.kt.lite.extensions.toJson
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -17,7 +15,6 @@ class MainActivity : KotlinBaseActivity() {
 
     private val kTag = "MainActivity"
     private val gson by lazy { Gson() }
-    private var models: List<SampleListModel.DataModel.RowsModel> = ArrayList()
 
     override fun initLayoutView(): Int = R.layout.activity_main
 
@@ -31,97 +28,49 @@ class MainActivity : KotlinBaseActivity() {
 
     override fun initData() {
         val data = readAssetsFile("TestData.json")
-        models = gson.fromJson<SampleListModel>(
-            data, object : TypeToken<SampleListModel>() {}.type
-        ).data.rows
+        val models = gson.fromJson<TestDataModel>(
+            data, object : TypeToken<TestDataModel>() {}.type
+        )
+
+        val logAdapter = object : NormalRecyclerAdapter<TestDataModel.DataModel>(
+            R.layout.item_entrust_log_rv_l, models.data
+        ) {
+            override fun convertView(
+                viewHolder: ViewHolder,
+                position: Int,
+                item: TestDataModel.DataModel
+            ) {
+                when (position) {
+                    0 -> {
+                        //最后一项
+                        viewHolder.setBackgroundColor(R.id.dotView, Color.BLACK)
+                        viewHolder.setTextColor(R.id.operatorNameView, Color.BLACK)
+                            .setTextColor(R.id.statusView, Color.BLACK)
+                            .setTextColor(R.id.operateTimeView, Color.BLACK)
+                            .setTextColor(R.id.remarkView, Color.BLACK)
+
+                        viewHolder.setVisibility(R.id.topLineView, View.INVISIBLE)
+                        viewHolder.setImageResource(R.id.tagImageView, R.drawable.dot_top)
+                    }
+                    models.data.size - 1 -> {
+                        viewHolder.setVisibility(R.id.bottomLineView, View.INVISIBLE)
+                        viewHolder.setImageResource(R.id.tagImageView, R.drawable.dot_bottom)
+                    }
+                    else -> {
+                        viewHolder.setImageResource(R.id.tagImageView, R.drawable.dot_middle)
+                    }
+                }
+
+                viewHolder.setText(R.id.operatorNameView, item.createUserName)
+                    .setText(R.id.statusView, item.status)
+                    .setText(R.id.operateTimeView, item.createTime)
+                    .setText(R.id.remarkView, item.recordContent)
+            }
+        }
+        recyclerView.adapter = logAdapter
     }
 
     override fun initEvent() {
-        /**
-         * 普通列表
-         * */
-//        val normalRecyclerAdapter = object : NormalRecyclerAdapter<SampleListModel.DataModel.RowsModel>(
-//            R.layout.item_select_sample_lv, models
-//        ) {
-//            override fun convertView(
-//                viewHolder: ViewHolder, position: Int, item: SampleListModel.DataModel.RowsModel
-//            ) {
-//                viewHolder.setText(R.id.sampleNameView, "${item.sampleName}【${item.sampleModel}】")
-//                    .setText(R.id.manufacturingCodeView, "出厂编号：${item.manufacturingNo}")
-//                    .setText(R.id.sampleCodeView, "样品编号：${item.sampleNo}")
-//                    .setText(R.id.validDateView, "有效期至：${item.validDeadline}")
-//            }
-//        }
-//        recyclerView.addItemDecoration(
-//            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-//        )
-//        (recyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
-//        recyclerView.adapter = normalRecyclerAdapter
-//        normalRecyclerAdapter.setOnCheckedListener(object :
-//            NormalRecyclerAdapter.OnItemClickedListener<SampleListModel.DataModel.RowsModel> {
-//            override fun onItemClicked(position: Int, t: SampleListModel.DataModel.RowsModel) {
-//                Log.d(kTag, t.id)
-//            }
-//        })
 
-        /**
-         * 单选
-         * */
-//        val singleChoiceAdapter = object : SingleChoiceAdapter<SampleListModel.DataModel.RowsModel>(
-//            R.layout.item_select_sample_lv, models
-//        ) {
-//            override fun convertView(
-//                viewHolder: ViewHolder, position: Int, item: SampleListModel.DataModel.RowsModel
-//            ) {
-//                viewHolder.setText(R.id.sampleNameView, "${item.sampleName}【${item.sampleModel}】")
-//                    .setText(R.id.manufacturingCodeView, "出厂编号：${item.manufacturingNo}")
-//                    .setText(R.id.sampleCodeView, "样品编号：${item.sampleNo}")
-//                    .setText(R.id.validDateView, "有效期至：${item.validDeadline}")
-//            }
-//        }
-//        recyclerView.addItemDecoration(
-//            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-//        )
-//        (recyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
-//        recyclerView.adapter = singleChoiceAdapter
-//        singleChoiceAdapter.setOnCheckedListener(object :
-//            SingleChoiceAdapter.OnItemCheckedListener<SampleListModel.DataModel.RowsModel> {
-//            override fun onItemChecked(position: Int, t: SampleListModel.DataModel.RowsModel) {
-//                Log.d(kTag, t.id)
-//            }
-//        })
-
-        /**
-         * 多选
-         * */
-        val multipleChoiceAdapter =
-            object : MultipleChoiceAdapter<SampleListModel.DataModel.RowsModel>(
-                R.layout.item_select_sample_lv, models
-            ) {
-                override fun convertView(
-                    viewHolder: ViewHolder, position: Int, item: SampleListModel.DataModel.RowsModel
-                ) {
-                    viewHolder.setText(
-                        R.id.sampleNameView,
-                        "${item.sampleName}【${item.sampleModel}】"
-                    )
-                        .setText(R.id.manufacturingCodeView, "出厂编号：${item.manufacturingNo}")
-                        .setText(R.id.sampleCodeView, "样品编号：${item.sampleNo}")
-                        .setText(R.id.validDateView, "有效期至：${item.validDeadline}")
-                }
-            }
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        )
-        (recyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
-        recyclerView.adapter = multipleChoiceAdapter
-        multipleChoiceAdapter.setOnItemCheckedListener(object :
-            MultipleChoiceAdapter.OnItemCheckedListener<SampleListModel.DataModel.RowsModel> {
-            override fun onItemChecked(
-                position: Int, items: ArrayList<SampleListModel.DataModel.RowsModel>
-            ) {
-                Log.d("Casic", "MainActivity => onItemChecked: ${items.toJson()}")
-            }
-        })
     }
 }
