@@ -1,5 +1,7 @@
 package com.pengxh.kt.lite.adapter
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.util.SparseArray
 import android.view.View
 import android.view.View.OnLongClickListener
@@ -121,6 +123,36 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val view = getView<View>(idRes)!!
         if (view is ImageView) {
             view.setImageResource(res)
+        }
+        return this
+    }
+
+    /**
+     * 设置ImageView显示图片
+     *
+     * @param idRes 控件ID
+     * @param bitmap   图片Bitmap
+     * @return holder
+     */
+    fun setImageResource(@IdRes idRes: Int, bitmap: Bitmap): ViewHolder {
+        val view = getView<View>(idRes)!!
+        if (view is ImageView) {
+            view.setImageBitmap(bitmap)
+        }
+        return this
+    }
+
+    /**
+     * 设置ImageView显示图片
+     *
+     * @param idRes 控件ID
+     * @param drawable   图片Drawable
+     * @return holder
+     */
+    fun setImageResource(@IdRes idRes: Int, drawable: Drawable): ViewHolder {
+        val view = getView<View>(idRes)!!
+        if (view is ImageView) {
+            view.setImageDrawable(drawable)
         }
         return this
     }
