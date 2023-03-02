@@ -36,7 +36,7 @@ abstract class NormalRecyclerAdapter<T>(
         fun onItemClicked(position: Int, t: T)
     }
 
-    fun setOnCheckedListener(listener: OnItemClickedListener<T>?) {
+    fun setOnItemClickedListener(listener: OnItemClickedListener<T>?) {
         itemCheckedListener = listener
     }
 }

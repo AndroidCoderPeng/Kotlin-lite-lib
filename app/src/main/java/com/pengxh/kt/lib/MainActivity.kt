@@ -115,7 +115,7 @@ class MainActivity : KotlinBaseActivity() {
         )
         (recyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
         recyclerView.adapter = multipleChoiceAdapter
-        multipleChoiceAdapter.setOnCheckedListener(object :
+        multipleChoiceAdapter.setOnItemCheckedListener(object :
             MultipleChoiceAdapter.OnItemCheckedListener<SampleListModel.DataModel.RowsModel> {
             override fun onItemChecked(
                 position: Int, items: ArrayList<SampleListModel.DataModel.RowsModel>

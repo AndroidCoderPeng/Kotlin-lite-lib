@@ -49,7 +49,7 @@ abstract class MultipleChoiceAdapter<T>(
         fun onItemChecked(position: Int, items: ArrayList<T>)
     }
 
-    fun setOnCheckedListener(listener: OnItemCheckedListener<T>?) {
+    fun setOnItemCheckedListener(listener: OnItemCheckedListener<T>?) {
         itemCheckedListener = listener
     }
 }

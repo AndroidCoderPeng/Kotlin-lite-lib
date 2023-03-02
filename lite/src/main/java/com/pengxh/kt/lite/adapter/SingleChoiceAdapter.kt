@@ -51,7 +51,7 @@ abstract class SingleChoiceAdapter<T>(
         fun onItemChecked(position: Int, t: T)
     }
 
-    fun setOnCheckedListener(listener: OnItemCheckedListener<T>?) {
+    fun setOnItemCheckedListener(listener: OnItemCheckedListener<T>?) {
         itemCheckedListener = listener
     }
 }
