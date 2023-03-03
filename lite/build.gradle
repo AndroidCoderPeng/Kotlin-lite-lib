@@ -55,8 +55,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     //官方Json解析库
     implementation 'com.google.code.gson:gson:2.9.0'
-    //高德导航、定位、地图三合一
-    implementation 'com.amap.api:navi-3dmap:latest.integration'
     //Kotlin协程
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     //MVVM+LiveData
