@@ -5,6 +5,7 @@ Android依赖库，Android-library升级Kotlin版。
 ## 使用说明
 
 ### 引入方式
+#### 最新版本: [![](https://jitpack.io/v/AndroidCoderPeng/Kotlin-lite-lib.svg)](https://jitpack.io/#AndroidCoderPeng/Kotlin-lite-lib)
 
 #### 1、通过gradle引入
 
