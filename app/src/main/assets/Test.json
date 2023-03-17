@@ -1,0 +1,39 @@
+{
+  "code": 200,
+  "data": {
+    "rows": [
+      {
+        "createTime": "2022-12-26 09:24:19",
+        "id": "1607306303102074882",
+        "isDel": 0,
+        "minioFileName": "",
+        "noticeCompany": "徐州分中心",
+        "noticeContent": "元旦放假通知",
+        "noticeNo": "tzgg221222202020",
+        "noticePublisher": "超级管理员",
+        "noticeSketch": "元旦放假通知",
+        "noticeTime": "2023-01-03 05:45:33",
+        "noticeTitle": "元旦放假通知",
+        "read": "1",
+        "updateTime": "2023-01-03 05:45:32"
+      },
+      {
+        "createTime": "2022-12-27 06:20:41",
+        "id": "1607260090789085186",
+        "isDel": 0,
+        "minioFileName": "未命名1_加水印_1672035640383.pdf",
+        "noticeCompany": "顶级",
+        "noticeContent": "图片/视频/代码块测试",
+        "noticeNo": "tzgg221222202019",
+        "noticePublisher": "李亚光",
+        "noticeSketch": "图片/视频/代码块测试",
+        "noticeTime": "2022-12-26 06:20:42",
+        "noticeTitle": "图片/视频/代码块测试",
+        "read": "1",
+        "updateTime": "2022-12-26 06:20:41"
+      }
+    ],
+    "total": 2
+  },
+  "message": "请求成功"
+}
