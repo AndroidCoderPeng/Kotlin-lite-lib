@@ -51,17 +51,13 @@ class KeyBoardView constructor(context: Context, attrs: AttributeSet) :
     override fun onClick(v: View) {
         if (v is TextView) {
             // 如果点击的是TextView
-            val value: String = v.text.toString()
+            val value = v.text.toString()
             if (value.isNotBlank()) {
-                if (listener != null) {
-                    listener!!.onClick(value)
-                }
+                listener?.onClick(value)
             }
         } else if (v is ImageView) {
             // 如果是图片那肯定点击的是删除
-            if (listener != null) {
-                listener!!.onDelete()
-            }
+            listener?.onDelete()
         }
     }
 
@@ -70,7 +66,7 @@ class KeyBoardView constructor(context: Context, attrs: AttributeSet) :
     }
 
     interface KeyboardClickListener {
-        fun onClick(value: String?)
+        fun onClick(value: String)
 
         fun onDelete()
     }
