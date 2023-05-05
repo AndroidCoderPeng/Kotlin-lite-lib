@@ -2,13 +2,12 @@ package com.pengxh.kt.lib
 
 import android.graphics.Color
 import android.os.Handler
+import android.util.Log
 import android.widget.TextView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.pengxh.kt.lite.base.KotlinBaseActivity
-import com.pengxh.kt.lite.extensions.convertColor
-import com.pengxh.kt.lite.extensions.readAssetsFile
-import com.pengxh.kt.lite.extensions.setAnimation
+import com.pengxh.kt.lite.extensions.*
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
@@ -30,7 +29,18 @@ class MainActivity : KotlinBaseActivity() {
     override fun initLayoutView(): Int = R.layout.activity_main
 
     override fun setupTopBarLayout() {
+        val screenWidth = getScreenWidth()
 
+        val screenHeight = getScreenHeight()
+
+        val statusBarHeight = getStatusBarHeight()
+
+        val screenDensity = getScreenDensity()
+
+        Log.d(
+            kTag,
+            "setupTopBarLayout => [${screenWidth},${screenHeight},${statusBarHeight},${screenDensity}]"
+        )
     }
 
     override fun observeRequestState() {

@@ -12,6 +12,7 @@ import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import com.pengxh.kt.lite.utils.Constant
@@ -141,15 +142,19 @@ fun Context.obtainSimCardSerialNumber(): String? {
  *
  * @return
  */
+@Deprecated("", ReplaceWith("getScreenWidth()"))
 fun Context.obtainScreenWidth(): Int {
+    return this.resources.displayMetrics.widthPixels
+}
+
+fun Context.getScreenWidth(): Int {
     return this.resources.displayMetrics.widthPixels
 }
 
 /**
  * 获取屏幕高度
- *
- * @return
  */
+@Deprecated("不兼容Android 11+", ReplaceWith("getScreenHeight()"))
 fun Context.obtainScreenHeight(): Int {
     var height = 0
     val resourceId = this.resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -160,17 +165,85 @@ fun Context.obtainScreenHeight(): Int {
 }
 
 /**
+ * 获取屏幕高度，兼容Android 11+
+ */
+fun Context.getScreenHeight(): Int {
+    return this.resources.displayMetrics.heightPixels + getStatusBarHeight()
+}
+
+/**
+ * 获取状态栏高度，兼容Android 11+
+ * */
+fun Context.getStatusBarHeight(): Int {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowMetrics = windowManager.currentWindowMetrics
+        val windowInsets = windowMetrics.windowInsets
+
+        val type = WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout()
+        val insets = windowInsets.getInsetsIgnoringVisibility(type)
+        return insets.top
+    } else {
+        if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi") {
+            val resourceId = this.resources.getIdentifier("status_bar_height", "dimen", "android")
+            return if (resourceId > 0) {
+                this.resources.getDimensionPixelSize(resourceId)
+            } else {
+                0
+            }
+        } else {
+            try {
+                val clazz = Class.forName("com.android.internal.R\$dimen")
+                val obj = clazz.newInstance()
+                val field = clazz.getField("status_bar_height")
+                if (field[obj] == null) {
+                    return 0
+                }
+                val x = field[obj]!!.toString().toInt()
+                if (x > 0) {
+                    return this.resources.getDimensionPixelSize(x)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return 0
+        }
+    }
+}
+
+/**
  * 获取屏幕密度
  *
  * Dpi（dots per inch 像素密度）
  * Density 密度
  */
+@Deprecated("", ReplaceWith("getScreenDensity()"))
 fun Context.obtainScreenDensity(): Float {
     val manager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     val dm = DisplayMetrics()
     manager.defaultDisplay.getMetrics(dm)
     return dm.density
 }
+
+fun Context.getScreenDensity(): Int {
+    val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val displayMetrics = DisplayMetrics()
+    val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        this.display
+    } else {
+        windowManager.defaultDisplay
+    }
+    if (display == null) {
+        return 0
+    }
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        this.resources.configuration.densityDpi
+    } else {
+        display.getMetrics(displayMetrics)
+        displayMetrics.density.toInt()
+    }
+}
+
 
 fun Context.createLogFile(): File {
     val documentDir = File(this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "")
