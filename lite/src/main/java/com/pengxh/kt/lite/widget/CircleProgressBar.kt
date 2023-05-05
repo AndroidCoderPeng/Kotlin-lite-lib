@@ -13,6 +13,7 @@ import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.sp2px
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
+import kotlinx.coroutines.*
 
 /**
  * 圆形进度条
@@ -177,18 +178,17 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
                 "$value%"
             }
         }
-        Thread {
-            for (i in 0 until value) {
-                val message = weakReferenceHandler.obtainMessage()
-                message.arg1 = i
-                message.what = 2022010101
-                weakReferenceHandler.handleMessage(message)
-                try {
-                    Thread.sleep(10)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
+                for (i in 0 until value) {
+                    val message = weakReferenceHandler.obtainMessage()
+                    message.arg1 = i
+                    message.what = 2022010101
+                    weakReferenceHandler.handleMessage(message)
+                    delay(10)
                 }
             }
-        }.start()
+        }
     }
 }
