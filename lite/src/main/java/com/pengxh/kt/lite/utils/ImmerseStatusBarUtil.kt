@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
+import com.pengxh.kt.lite.extensions.getStatusBarHeight
 
 object ImmerseStatusBarUtil {
     fun setColor(activity: Activity, @ColorInt color: Int) {
@@ -33,8 +34,7 @@ object ImmerseStatusBarUtil {
      */
     private fun createStatusView(activity: Activity, @ColorInt color: Int): View {
         // 获得状态栏高度
-        val resourceId = activity.resources.getIdentifier("status_bar_height", "dimen", "android")
-        val statusBarHeight = activity.resources.getDimensionPixelSize(resourceId)
+        val statusBarHeight = activity.getStatusBarHeight()
         // 绘制一个和状态栏一样高的矩形
         val statusView = View(activity)
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, statusBarHeight)
