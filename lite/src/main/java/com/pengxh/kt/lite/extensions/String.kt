@@ -13,6 +13,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.math.abs
 
 /**
  * 手动换行
@@ -75,6 +76,43 @@ fun String.dateToTimestamp(): Long {
     }
     return 0
 }
+
+/**
+ * 判断是否已过时
+ * */
+fun String.isEarlierThenCurrent(): Boolean {
+    val t1 = this.dateToTimestamp()
+    val t2 = System.currentTimeMillis()
+    return (t1 - t2) < 0
+}
+
+/**
+ * 时间差-小时
+ * */
+fun String.diffCurrentTime(): Int {
+    if (this.isBlank()) {
+        return 0
+    }
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
+    val date = simpleDateFormat.parse(this)
+    val diff = abs(System.currentTimeMillis() - date.time)
+    return (diff / (3600000)).toInt()
+}
+
+/**
+ * yyyy-MM-dd HH:mm:ss 转 yyyy-MM-dd
+ * */
+fun String.formatToYearMonthDay(): String {
+    if (this.isBlank()) {
+        return this
+    }
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
+    val date = simpleDateFormat.parse(this)
+
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+    return dateFormat.format(date)
+}
+
 
 /**
  * 判断输入的是否是数字
