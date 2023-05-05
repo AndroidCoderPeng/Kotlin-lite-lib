@@ -7,7 +7,7 @@ import android.util.TypedValue
  * px转dp
  */
 fun Float.px2dp(context: Context): Int {
-    val scale = context.obtainScreenDensity()
+    val scale = context.getScreenDensity()
     return (this / scale + 0.5f).toInt()
 }
 
@@ -16,9 +16,7 @@ fun Float.px2dp(context: Context): Int {
  */
 fun Float.dp2px(context: Context): Int {
     return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this,
-        context.resources.displayMetrics
+        TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics
     ).toInt()
 }
 
@@ -26,6 +24,6 @@ fun Float.dp2px(context: Context): Int {
  * sp转换成px
  */
 fun Float.sp2px(context: Context): Int {
-    val fontScale = context.obtainScreenDensity()
+    val fontScale = context.getScreenDensity()
     return (this * fontScale + 0.5f).toInt()
 }
