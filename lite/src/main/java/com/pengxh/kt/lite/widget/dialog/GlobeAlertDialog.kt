@@ -10,7 +10,7 @@ import android.view.WindowManager
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.obtainScreenWidth
+import com.pengxh.kt.lite.extensions.getScreenWidth
 
 
 class GlobeAlertDialog(private val listener: OnDialogButtonClickListener) : DialogFragment() {
@@ -22,7 +22,7 @@ class GlobeAlertDialog(private val listener: OnDialogButtonClickListener) : Dial
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window?.decorView?.setBackgroundColor(Color.TRANSPARENT)
         val params = window?.attributes
-        params?.width = ((context?.obtainScreenWidth()!! * 0.8f).toInt())
+        params?.width = ((context?.getScreenWidth()!! * 0.8f).toInt())
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         window?.attributes = params
 
