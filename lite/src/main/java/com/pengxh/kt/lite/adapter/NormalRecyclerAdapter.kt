@@ -24,19 +24,19 @@ abstract class NormalRecyclerAdapter<T>(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         convertView(holder, position, dataRows[position])
         holder.itemView.setOnClickListener {
-            itemCheckedListener?.onItemClicked(position, dataRows[position])
+            itemClickedListener?.onItemClicked(position, dataRows[position])
         }
     }
 
     abstract fun convertView(viewHolder: ViewHolder, position: Int, item: T)
 
-    private var itemCheckedListener: OnItemClickedListener<T>? = null
+    private var itemClickedListener: OnItemClickedListener<T>? = null
 
     interface OnItemClickedListener<T> {
         fun onItemClicked(position: Int, t: T)
     }
 
     fun setOnItemClickedListener(listener: OnItemClickedListener<T>?) {
-        itemCheckedListener = listener
+        itemClickedListener = listener
     }
 }

@@ -180,8 +180,7 @@ fun Context.getStatusBarHeight(): Int {
         val windowMetrics = windowManager.currentWindowMetrics
         val windowInsets = windowMetrics.windowInsets
 
-        val type = WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout()
-        val insets = windowInsets.getInsetsIgnoringVisibility(type)
+        val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars())
         return insets.top
     } else {
         if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi") {
