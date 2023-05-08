@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 /**
  * 通用的 ViewHolder
@@ -29,9 +30,6 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
     }
 
-    /**
-     * @param itemView itemView
-     */
     init {
         convertView = itemView
     }
@@ -153,6 +151,21 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val view = getView<View>(idRes)!!
         if (view is ImageView) {
             view.setImageDrawable(drawable)
+        }
+        return this
+    }
+
+    /**
+     * 设置ImageView显示图片
+     *
+     * @param idRes    控件ID
+     * @param imageUrl 图片网络地址
+     * @return holder
+     */
+    fun setImageResource(@IdRes idRes: Int, imageUrl: String): ViewHolder {
+        val view = getView<View>(idRes)!!
+        if (view is ImageView) {
+            Glide.with(convertView).load(imageUrl).into(view)
         }
         return this
     }
