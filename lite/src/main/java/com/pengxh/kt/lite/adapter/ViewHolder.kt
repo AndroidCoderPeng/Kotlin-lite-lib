@@ -41,13 +41,13 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @param <T> 类型
      * @return 控件
     </T> */
-    private fun <T : View?> getView(@IdRes res: Int): T? {
+    fun <T : View> getView(@IdRes res: Int): T {
         var view = views[res]
         if (view == null) {
             view = convertView.findViewById(res)
             views.put(res, view)
         }
-        return view as T?
+        return view as T
     }
 
     /**
@@ -58,7 +58,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setText(@IdRes idRes: Int, charSequence: CharSequence?): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         if (view is TextView) {
             view.text = charSequence
         } else if (view is Button) {
@@ -75,7 +75,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setTextColor(@IdRes idRes: Int, color: Int): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         if (view is TextView) {
             view.setTextColor(color)
         } else if (view is Button) {
@@ -92,7 +92,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setBackgroundColor(@IdRes idRes: Int, color: Int): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         view.setBackgroundColor(color)
         return this
     }
@@ -105,7 +105,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setVisibility(@IdRes idRes: Int, @DrawableRes visibility: Int): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         view.visibility = visibility
         return this
     }
@@ -118,7 +118,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, @DrawableRes res: Int): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         if (view is ImageView) {
             view.setImageResource(res)
         }
@@ -133,7 +133,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, bitmap: Bitmap): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         if (view is ImageView) {
             view.setImageBitmap(bitmap)
         }
@@ -148,7 +148,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, drawable: Drawable): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         if (view is ImageView) {
             view.setImageDrawable(drawable)
         }
@@ -163,7 +163,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, imageUrl: String): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         if (view is ImageView) {
             Glide.with(convertView).load(imageUrl).into(view)
         }
@@ -178,7 +178,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setOnClickListener(@IdRes idRes: Int, listener: View.OnClickListener?): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         view.setOnClickListener(listener)
         return this
     }
@@ -191,7 +191,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setOnLongClickListener(@IdRes idRes: Int, listener: OnLongClickListener?): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         view.setOnLongClickListener(listener)
         return this
     }
@@ -204,7 +204,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setTag(@IdRes idRes: Int, tag: Any?): ViewHolder {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         view.tag = tag
         return this
     }
@@ -216,7 +216,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun getTag(@IdRes idRes: Int): Any {
-        val view = getView<View>(idRes)!!
+        val view = getView<View>(idRes)
         return view.tag
     }
 }

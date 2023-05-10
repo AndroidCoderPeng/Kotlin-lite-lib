@@ -1,46 +1,34 @@
 package com.pengxh.kt.lib
 
-import android.graphics.Color
-import android.os.Handler
-import android.util.Log
-import android.widget.TextView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import android.view.View
+import com.luck.picture.lib.basic.PictureSelector
+import com.luck.picture.lib.config.SelectMimeType
+import com.luck.picture.lib.entity.LocalMedia
+import com.luck.picture.lib.interfaces.OnResultCallbackListener
+import com.pengxh.kt.lite.adapter.EditableImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseActivity
-import com.pengxh.kt.lite.extensions.*
-import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import kotlinx.android.synthetic.main.activity_main.*
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.abs
-
 
 class MainActivity : KotlinBaseActivity() {
 
-    companion object {
-        lateinit var timer: Timer
-    }
-
     private val kTag = "MainActivity"
-    private lateinit var weakReferenceHandler: WeakReferenceHandler
-    private var noticeBeans: MutableList<NoticeListModel.DataModel.RowsModel> = ArrayList()
-    private var currentIndex = 0
+    private val images = listOf(
+        "https://images.pexels.com/photos/1036808/pexels-photo-1036808.jpeg",
+        "https://images.pexels.com/photos/796602/pexels-photo-796602.jpeg",
+        "https://images.pexels.com/photos/1109543/pexels-photo-1109543.jpeg",
+        "https://images.pexels.com/photos/296115/pexels-photo-296115.jpeg",
+        "https://images.pexels.com/photos/296115/pexels-photo-296115.jpeg",
+        "https://images.pexels.com/photos/296115/pexels-photo-296115.jpeg",
+        "https://images.pexels.com/photos/296115/pexels-photo-296115.jpeg",
+        "https://images.pexels.com/photos/296115/pexels-photo-296115.jpeg",
+        "https://images.pexels.com/photos/4158/apple-iphone-smartphone-desk.jpg"
+    )
+    private val recyclerViewImages = ArrayList<String>()
 
     override fun initLayoutView(): Int = R.layout.activity_main
 
     override fun setupTopBarLayout() {
-        val screenWidth = getScreenWidth()
 
-        val screenHeight = getScreenHeight()
-
-        val statusBarHeight = getStatusBarHeight()
-
-        val screenDensity = getScreenDensity()
-
-        Log.d(
-            kTag,
-            "setupTopBarLayout => [${screenWidth},${screenHeight},${statusBarHeight},${screenDensity}]"
-        )
     }
 
     override fun observeRequestState() {
@@ -48,91 +36,41 @@ class MainActivity : KotlinBaseActivity() {
     }
 
     override fun initData() {
-        val response = readAssetsFile("Test.json")
-        val it = Gson().fromJson<NoticeListModel>(
-            response, object : TypeToken<NoticeListModel>() {}.type
-        )
-        noticeBeans = it.data.rows
+        val imageAdapter = EditableImageAdapter(this, 9, 2f)
+        imageGridView.adapter = imageAdapter
+        imageAdapter.setOnItemClickListener(object : EditableImageAdapter.OnItemClickListener {
+            override fun onAddImageClick() {
+                PictureSelector.create(this@MainActivity)
+                    .openGallery(SelectMimeType.ofImage())
+                    .isGif(false)
+                    .isMaxSelectEnabledMask(true)
+                    .setFilterMinFileSize(100)
+                    .setMaxSelectNum(9)
+                    .isDisplayCamera(false)
+                    .setImageEngine(GlideLoadEngine.get)
+                    .forResult(object : OnResultCallbackListener<LocalMedia> {
+                        override fun onResult(result: ArrayList<LocalMedia>) {
+                            result.forEach {
+                                recyclerViewImages.add(it.realPath)
+                            }
+                            imageAdapter.setupImage(recyclerViewImages)
+                        }
 
-        noticeSwitcherView.setFactory {
-            val textView = TextView(this)
-            textView.setTextColor(Color.BLACK)
-            textView
-        }
-        noticeSwitcherView.setAnimation()
-
-        timeSwitcherView.setFactory {
-            val textView = TextView(this)
-            textView.setTextColor(R.color.hintColor.convertColor(this))
-            textView
-        }
-        timeSwitcherView.setAnimation()
-
-        weakReferenceHandler = WeakReferenceHandler(callback)
-        //消息滚动Timer
-        timer = Timer()
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                weakReferenceHandler.sendEmptyMessage(2023030601)
+                        override fun onCancel() {}
+                    })
             }
-        }, 0, 3000)
-    }
 
-    private val callback = Handler.Callback { msg ->
-        when (msg.what) {
-            2023030601 -> {
-                if (noticeBeans.size != 0) {
-                    val model = noticeBeans[currentIndex % noticeBeans.size]
+            override fun onItemClick(position: Int) {
 
-                    noticeSwitcherView.setText(model.noticeTitle)
-
-                    val deltaT = model.createTime.diffCurrentTime()
-                    val diffTime = if (deltaT < 24) {
-                        "${deltaT}小时前"
-                    } else {
-                        model.createTime.formatToDate()
-                    }
-                    timeSwitcherView.setText(diffTime)
-                    currentIndex++
-                } else {
-                    noticeSwitcherView.setText("暂无新消息")
-                    timeSwitcherView.setText("--:--")
-                }
             }
-        }
-        true
+
+            override fun onItemLongClick(view: View?, position: Int) {
+                imageAdapter.deleteImage(position)
+            }
+        })
     }
 
     override fun initEvent() {
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        timer.cancel()
-    }
-
-    /**
-     * 时间差-小时
-     * */
-    private fun String.diffCurrentTime(): Int {
-        if (this.isBlank()) {
-            return 0
-        }
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-        val date = simpleDateFormat.parse(this)
-        val diff = abs(System.currentTimeMillis() - date.time)
-        return (diff / (3600000)).toInt()
-    }
-
-    private fun String.formatToDate(): String {
-        if (this.isBlank()) {
-            return this
-        }
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-        val date = simpleDateFormat.parse(this)
-
-        val dateFormat = SimpleDateFormat("MM-dd", Locale.CHINA)
-        return dateFormat.format(date)
     }
 }

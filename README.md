@@ -14,7 +14,7 @@ Android依赖库，Android-library升级Kotlin版。
 ```gradle
 dependencies {
     //基础依赖库
-    implementation 'com.github.AndroidCoderPeng:Kotlin-lite-lib:1.0.4'
+    implementation 'com.github.AndroidCoderPeng:Kotlin-lite-lib:latest.integration'
 }
 ```
 
@@ -52,7 +52,6 @@ val selectCustomerAdapter = object :
         viewHolder.setText(R.id.xxxx, item.xxxxx)
     }
 }
-(customerRecyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
 customerRecyclerView.adapter = selectCustomerAdapter
 ```
 
@@ -69,7 +68,6 @@ val selectSampleAdapter = object :
         viewHolder.setText(R.id.xxxx, item.xxxxx)
     }
 }
-(sampleRecyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
 sampleRecyclerView.adapter = selectSampleAdapter
 ```
 

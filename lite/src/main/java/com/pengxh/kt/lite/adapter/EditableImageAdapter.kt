@@ -1,6 +1,5 @@
 package com.pengxh.kt.lite.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,82 +10,88 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.extensions.obtainScreenWidth
+import com.pengxh.kt.lite.extensions.getScreenWidth
 
 
 /**
  * 数量可编辑图片适配器
  *
- * @param imageCountLimit 最多显示几张图片
- * @param spacing RecyclerView边距，左右外边距+ImageView内边距,单位dp
+ * @param imageCountLimit 最多显示几张图片，每行3张图片
+ * @param spacing 上下左右外边距，无需在 [androidx.recyclerview.widget.RecyclerView] 设置边距
  * */
-@SuppressLint("NotifyDataSetChanged")
 class EditableImageAdapter(
     private val context: Context, private val imageCountLimit: Int, private val spacing: Float
-) : RecyclerView.Adapter<EditableImageAdapter.ItemViewHolder>() {
+) : RecyclerView.Adapter<ViewHolder>() {
 
-    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
-    private val screenWidth = context.obtainScreenWidth()
-    private var imageData: MutableList<String> = ArrayList()
+    private val layoutInflater by lazy { LayoutInflater.from(context) }
+    private val screenWidth by lazy { context.getScreenWidth() }
+    private var images: MutableList<String> = ArrayList()
 
     fun setupImage(images: MutableList<String>) {
-        imageData = images
-        notifyDataSetChanged()
+        this.images = images
+        notifyItemRangeChanged(0, images.size)
     }
 
     fun deleteImage(position: Int) {
-        if (imageData.isNotEmpty()) {
-            imageData.removeAt(position)
-            notifyDataSetChanged()
+        if (images.isNotEmpty()) {
+            images.removeAt(position)
+            /**
+             * 发生变化的item数目
+             * */
+            notifyItemRangeRemoved(position, 1)
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(
-            layoutInflater.inflate(R.layout.item_gridview_editable, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            layoutInflater.inflate(R.layout.item_editable_rv_g, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        configImageParams(holder.imageView, position)
-        if (position == itemCount - 1 && imageData.size < imageCountLimit) {
-            holder.imageView.setImageResource(R.drawable.ic_add_pic)
-            holder.imageView.setOnClickListener { //添加图片
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val imageView = holder.getView<ImageView>(R.id.imageView)
+        configImageParams(imageView, holder.bindingAdapterPosition)
+        if (position == itemCount - 1 && images.size < imageCountLimit) {
+            imageView.setImageResource(R.drawable.ic_add_pic)
+            imageView.setOnClickListener { //添加图片
                 itemClickListener?.onAddImageClick()
             }
         } else {
-            Glide.with(context).load(imageData[position]).into(holder.imageView)
-            holder.imageView.setOnClickListener { // 点击操作，查看大图
-                itemClickListener?.onItemClick(position)
+            Glide.with(context).load(images[position]).into(imageView)
+            imageView.setOnClickListener { // 点击操作，查看大图
+                itemClickListener?.onItemClick(holder.bindingAdapterPosition)
             }
             // 长按监听
-            holder.imageView.setOnLongClickListener { v -> //长按删除
-                itemClickListener?.onItemLongClick(v, position)
+            imageView.setOnLongClickListener { v -> //长按删除
+                itemClickListener?.onItemLongClick(v, holder.bindingAdapterPosition)
                 true
             }
         }
     }
 
     private fun configImageParams(imageView: ImageView, position: Int) {
-        val totalPadding = spacing.dp2px(context) * 4
-        val imageSize = (screenWidth - totalPadding) / 3
+        val temp = spacing.dp2px(context)
+        val imageSize = (screenWidth - temp * 3) / 3
 
         val params = LinearLayout.LayoutParams(imageSize, imageSize)
         when (position) {
-            in 3..5 -> {
-                params.setMargins(0, spacing.dp2px(context), 0, spacing.dp2px(context))
-            }
-            else -> {
-                params.setMargins(0, 0, 0, 0)
-            }
+            0 -> params.setMargins(temp, temp, temp shr 1, temp shr 1)
+            1 -> params.setMargins(temp shr 1, temp, temp shr 1, temp shr 1)
+            2 -> params.setMargins(temp shr 1, temp, temp, temp shr 1)
+            3 -> params.setMargins(temp, temp shr 1, temp shr 1, temp shr 1)
+            4 -> params.setMargins(temp shr 1, temp shr 1, temp shr 1, temp shr 1)
+            5 -> params.setMargins(temp shr 1, temp shr 1, temp, temp shr 1)
+            6 -> params.setMargins(temp, temp shr 1, temp shr 1, temp)
+            7 -> params.setMargins(temp shr 1, temp shr 1, temp shr 1, temp)
+            8 -> params.setMargins(temp shr 1, temp shr 1, temp, temp)
         }
         imageView.layoutParams = params
     }
 
-    override fun getItemCount(): Int = if (imageData.size >= imageCountLimit) {
+    override fun getItemCount(): Int = if (images.size >= imageCountLimit) {
         imageCountLimit
     } else {
-        imageData.size + 1
+        images.size + 1
     }
 
     private var itemClickListener: OnItemClickListener? = null
@@ -101,9 +106,5 @@ class EditableImageAdapter(
         fun onItemClick(position: Int)
 
         fun onItemLongClick(view: View?, position: Int)
-    }
-
-    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.imageView)
     }
 }

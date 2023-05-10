@@ -10,24 +10,16 @@ import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.obtainScreenWidth
-import java.util.*
+import com.pengxh.kt.lite.extensions.getScreenWidth
 
 /**
  * 不可编辑图片适配器
+ * 仅支持 [android.widget.GridView]
  */
-class ReadOnlyImageAdapter(private val context: Context) : BaseAdapter() {
+class ReadOnlyImageAdapter(private val context: Context, private val images: List<String>) :
+    BaseAdapter() {
 
-    private val images: MutableList<String> = ArrayList()
-    private val screenWidth = context.obtainScreenWidth()
-
-    fun setImageList(imageUrlList: MutableList<String>?) {
-        images.clear()
-        if (imageUrlList != null) {
-            images.addAll(imageUrlList)
-        }
-        notifyDataSetChanged()
-    }
+    private val screenWidth = context.getScreenWidth()
 
     override fun getItemId(position: Int): Long = position.toLong()
 
@@ -39,7 +31,7 @@ class ReadOnlyImageAdapter(private val context: Context) : BaseAdapter() {
         val view: View
         val holder: ItemViewHolder
         if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_gridview_readonly, null)
+            view = LayoutInflater.from(context).inflate(R.layout.item_readonly_gv, null)
             holder = ItemViewHolder()
             holder.imageView = view.findViewById(R.id.imageView)
             view.tag = holder
