@@ -1,5 +1,6 @@
 package com.pengxh.kt.lite.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
  * RecyclerView多选适配器
  */
 abstract class MultipleChoiceAdapter<T>(
-    @LayoutRes private val xmlResource: Int, private val dataRows: List<T>
+    @LayoutRes private val xmlResource: Int, private val dataRows: MutableList<T>
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     private val kTag = "MultipleChoiceAdapter"
@@ -39,6 +40,18 @@ abstract class MultipleChoiceAdapter<T>(
 
             itemCheckedListener?.onItemChecked(position, selectedItems)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setRefreshData(dataRows: MutableList<T>) {
+        this.dataRows.clear()
+        this.dataRows.addAll(dataRows)
+        notifyDataSetChanged()
+    }
+
+    fun setLoadMoreData(dataRows: MutableList<T>) {
+        this.dataRows.addAll(dataRows)
+        notifyItemRangeInserted(this.dataRows.size, dataRows.size)
     }
 
     abstract fun convertView(viewHolder: ViewHolder, position: Int, item: T)
