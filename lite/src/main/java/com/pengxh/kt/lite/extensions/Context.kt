@@ -218,14 +218,14 @@ fun Context.getStatusBarHeight(): Int {
  */
 @Deprecated("", ReplaceWith("getScreenDensity()"))
 fun Context.obtainScreenDensity(): Float {
-    val manager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val windowManager = this.getSystemService<WindowManager>()!!
     val dm = DisplayMetrics()
-    manager.defaultDisplay.getMetrics(dm)
+    windowManager.defaultDisplay.getMetrics(dm)
     return dm.density
 }
 
-fun Context.getScreenDensity(): Int {
-    val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+fun Context.getScreenDensity(): Float {
+    val windowManager = this.getSystemService<WindowManager>()!!
     val displayMetrics = DisplayMetrics()
     val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         this.display
@@ -233,13 +233,13 @@ fun Context.getScreenDensity(): Int {
         windowManager.defaultDisplay
     }
     if (display == null) {
-        return 0
+        return 0f
     }
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        this.resources.configuration.densityDpi
+        this.resources.displayMetrics.density
     } else {
         display.getMetrics(displayMetrics)
-        displayMetrics.density.toInt()
+        displayMetrics.density
     }
 }
 
