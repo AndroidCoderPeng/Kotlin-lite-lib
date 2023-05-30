@@ -17,7 +17,11 @@ abstract class SingleChoiceAdapter<T>(
     private val kTag = "SingleChoiceAdapter"
 
     //选择的位置
-    private var selectedPosition = 0
+    private var selectedPosition = -1
+
+    fun setSelectedPosition(position: Int) {
+        selectedPosition = position
+    }
 
     //临时记录上次选择的位置
     private var temp = -1
