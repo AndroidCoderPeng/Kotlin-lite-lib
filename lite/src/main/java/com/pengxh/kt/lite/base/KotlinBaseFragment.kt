@@ -17,7 +17,7 @@ abstract class KotlinBaseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTopBarLayout()
-        initData()
+        initData(savedInstanceState)
         observeRequestState()
         initEvent()
     }
@@ -35,7 +35,7 @@ abstract class KotlinBaseFragment : Fragment() {
     /**
      * 初始化默认数据
      */
-    abstract fun initData()
+    abstract fun initData(savedInstanceState: Bundle?)
 
     /**
      * 数据请求状态监听

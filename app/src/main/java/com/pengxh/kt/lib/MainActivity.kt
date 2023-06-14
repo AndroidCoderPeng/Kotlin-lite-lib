@@ -1,5 +1,6 @@
 package com.pengxh.kt.lib
 
+import android.os.Bundle
 import android.view.View
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
@@ -35,7 +36,7 @@ class MainActivity : KotlinBaseActivity() {
 
     }
 
-    override fun initData() {
+    override fun initData(savedInstanceState: Bundle?) {
         val imageAdapter = EditableImageAdapter(this, 9, 2f)
         imageGridView.adapter = imageAdapter
         imageAdapter.setOnItemClickListener(object : EditableImageAdapter.OnItemClickListener {

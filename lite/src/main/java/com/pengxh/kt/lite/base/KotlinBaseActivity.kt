@@ -9,7 +9,7 @@ abstract class KotlinBaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(initLayoutView())
         setupTopBarLayout()
-        initData()
+        initData(savedInstanceState)
         observeRequestState()
         initEvent()
     }
@@ -27,7 +27,7 @@ abstract class KotlinBaseActivity : AppCompatActivity() {
     /**
      * 初始化默认数据
      */
-    abstract fun initData()
+    abstract fun initData(savedInstanceState: Bundle?)
 
     /**
      * 数据请求状态监听
