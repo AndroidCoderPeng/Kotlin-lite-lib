@@ -8,16 +8,19 @@ import androidx.fragment.app.Fragment
 
 abstract class KotlinBaseFragment : Fragment() {
 
+    lateinit var baseView: View
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(initLayoutView(), container, false)
+        baseView = inflater.inflate(initLayoutView(), container, false)
+        initData(savedInstanceState)
+        return baseView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTopBarLayout()
-        initData(savedInstanceState)
         observeRequestState()
         initEvent()
     }
