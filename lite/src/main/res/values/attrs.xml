@@ -28,7 +28,23 @@
     <declare-styleable name="SteeringWheelController">
         <attr name="controller_backgroundColor" format="color" />
         <attr name="controller_borderColor" format="color" />
-        <attr name="controller_outerCircleDiameter" format="integer" />
-        <attr name="controller_borderStroke" format="integer" />
+        <attr name="controller_outerCircleDiameter" format="dimension" />
+        <attr name="controller_borderStroke" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SteeringWheelView">
+        <!--方向盘外边框颜色-->
+        <attr name="ctrl_diameter" format="dimension" />
+        <!--方向盘外边框颜色-->
+        <attr name="ctrl_borderColor" format="color" />
+        <attr name="ctrl_backgroundColor" format="color" />
+        <!--方向盘外边框粗细-->
+        <attr name="ctrl_borderStroke" format="dimension" />
+        <!--中间开关颜色-->
+        <attr name="ctrl_switchColor" format="color" />
+        <!--四个方位小点颜色-->
+        <attr name="ctrl_directionColor" format="color" />
+        <!--四个方位小点直径-->
+        <attr name="ctrl_directionDiameter" format="dimension" />
     </declare-styleable>
 </resources>
