@@ -5,26 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.pengxh.kt.lite.widget.SteeringWheelController
-        android:id="@+id/steeringWheelController"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:controller_backgroundColor="@color/black"
-        app:controller_borderColor="@color/red"
-        app:controller_borderStroke="@dimen/dp_5"
-        app:controller_outerCircleDiameter="@dimen/dp_200" />
-
     <com.pengxh.kt.lite.widget.SteeringWheelView
         android:id="@+id/steeringWheelView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center"
         app:ctrl_backgroundColor="@color/white"
         app:ctrl_borderColor="#64BFEB"
         app:ctrl_borderStroke="@dimen/dp_5"
-        app:ctrl_diameter="@dimen/dp_200"
-        app:ctrl_directionColor="#2A68BF"
-        app:ctrl_directionDiameter="@dimen/dp_15"
-        app:ctrl_switchColor="@color/white" />
+        app:ctrl_diameter="@dimen/dp_200" />
 </LinearLayout>

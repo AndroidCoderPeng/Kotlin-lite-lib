@@ -13,6 +13,11 @@ import kotlin.math.sqrt
 /**
  * 方向盘控件
  * */
+@Deprecated(
+    "废弃，不建议使用，有性能问题",
+    replaceWith = ReplaceWith("SteeringWheelView"),
+    level = DeprecationLevel.WARNING
+)
 class SteeringWheelController constructor(context: Context, attrs: AttributeSet) :
     View(context, attrs), View.OnTouchListener {
     //画布中心x
