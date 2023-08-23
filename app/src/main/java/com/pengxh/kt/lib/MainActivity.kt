@@ -1,32 +1,22 @@
 package com.pengxh.kt.lib
 
 import android.os.Bundle
-import com.pengxh.kt.lite.base.KotlinBaseActivity
+import androidx.appcompat.app.AppCompatActivity
+import com.pengxh.kt.lib.databinding.ActivityMainBinding
+import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.widget.SteeringWheelView
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : KotlinBaseActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val kTag = "MainActivity"
     private val context = this@MainActivity
+    private val binding: ActivityMainBinding by binding()
 
-    override fun initLayoutView(): Int = R.layout.activity_main
-
-    override fun setupTopBarLayout() {
-
-    }
-
-    override fun observeRequestState() {
-
-    }
-
-    override fun initData(savedInstanceState: Bundle?) {
-
-    }
-
-    override fun initEvent() {
-        steeringWheelView.setOnWheelTouchListener(object : SteeringWheelView.OnWheelTouchListener {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding.steeringWheelView.setOnWheelTouchListener(object :
+            SteeringWheelView.OnWheelTouchListener {
             override fun onCenterClicked() {
                 "onCenterClicked".show(context)
             }
@@ -52,12 +42,15 @@ class MainActivity : KotlinBaseActivity() {
                     SteeringWheelView.Direction.LEFT -> {
                         "LEFT onActionTurnUp".show(context)
                     }
+
                     SteeringWheelView.Direction.TOP -> {
                         "TOP onActionTurnUp".show(context)
                     }
+
                     SteeringWheelView.Direction.RIGHT -> {
                         "RIGHT onActionTurnUp".show(context)
                     }
+
                     SteeringWheelView.Direction.BOTTOM -> {
                         "BOTTOM onActionTurnUp".show(context)
                     }
