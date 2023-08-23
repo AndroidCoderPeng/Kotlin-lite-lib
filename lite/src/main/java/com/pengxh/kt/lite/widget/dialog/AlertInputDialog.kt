@@ -4,12 +4,11 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.databinding.DialogInputBinding
+import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 import com.pengxh.kt.lite.extensions.show
-import com.pengxh.kt.lite.widget.DeleteEditText
 
 /**
  * 输入对话框
@@ -67,6 +66,8 @@ class AlertInputDialog private constructor(builder: Builder) : Dialog(
         }
     }
 
+    private val binding: DialogInputBinding by binding()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.initDialogLayoutParams(0.8f)
@@ -76,28 +77,24 @@ class AlertInputDialog private constructor(builder: Builder) : Dialog(
     }
 
     private fun initView() {
-        val dialogTitleView: TextView = findViewById(R.id.dialogTitleView)
-        val dialogInputView: DeleteEditText = findViewById(R.id.dialogInputView)
-        val dialogCancelButton = findViewById<Button>(R.id.dialogCancelButton)
-        val dialogConfirmButton = findViewById<Button>(R.id.dialogConfirmButton)
         if (title.isNotBlank()) {
-            dialogTitleView.text = title
+            binding.dialogTitleView.text = title
         }
         if (hint.isNotBlank()) {
-            dialogInputView.hint = hint
+            binding.dialogInputView.hint = hint
         }
         if (negativeBtn.isNotBlank()) {
-            dialogCancelButton.text = negativeBtn
+            binding.dialogCancelButton.text = negativeBtn
         }
-        dialogCancelButton.setOnClickListener {
+        binding.dialogCancelButton.setOnClickListener {
             listener.onCancelClick()
             dismiss()
         }
         if (positiveBtn.isNotBlank()) {
-            dialogConfirmButton.text = positiveBtn
+            binding.dialogConfirmButton.text = positiveBtn
         }
-        dialogConfirmButton.setOnClickListener(View.OnClickListener {
-            val inputValue: String = dialogInputView.text.toString().trim()
+        binding.dialogConfirmButton.setOnClickListener(View.OnClickListener {
+            val inputValue: String = binding.dialogInputView.text.toString().trim()
             if (inputValue.isBlank()) {
                 "输入错误，请检查！".show(ctx)
                 return@OnClickListener

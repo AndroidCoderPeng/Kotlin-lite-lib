@@ -4,9 +4,9 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
-import android.widget.Button
-import android.widget.TextView
 import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.databinding.DialogMessageBinding
+import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 
 /**
@@ -57,6 +57,8 @@ class AlertMessageDialog private constructor(builder: Builder) : Dialog(
         }
     }
 
+    private val binding: DialogMessageBinding by binding()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.initDialogLayoutParams(0.8f)
@@ -66,19 +68,16 @@ class AlertMessageDialog private constructor(builder: Builder) : Dialog(
     }
 
     private fun initView() {
-        val dialogTitleView: TextView = findViewById(R.id.dialogTitleView)
-        val dialogMessageView: TextView = findViewById(R.id.dialogMessageView)
-        val dialogConfirmButton = findViewById<Button>(R.id.dialogConfirmButton)
         if (title.isNotBlank()) {
-            dialogTitleView.text = title
+            binding.dialogTitleView.text = title
         }
         if (message.isNotBlank()) {
-            dialogMessageView.text = message
+            binding.dialogMessageView.text = message
         }
         if (!TextUtils.isEmpty(positiveBtn)) {
-            dialogConfirmButton.text = positiveBtn
+            binding.dialogConfirmButton.text = positiveBtn
         }
-        dialogConfirmButton.setOnClickListener {
+        binding.dialogConfirmButton.setOnClickListener {
             listener.onConfirmClick()
             dismiss()
         }

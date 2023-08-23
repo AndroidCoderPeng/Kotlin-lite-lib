@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.pengxh.kt.lib.databinding.ActivityMainBinding
 import com.pengxh.kt.lite.extensions.binding
-import com.pengxh.kt.lite.extensions.show
-import com.pengxh.kt.lite.widget.SteeringWheelView
+import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,47 +14,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.steeringWheelView.setOnWheelTouchListener(object :
-            SteeringWheelView.OnWheelTouchListener {
-            override fun onCenterClicked() {
-                "onCenterClicked".show(context)
-            }
 
-            override fun onLeftTurn() {
-                "onLeftTurn".show(context)
-            }
+        binding.showDialogButton.setOnClickListener {
+            AlertControlDialog.Builder()
+                .setContext(this)
+                .setTitle("111")
+                .setMessage("1111")
+                .setNegativeButton("111")
+                .setPositiveButton("1111")
+                .setOnDialogButtonClickListener(object :
+                    AlertControlDialog.OnDialogButtonClickListener {
+                    override fun onConfirmClick() {
 
-            override fun onTopTurn() {
-                "onTopTurn".show(context)
-            }
-
-            override fun onRightTurn() {
-                "onRightTurn".show(context)
-            }
-
-            override fun onBottomTurn() {
-                "onBottomTurn".show(context)
-            }
-
-            override fun onActionTurnUp(dir: SteeringWheelView.Direction) {
-                when (dir) {
-                    SteeringWheelView.Direction.LEFT -> {
-                        "LEFT onActionTurnUp".show(context)
                     }
 
-                    SteeringWheelView.Direction.TOP -> {
-                        "TOP onActionTurnUp".show(context)
-                    }
+                    override fun onCancelClick() {
 
-                    SteeringWheelView.Direction.RIGHT -> {
-                        "RIGHT onActionTurnUp".show(context)
                     }
-
-                    SteeringWheelView.Direction.BOTTOM -> {
-                        "BOTTOM onActionTurnUp".show(context)
-                    }
-                }
-            }
-        })
+                })
+                .build().show()
+        }
     }
 }

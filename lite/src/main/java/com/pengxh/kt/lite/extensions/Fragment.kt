@@ -2,7 +2,7 @@ package com.pengxh.kt.lite.extensions
 
 import android.os.Handler
 import android.os.Looper
-import android.view.View
+import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -15,22 +15,23 @@ inline fun <reified VB : ViewBinding> Fragment.bindView() = FragmentBindingDeleg
 class FragmentBindingDelegate<VB : ViewBinding>(private val clazz: Class<VB>) :
     ReadOnlyProperty<Fragment, VB> {
 
-    private var isInitialized = false
-    private var _binding: VB? = null
-    private val binding: VB get() = _binding!!
+    private var binding: VB? = null
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     override fun getValue(thisRef: Fragment, property: KProperty<*>): VB {
-        if (!isInitialized) {
-            thisRef.viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
-                override fun onDestroy(owner: LifecycleOwner) {
-                    handler.post { _binding = null }
-                }
-            })
-            _binding = clazz.getMethod("bind", View::class.java)
-                .invoke(null, thisRef.requireView()) as VB
-            isInitialized = true
+        if (binding == null) {
+            try {
+                binding = clazz.getMethod("inflate", LayoutInflater::class.java)
+                    .invoke(null, thisRef.layoutInflater) as VB
+            } catch (e: IllegalStateException) {
+                throw IllegalStateException("The property of ${property.name} has been destroyed.")
+            }
         }
-        return _binding!!
+        thisRef.viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onDestroy(owner: LifecycleOwner) {
+                handler.post { binding = null }
+            }
+        })
+        return binding!!
     }
 }

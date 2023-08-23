@@ -3,16 +3,21 @@ package com.pengxh.kt.lite.widget.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.AbsListView
 import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.databinding.BottomActionSheetBinding
+import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.resetParams
-import kotlinx.android.synthetic.main.bottom_action_sheet.*
 
 /**
  * 底部列表Sheet
@@ -56,21 +61,22 @@ class BottomActionSheet private constructor(builder: Builder) : Dialog(
         }
     }
 
+    private val binding: BottomActionSheetBinding by binding()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.resetParams(Gravity.BOTTOM, R.style.ActionSheetDialogAnimation, 1.0)
-        setContentView(R.layout.bottom_action_sheet)
         setCancelable(true)
         setCanceledOnTouchOutside(true)
 
-        itemListView.adapter = ItemListAdapter(ctx)
-        itemListView.onItemClickListener =
+        binding.itemListView.adapter = ItemListAdapter(ctx)
+        binding.itemListView.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 dismiss()
                 sheetListener.onActionItemClick(position)
             }
-        sheetCancelView.setTextColor(itemTextColor)
-        sheetCancelView.setOnClickListener { dismiss() }
+        binding.sheetCancelView.setTextColor(itemTextColor)
+        binding.sheetCancelView.setOnClickListener { dismiss() }
     }
 
     interface OnActionSheetListener {
@@ -103,9 +109,11 @@ class BottomActionSheet private constructor(builder: Builder) : Dialog(
                 0 -> {
                     holder.sheetItemView.setBackgroundResource(R.drawable.sheet_item_top_selector)
                 }
+
                 sheetItems.size - 1 -> {
                     holder.sheetItemView.setBackgroundResource(R.drawable.sheet_item_bottom_selector)
                 }
+
                 else -> {
                     holder.sheetItemView.setBackgroundResource(R.drawable.sheet_item_middle_selector)
                 }

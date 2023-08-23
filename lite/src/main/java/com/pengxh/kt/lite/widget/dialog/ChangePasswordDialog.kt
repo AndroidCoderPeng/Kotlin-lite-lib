@@ -5,9 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.databinding.DialogChangePwdBinding
+import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 import com.pengxh.kt.lite.extensions.isLetterAndDigit
 import com.pengxh.kt.lite.extensions.show
@@ -37,22 +37,18 @@ class ChangePasswordDialog private constructor(builder: Builder) : Dialog(
         }
     }
 
+    private val binding: DialogChangePwdBinding by binding()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.initDialogLayoutParams(0.85f)
-        setContentView(R.layout.dialog_change_pwd)
         setCancelable(true)
         setCanceledOnTouchOutside(true)
 
-        val oldPwdView = findViewById<TextView>(R.id.oldPwdView)
-        val newPwdView = findViewById<TextView>(R.id.newPwdView)
-        val confirmPwdView = findViewById<TextView>(R.id.confirmPwdView)
-        val confirmButton = findViewById<Button>(R.id.confirmButton)
-
-        confirmButton.setOnClickListener(View.OnClickListener {
-            val oldPwd = oldPwdView.text.toString()
-            val newPwd = newPwdView.text.toString()
-            val confirmPwd = confirmPwdView.text.toString()
+        binding.confirmButton.setOnClickListener(View.OnClickListener {
+            val oldPwd = binding.oldPwdView.text.toString()
+            val newPwd = binding.newPwdView.text.toString()
+            val confirmPwd = binding.confirmPwdView.text.toString()
             if (TextUtils.isEmpty(oldPwd)) {
                 "请输入原密码".show(ctx)
                 return@OnClickListener

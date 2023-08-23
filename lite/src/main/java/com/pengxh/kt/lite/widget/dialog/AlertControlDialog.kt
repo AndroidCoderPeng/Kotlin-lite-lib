@@ -3,9 +3,9 @@ package com.pengxh.kt.lite.widget.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.databinding.DialogAlertBinding
+import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 
 /**
@@ -63,6 +63,8 @@ class AlertControlDialog private constructor(builder: Builder) : Dialog(
         }
     }
 
+    private val binding: DialogAlertBinding by binding()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.initDialogLayoutParams(0.8f)
@@ -73,27 +75,23 @@ class AlertControlDialog private constructor(builder: Builder) : Dialog(
     }
 
     private fun initView() {
-        val dialogTitleView: TextView = findViewById(R.id.dialogTitleView)
-        val dialogMessageView: TextView = findViewById(R.id.dialogMessageView)
-        val dialogCancelButton = findViewById<Button>(R.id.dialogCancelButton)
-        val dialogConfirmButton = findViewById<Button>(R.id.dialogConfirmButton)
         if (title.isNotBlank()) {
-            dialogTitleView.text = title
+            binding.dialogTitleView.text = title
         }
         if (message.isNotBlank()) {
-            dialogMessageView.text = message
+            binding.dialogMessageView.text = message
         }
         if (negativeBtn.isNotBlank()) {
-            dialogCancelButton.text = negativeBtn
+            binding.dialogCancelButton.text = negativeBtn
         }
-        dialogCancelButton.setOnClickListener {
+        binding.dialogCancelButton.setOnClickListener {
             listener.onCancelClick()
             dismiss()
         }
         if (positiveBtn.isNotBlank()) {
-            dialogConfirmButton.text = positiveBtn
+            binding.dialogConfirmButton.text = positiveBtn
         }
-        dialogConfirmButton.setOnClickListener {
+        binding.dialogConfirmButton.setOnClickListener {
             listener.onConfirmClick()
             dismiss()
         }

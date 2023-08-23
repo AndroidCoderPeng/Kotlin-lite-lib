@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.WindowManager
 import androidx.annotation.StyleRes
+import androidx.viewbinding.ViewBinding
 
 fun Dialog.initDialogLayoutParams(ratio: Float) {
     val window = this.window ?: return
@@ -27,4 +28,8 @@ fun Dialog.resetParams(gravity: Int, @StyleRes resId: Int, ratio: Double) {
     params.width = ((this.context.getScreenWidth() * ratio).toInt())
     params.height = WindowManager.LayoutParams.WRAP_CONTENT
     window.attributes = params
+}
+
+inline fun <reified VB : ViewBinding> Dialog.binding() = lazy(LazyThreadSafetyMode.NONE) {
+    inflateBinding<VB>(layoutInflater).also { setContentView(it.root) }
 }

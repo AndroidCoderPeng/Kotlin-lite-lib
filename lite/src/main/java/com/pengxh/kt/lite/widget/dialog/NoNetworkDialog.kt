@@ -4,9 +4,9 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
-import android.widget.Button
-import android.widget.ImageView
 import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.databinding.DialogNoNetworkBinding
+import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.resetParams
 
 class NoNetworkDialog private constructor(builder: Builder) : Dialog(
@@ -33,18 +33,17 @@ class NoNetworkDialog private constructor(builder: Builder) : Dialog(
         }
     }
 
+    private val binding: DialogNoNetworkBinding by binding()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.resetParams(Gravity.CENTER, R.style.UserDefinedAnimation, 0.85)
-        setContentView(R.layout.dialog_no_network)
         setCancelable(false)
         setCanceledOnTouchOutside(false)
 
-        val dismissView = findViewById<ImageView>(R.id.dismissView)
-        dismissView.setOnClickListener { dismiss() }
+        binding.dismissView.setOnClickListener { dismiss() }
 
-        val dialogButton = findViewById<Button>(R.id.dialogButton)
-        dialogButton.setOnClickListener {
+        binding.dialogButton.setOnClickListener {
             listener.onButtonClick()
             dismiss()
         }
