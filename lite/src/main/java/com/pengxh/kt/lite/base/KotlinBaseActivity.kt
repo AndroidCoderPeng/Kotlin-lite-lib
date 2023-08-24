@@ -2,22 +2,26 @@ package com.pengxh.kt.lite.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewbinding.ViewBinding
 
-abstract class KotlinBaseActivity : AppCompatActivity() {
+abstract class KotlinBaseActivity<VB : ViewBinding> : AppCompatActivity() {
+
+    protected lateinit var binding: VB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(initLayoutView())
+        binding = initViewBinding()
+        setContentView(binding.root)
         setupTopBarLayout()
-        initData(savedInstanceState)
+        initOnCreate(savedInstanceState)
         observeRequestState()
         initEvent()
     }
 
     /**
-     * 初始化xml布局
+     * 初始化ViewBinding
      */
-    abstract fun initLayoutView(): Int
+    abstract fun initViewBinding(): VB
 
     /**
      * 特定页面定制沉浸式状态栏
@@ -27,7 +31,7 @@ abstract class KotlinBaseActivity : AppCompatActivity() {
     /**
      * 初始化默认数据
      */
-    abstract fun initData(savedInstanceState: Bundle?)
+    abstract fun initOnCreate(savedInstanceState: Bundle?)
 
     /**
      * 数据请求状态监听

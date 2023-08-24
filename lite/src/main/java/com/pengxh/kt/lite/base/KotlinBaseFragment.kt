@@ -4,30 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 
-abstract class KotlinBaseFragment : Fragment() {
+abstract class KotlinBaseFragment<VB : ViewBinding> : Fragment() {
 
-    lateinit var bv: View
+    private lateinit var _binding: VB
+
+    protected val binding get() = _binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        bv = inflater.inflate(initLayoutRes(), container, false)
-        initView(savedInstanceState)
-        setupTopBarLayout()
-        return bv
+        _binding = initViewBinding(inflater, container)
+        return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initOnCreate(savedInstanceState)
+        setupTopBarLayout()
         observeRequestState()
         initEvent()
     }
 
-    @LayoutRes
-    abstract fun initLayoutRes(): Int
+    abstract fun initViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
 
     /**
      * 沉浸式状态栏
@@ -37,7 +38,7 @@ abstract class KotlinBaseFragment : Fragment() {
     /**
      * 初始化布局以及控件
      */
-    abstract fun initView(savedInstanceState: Bundle?)
+    abstract fun initOnCreate(savedInstanceState: Bundle?)
 
     /**
      * 网络请求状态监听

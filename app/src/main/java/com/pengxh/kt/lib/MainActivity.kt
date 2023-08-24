@@ -1,20 +1,31 @@
 package com.pengxh.kt.lib
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.pengxh.kt.lib.databinding.ActivityMainBinding
-import com.pengxh.kt.lite.extensions.binding
+import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     private val kTag = "MainActivity"
     private val context = this@MainActivity
-    private val binding: ActivityMainBinding by binding()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
+
+    override fun setupTopBarLayout() {
+
+    }
+
+    override fun initOnCreate(savedInstanceState: Bundle?) {
+
+    }
+
+    override fun observeRequestState() {
+
+    }
+
+    override fun initEvent() {
         binding.showDialogButton.setOnClickListener {
             AlertControlDialog.Builder()
                 .setContext(this)
