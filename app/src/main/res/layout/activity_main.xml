@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/audioButton"
+    <com.pengxh.kt.lite.widget.AirDashBoardView
+        android:id="@+id/airDashBoardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name" />
+        app:air_center_text="优"
+        app:air_center_textColor="@color/black"
+        app:air_center_textSize="@dimen/sp_14"
+        app:air_current_valueColor="@color/red"
+        app:air_current_valueSize="30sp"
+        app:air_ring_background="@color/hintColor"
+        app:air_ring_radius="@dimen/dp_100"
+        app:air_ring_width="@dimen/dp_5"
+        app:air_valueColor="@color/blue"
+        app:air_valueSize="@dimen/sp_16" />
 </LinearLayout>
