@@ -46,4 +46,16 @@
         <item name="android:windowEnterAnimation">@anim/action_dialog_show</item>
         <item name="android:windowExitAnimation">@anim/action_dialog_hide</item>
     </style>
+
+    <style name="AudioPlayerViewBaseStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/lib_dp_3</item>
+        <item name="android:paddingBottom">@dimen/lib_dp_3</item>
+        <item name="android:paddingStart">@dimen/lib_dp_7</item>
+        <item name="android:paddingEnd">@dimen/lib_dp_7</item>
+        <item name="android:drawablePadding">@dimen/lib_dp_5</item>
+        <item name="android:drawableStart">@drawable/ic_audio_icon1</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
 </resources>

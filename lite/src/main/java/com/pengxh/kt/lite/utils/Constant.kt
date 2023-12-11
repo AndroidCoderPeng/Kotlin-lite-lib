@@ -1,5 +1,7 @@
 package com.pengxh.kt.lite.utils
 
+import com.pengxh.kt.lite.R
+
 object Constant {
     /**
      * 广播接收者消息Key
@@ -43,4 +45,11 @@ object Constant {
     const val RECEIVE_FAILURE = 28
     const val DISCOVERY_DEVICE = 29
     const val DISCOVERY_OUT_TIME = 30
+
+    /**
+     * 录音动画图标
+     * */
+    val AUDIO_DRAWABLES = intArrayOf(
+        R.drawable.ic_audio_icon1, R.drawable.ic_audio_icon2, R.drawable.ic_audio_icon3
+    )
 }

@@ -5,9 +5,11 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/showDialogButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="显示弹窗" />
+    <com.pengxh.kt.lite.widget.audio.AudioPlayerView
+        android:id="@+id/audioPlayerView"
+        style="@style/AudioPlayerViewBaseStyle"
+        android:background="@drawable/bg_audio_view"
+        android:text="00:00"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16" />
 </LinearLayout>
