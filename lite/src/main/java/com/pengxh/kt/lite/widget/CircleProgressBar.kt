@@ -1,24 +1,38 @@
 package com.pengxh.kt.lite.widget
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Message
 import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.sp2px
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * 圆形进度条
  */
 class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
+
+    private val ringRadius: Int
+
+    //控件边长
+    private val viewSideLength: Int
+    private val ringWidth: Int
+    private val viewRect: Rect
+    private lateinit var guidePaint: Paint
 
     private val backgroundColor: Int
     private val foregroundColor: Int
@@ -28,7 +42,6 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
     private lateinit var backgroundPaint: Paint
     private lateinit var foregroundPaint: Paint
     private lateinit var textPaint: TextPaint
-    private var radius = 0
 
     //当前污染物测量值
     private var currentValue: String = ""
@@ -39,19 +52,30 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
 
     init {
         val type = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar)
+
+        ringRadius = type.getDimensionPixelOffset(
+            R.styleable.CircleProgressBar_cpb_ring_radius, 100f.dp2px(context)
+        )
+        ringWidth = type.getDimensionPixelOffset(
+            R.styleable.CircleProgressBar_cpb_ring_width, 10f.dp2px(context)
+        )
+        //需要给外围刻度留位置
+        viewSideLength = ringRadius + 30f.dp2px(context)
+        //辅助框
+        viewRect = Rect(-viewSideLength, -viewSideLength, viewSideLength, viewSideLength)
+
         backgroundColor = type.getColor(
-            R.styleable.CircleProgressBar_cpb_backgroundColor,
-            Color.parseColor("#D3D3D3")
+            R.styleable.CircleProgressBar_cpb_backgroundColor, Color.LTGRAY
         )
         foregroundColor = type.getColor(
-            R.styleable.CircleProgressBar_cpb_foregroundColor, R.color.blue.convertColor(
-                context
-            )
+            R.styleable.CircleProgressBar_cpb_foregroundColor, Color.BLUE
         )
         text = type.getString(R.styleable.CircleProgressBar_cpb_text).toString()
+
         type.recycle()
         //初始化画笔
         initPaint()
+
         weakReferenceHandler = WeakReferenceHandler { msg: Message ->
             if (msg.what == 2022010101) {
                 sweepAngle = msg.arg1.toFloat() * 360 / 100
@@ -61,11 +85,17 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
     }
 
     private fun initPaint() {
+        guidePaint = Paint()
+        guidePaint.color = Color.LTGRAY
+        guidePaint.style = Paint.Style.STROKE
+        guidePaint.strokeWidth = 1f.dp2px(context).toFloat()
+        guidePaint.isAntiAlias = true
+
         //背景色画笔
         backgroundPaint = Paint()
         backgroundPaint.color = backgroundColor
         backgroundPaint.style = Paint.Style.STROKE
-        backgroundPaint.strokeWidth = 12f.dp2px(context).toFloat()
+        backgroundPaint.strokeWidth = ringWidth.toFloat()
         backgroundPaint.strokeCap = Paint.Cap.ROUND //圆头
         backgroundPaint.isAntiAlias = true
 
@@ -73,7 +103,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         foregroundPaint = Paint()
         foregroundPaint.color = foregroundColor
         foregroundPaint.style = Paint.Style.STROKE
-        foregroundPaint.strokeWidth = 12f.dp2px(context).toFloat()
+        foregroundPaint.strokeWidth = ringWidth.toFloat()
         foregroundPaint.strokeCap = Paint.Cap.ROUND //圆头
         foregroundPaint.isAntiAlias = true
 
@@ -81,7 +111,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         textPaint = TextPaint()
         textPaint.isAntiAlias = true
         textPaint.textAlign = Paint.Align.CENTER
-        textPaint.color = Color.parseColor("#333333")
+        textPaint.color = Color.LTGRAY
         textPaint.textSize = 14f.sp2px(context).toFloat()
     }
 
@@ -100,83 +130,119 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         val heightSpecMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSpecSize = MeasureSpec.getSize(heightMeasureSpec)
         // 获取宽
-        val viewWidth: Int = if (widthSpecMode == MeasureSpec.EXACTLY) {
+        val mWidth: Int = if (widthSpecMode == MeasureSpec.EXACTLY) {
             // match_parent/精确值
             widthSpecSize
         } else {
-            // wrap_content
-            150f.dp2px(context)
+            // wrap_content，外边界宽
+            (viewSideLength * 2)
         }
         // 获取高
-        val viewHeight: Int = if (heightSpecMode == MeasureSpec.EXACTLY) {
+        val mHeight: Int = if (heightSpecMode == MeasureSpec.EXACTLY) {
             // match_parent/精确值
             heightSpecSize
         } else {
-            // wrap_content
-            150f.dp2px(context)
+            // wrap_content，外边界高
+            (viewSideLength * 2)
         }
-        //园半径等于View宽或者高的一半
-        radius = viewWidth - 20f.dp2px(context) shr 1
-        setMeasuredDimension(viewWidth, viewHeight)
+        // 设置该view的宽高
+        setMeasuredDimension(mWidth, mHeight)
     }
 
-    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         /**
          * 画布移到中心位置
          */
         canvas.translate(centerX, centerY)
+//        drawGuides(canvas)
+
         //绘制进度条背景
-        canvas.drawCircle(0f, 0f, radius.toFloat(), backgroundPaint)
+        canvas.drawCircle(0f, 0f, ringRadius.toFloat(), backgroundPaint)
 
         //绘制上面百分比
-        val valueRect = Rect(0, 0, 0, 0)
-        val valueY =
-            (valueRect.centerY() + textPaint.fontMetrics.top * 0.3).toInt() //基线中间点的y轴计算公式
+        val fontMetrics = textPaint.fontMetrics
+        val top = fontMetrics.top
+        val bottom = fontMetrics.bottom
         if (TextUtils.isEmpty(currentValue)) {
-            canvas.drawText("未定义!", valueRect.centerX().toFloat(), valueY.toFloat(), textPaint)
+            canvas.drawText(
+                "未定义！",
+                0f,
+                (top + bottom) / 2,
+                textPaint
+            )
         } else {
             canvas.drawText(
                 currentValue,
-                valueRect.centerX().toFloat(),
-                valueY.toFloat(),
+                0f,
+                (top + bottom) / 2,
                 textPaint
             )
         }
 
         //绘制下面Tip文字
-        val tipsRect = Rect(0, 0, 0, 0)
-        //计算文字左下角坐标
-        val tipsY = (tipsRect.centerY() - textPaint.fontMetrics.top * 1.2).toInt() //基线中间点的y轴计算公式
         if (TextUtils.isEmpty(text)) {
-            canvas.drawText("未定义！", tipsRect.centerX().toFloat(), tipsY.toFloat(), textPaint)
+            canvas.drawText(
+                "未定义！",
+                0f,
+                -(top + bottom) * 1.5f,
+                textPaint
+            )
         } else {
-            canvas.drawText(text, tipsRect.centerX().toFloat(), tipsY.toFloat(), textPaint)
+            canvas.drawText(
+                text,
+                0f,
+                -(top + bottom) * 1.5f,
+                textPaint
+            )
         }
 
         //绘制前景进度
         drawForegroundArc(canvas)
     }
 
+    /**
+     * 辅助线
+     * */
+    private fun drawGuides(canvas: Canvas) {
+        //最外层方框，即自定义View的边界
+        canvas.drawRect(viewRect, guidePaint)
+
+        //中心横线
+        canvas.drawLine(
+            -viewSideLength.toFloat(),
+            0f,
+            viewSideLength.toFloat(),
+            0f,
+            guidePaint
+        )
+
+        //中心竖线
+        canvas.drawLine(
+            0f,
+            -viewSideLength.toFloat(),
+            0f,
+            viewSideLength.toFloat(),
+            guidePaint
+        )
+    }
+
     private fun drawForegroundArc(canvas: Canvas) {
-        val rectF =
-            RectF((-radius).toFloat(), (-radius).toFloat(), radius.toFloat(), radius.toFloat())
+        val rectF = RectF(
+            -ringRadius.toFloat(),
+            -ringRadius.toFloat(),
+            ringRadius.toFloat(),
+            ringRadius.toFloat()
+        )
         canvas.drawArc(rectF, -90f, sweepAngle, false, foregroundPaint)
         invalidate()
     }
 
     fun setCurrentValue(value: Int) {
         currentValue = when {
-            value < 0 -> {
-                "0"
-            }
-            value > 100 -> {
-                "100%"
-            }
-            else -> {
-                "$value%"
-            }
+            value < 0 -> "0"
+            value > 100 -> "100%"
+            else -> "$value%"
         }
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -186,7 +252,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
                     message.arg1 = i
                     message.what = 2022010101
                     weakReferenceHandler.handleMessage(message)
-                    delay(10)
+                    delay(20)
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.pengxh.kt.lib
 
 import android.Manifest
-import android.graphics.Color
 import android.os.Bundle
 import com.pengxh.kt.lib.databinding.ActivityMainBinding
 import com.pengxh.kt.lite.base.KotlinBaseActivity
@@ -28,13 +27,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>(),
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         if (EasyPermissions.hasPermissions(this, *userPermissions)) {
-            binding.airDashBoardView
-                .setMaxValue(500)
-                .setCenterText("优")
-                .setAirRingForeground(Color.GREEN)
-                .setAirCenterTextColor(Color.RED)
-                .setAirCurrentValueColor(Color.BLUE)
-                .setCurrentValue(255)
+            binding.circleProgressBar.setCurrentValue(35)
         } else {
             EasyPermissions.requestPermissions(
                 this@MainActivity,
