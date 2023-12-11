@@ -1,15 +1,15 @@
 package com.pengxh.kt.lite.base
 
 /**
- * Double Check Singleton
+ * 双重锁单例抽象类
  * */
-abstract class BaseSingleton<in P, out T> {
+abstract class BaseSingleton<in C, out T> {
     @Volatile
-    private var instance: T? = null
+    private var singleton: T? = null
 
-    protected abstract val creator: (P) -> T
+    protected abstract val creator: (C) -> T
 
-    fun obtainInstance(param: P): T = instance ?: synchronized(this) {
-        instance ?: creator(param).also { instance = it }
+    fun get(context: C): T = singleton ?: synchronized(this) {
+        singleton ?: creator(context).also { singleton = it }
     }
 }
