@@ -14,6 +14,11 @@ import androidx.annotation.ColorInt
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * 空气污染指数表盘，仿HUAWEI天气
@@ -381,18 +386,16 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
             value
         }
 
-        Thread {
-            for (i in 0 until currentValue) {
-                val message = weakReferenceHandler.obtainMessage()
-                message.arg1 = i
-                message.what = 2022061201
-                weakReferenceHandler.handleMessage(message)
-                try {
-                    Thread.sleep(10)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
+                for (i in 0 until currentValue) {
+                    val message = weakReferenceHandler.obtainMessage()
+                    message.arg1 = i
+                    message.what = 2022061201
+                    weakReferenceHandler.handleMessage(message)
+                    delay(10)
                 }
             }
-        }.start()
+        }
     }
 }
