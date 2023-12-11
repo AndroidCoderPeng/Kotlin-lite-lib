@@ -4,19 +4,24 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.ListView
+import android.widget.PopupWindow
+import android.widget.TextView
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.getScreenWidth
 
 class EasyPopupWindow constructor(context: Context) : PopupWindow() {
+
     private var clickListener: OnPopupWindowClickListener? = null
 
     init {
-        width = ((context.getScreenWidth() * 0.3).toInt())
+        width = ((context.getScreenWidth() * 0.35).toInt())
         height = ViewGroup.LayoutParams.WRAP_CONTENT
         isOutsideTouchable = true
         isFocusable = true
-        animationStyle = R.style.PopupAnimation
+        animationStyle = R.style.EasyPopupAnimation
         setBackgroundDrawable(null)
         contentView = LayoutInflater.from(context).inflate(
             R.layout.popup_menu_option, null, false

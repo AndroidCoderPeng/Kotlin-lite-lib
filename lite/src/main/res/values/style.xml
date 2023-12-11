@@ -36,10 +36,13 @@
     </style>
 
     <style name="PopupAnimation">
-        <!-- 指定显示的动画xml -->
         <item name="android:windowEnterAnimation">@anim/popup_show</item>
-        <!-- 指定消失的动画xml -->
         <item name="android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
+
+    <style name="EasyPopupAnimation">
+        <item name="android:windowEnterAnimation">@anim/easy_popup_show</item>
+        <item name="android:windowExitAnimation">@anim/easy_popup_hide</item>
     </style>
 
     <style name="UserDefinedAnimation" parent="@android:style/Animation.Dialog">
