@@ -109,7 +109,7 @@ class AudioRecordHub private constructor(private val context: Context) {
             0.0
         } else {
             if (ratio > 1) {
-                20 * log10(ratio.toDouble())
+                30 * log10(ratio.toDouble())
             } else {
                 0.0
             }

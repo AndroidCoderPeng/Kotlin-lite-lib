@@ -26,7 +26,6 @@ class AudioPlayerView(context: Context, attrs: AttributeSet) : AppCompatTextView
      * 在非初始化状态下调用setDataSource  会抛出IllegalStateException异常
      */
     private var hasPrepared = false
-    private lateinit var audioSource: String
     private var index = 0
     private var weakReferenceHandler: WeakReferenceHandler
     private var animationRunnable: Runnable
@@ -78,23 +77,8 @@ class AudioPlayerView(context: Context, attrs: AttributeSet) : AppCompatTextView
         }
 
     fun setAudioSource(audioSource: String) {
-        this.audioSource = audioSource
-
         mediaPlayer.setDataSource(audioSource)
         mediaPlayer.prepare()
-    }
-
-    /**
-     * 用于需要设置不同的dataSource
-     * 二次setDataSource的时候需要reset 将MediaPlayer恢复到Initialized状态
-     *
-     * @param audioSource
-     */
-    fun resetAudioSource(audioSource: String) {
-        if (audioSource.isBlank() || hasPrepared) {
-            mediaPlayer.reset()
-        }
-        setAudioSource(audioSource)
     }
 
     private fun startAnimation() {
