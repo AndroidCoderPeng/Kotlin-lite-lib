@@ -1,7 +1,13 @@
 package com.pengxh.kt.lite.utils.ble
 
 import android.annotation.SuppressLint
-import android.bluetooth.*
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
@@ -11,8 +17,9 @@ import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
+import com.pengxh.kt.lite.extensions.getSystemService
 import com.pengxh.kt.lite.utils.Constant
-import java.util.*
+import java.util.UUID
 
 
 /**
@@ -47,8 +54,7 @@ object BLEManager {
     fun initBLE(context: Context): Boolean {
         this.context = context
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            val bluetoothManager =
-                context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val bluetoothManager = context.getSystemService<BluetoothManager>()!!
             bluetoothAdapter = bluetoothManager.adapter
             true
         } else {
@@ -175,6 +181,7 @@ object BLEManager {
                     Log.d(kTag, "正在连接...")
                     bleConnectListener.onConnecting(gatt)  //正在连接回调
                 }
+
                 BluetoothGatt.STATE_CONNECTED -> {
                     Log.d(kTag, "连接成功")
                     //连接成功去发现服务
@@ -186,10 +193,12 @@ object BLEManager {
                     )
                     bleConnectListener.onConnectSuccess(gatt, status)
                 }
+
                 BluetoothGatt.STATE_DISCONNECTING -> {
                     Log.d(kTag, "正在断开...")
                     bleConnectListener.onDisConnecting(gatt) //正在断开回调
                 }
+
                 BluetoothGatt.STATE_DISCONNECTED -> {
                     Log.d(kTag, "断开连接status: $status")
                     gatt?.close()
@@ -200,14 +209,19 @@ object BLEManager {
                             bleConnectListener.onConnectFailure(
                                 gatt, "连接异常！", status
                             )
-                            Log.d(kTag, "连接失败status：" + status + "  " + bluetoothDevice?.address)
+                            Log.d(
+                                kTag,
+                                "连接失败status：" + status + "  " + bluetoothDevice?.address
+                            )
                         }
+
                         62 -> {//62没有发现服务 异常断开
                             gatt?.close()
                             bleConnectListener.onConnectFailure(
                                 gatt, "连接成功服务未发现断开！", status
                             )
                         }
+
                         else -> {
                             //0:正常断开
                             //8:因为距离远或者电池无法供电断开连接
@@ -258,10 +272,12 @@ object BLEManager {
                     //写入成功
                     bleConnectListener.onWriteSuccess(gatt, characteristic.value)
                 }
+
                 BluetoothGatt.GATT_FAILURE -> {
                     //写入失败
                     bleConnectListener.onWriteFailure(gatt, characteristic.value, "写入失败")
                 }
+
                 BluetoothGatt.GATT_WRITE_NOT_PERMITTED -> {
                     Log.d(kTag, "没有权限")
                 }
@@ -301,6 +317,7 @@ object BLEManager {
                     Log.w(kTag, "读取RSSI值成功，RSSI值: $rssi ,status: $status")
                     bleConnectListener.onReadRssi(gatt, rssi, status)  //成功读取连接的信号强度回调
                 }
+
                 BluetoothGatt.GATT_FAILURE -> Log.w(kTag, "读取RSSI值失败，status: $status")
             }
         }

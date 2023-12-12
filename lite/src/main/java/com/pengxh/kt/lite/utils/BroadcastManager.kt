@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import com.pengxh.kt.lite.base.BaseSingleton
-import java.util.*
 
 class BroadcastManager private constructor(private val context: Context) {
 
@@ -59,7 +58,7 @@ class BroadcastManager private constructor(private val context: Context) {
             val intent = Intent()
             intent.action = action
             intent.putExtra(Constant.BROADCAST_INTENT_DATA_KEY, msg)
-            Log.d(kTag, "BroadcastMessage ===> $msg")
+            Log.d(kTag, ">>>>> $msg")
             context.sendBroadcast(intent)
         } catch (e: Exception) {
             e.printStackTrace()

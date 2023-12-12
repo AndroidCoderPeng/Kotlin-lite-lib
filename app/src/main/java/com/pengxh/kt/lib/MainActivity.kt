@@ -2,8 +2,11 @@ package com.pengxh.kt.lib
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import com.pengxh.kt.lib.databinding.ActivityMainBinding
 import com.pengxh.kt.lite.base.KotlinBaseActivity
+import com.pengxh.kt.lite.utils.ble.BLEManager
+import com.pengxh.kt.lite.widget.SteeringWheelView
 import pub.devrel.easypermissions.EasyPermissions
 
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>(),
@@ -27,7 +30,32 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>(),
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         if (EasyPermissions.hasPermissions(this, *userPermissions)) {
-            binding.circleProgressBar.setCurrentValue(35)
+            binding.steeringWheelView.setOnWheelTouchListener(object :
+                SteeringWheelView.OnWheelTouchListener {
+                override fun onCenterClicked() {
+                    Log.d(kTag, "onCenterClicked: ${BLEManager.initBLE(context)}")
+                }
+
+                override fun onLeftTurn() {
+
+                }
+
+                override fun onTopTurn() {
+
+                }
+
+                override fun onRightTurn() {
+
+                }
+
+                override fun onBottomTurn() {
+
+                }
+
+                override fun onActionTurnUp(dir: SteeringWheelView.Direction) {
+
+                }
+            })
         } else {
             EasyPermissions.requestPermissions(
                 this@MainActivity,

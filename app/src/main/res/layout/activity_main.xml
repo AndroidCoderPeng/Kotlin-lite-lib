@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.pengxh.kt.lite.widget.CircleProgressBar
-        android:id="@+id/circleProgressBar"
+    <com.pengxh.kt.lite.widget.SteeringWheelView
+        android:id="@+id/steeringWheelView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cpb_ring_width="@dimen/dp_20"
-        app:cpb_text="A" />
-</LinearLayout>
+        android:layout_centerInParent="true"
+        android:background="#F7F7F7"
+        android:padding="@dimen/dp_5"
+        app:ctrl_backgroundColor="@color/white"
+        app:ctrl_borderColor="#64BFEB"
+        app:ctrl_borderStroke="@dimen/dp_5"
+        app:ctrl_diameter="@dimen/dp_200" />
+</RelativeLayout>

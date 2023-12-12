@@ -4,7 +4,6 @@ import android.util.Log
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.jetbrains.annotations.NotNull
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -26,7 +25,7 @@ object RetrofitFactory {
 
     private fun createHttpClient(): OkHttpClient { //日志显示级别
         val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
-            override fun log(@NotNull message: String) {
+            override fun log(message: String) {
                 Log.d(kTag, ">>>>> $message")
             }
         })

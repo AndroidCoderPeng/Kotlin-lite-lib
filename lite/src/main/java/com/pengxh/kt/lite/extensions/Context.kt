@@ -29,7 +29,7 @@ import java.util.*
  */
 @SuppressLint("MissingPermission")
 fun Context.isNetworkConnected(): Boolean { //true是连接，false是没连接
-    val manager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+    val manager = this.getSystemService<ConnectivityManager>()
     if (manager == null) {
         return false
     } else {
@@ -98,12 +98,12 @@ fun Context.readAssetsFile(fileName: String?): String {
 
 //获取SimSerialNumber
 @SuppressLint("MissingPermission", "HardwareIds")
-fun Context.obtainSimCardSerialNumber(): String? {
+fun Context.getSimCardSerialNumber(): String? {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         //Android 10改为获取Android_ID
         return Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
     } else {
-        val telephony = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val telephony = this.getSystemService<TelephonyManager>()!!
         val telephonyClass: Class<*>
         try {
             telephonyClass = Class.forName(telephony.javaClass.name)
@@ -142,26 +142,8 @@ fun Context.obtainSimCardSerialNumber(): String? {
  *
  * @return
  */
-@Deprecated("", ReplaceWith("getScreenWidth()"))
-fun Context.obtainScreenWidth(): Int {
-    return this.resources.displayMetrics.widthPixels
-}
-
 fun Context.getScreenWidth(): Int {
     return this.resources.displayMetrics.widthPixels
-}
-
-/**
- * 获取屏幕高度
- */
-@Deprecated("不兼容Android 11+", ReplaceWith("getScreenHeight()"))
-fun Context.obtainScreenHeight(): Int {
-    var height = 0
-    val resourceId = this.resources.getIdentifier("status_bar_height", "dimen", "android")
-    if (resourceId > 0) {
-        height = this.resources.getDimensionPixelSize(resourceId)
-    }
-    return this.resources.displayMetrics.heightPixels + height
 }
 
 /**
@@ -216,14 +198,6 @@ fun Context.getStatusBarHeight(): Int {
  * Dpi（dots per inch 像素密度）
  * Density 密度
  */
-@Deprecated("", ReplaceWith("getScreenDensity()"))
-fun Context.obtainScreenDensity(): Float {
-    val windowManager = this.getSystemService<WindowManager>()!!
-    val dm = DisplayMetrics()
-    windowManager.defaultDisplay.getMetrics(dm)
-    return dm.density
-}
-
 fun Context.getScreenDensity(): Float {
     val windowManager = this.getSystemService<WindowManager>()!!
     val displayMetrics = DisplayMetrics()
