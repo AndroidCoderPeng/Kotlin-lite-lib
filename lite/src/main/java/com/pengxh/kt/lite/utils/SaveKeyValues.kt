@@ -9,8 +9,8 @@ object SaveKeyValues {
     fun initSharedPreferences(context: Context) {
         val packageName = context.packageName
         //获取到的包名带有“.”方便命名，取最后一个作为sp文件名
-        val split = packageName.split("\\.").toTypedArray()
-        val fileName = split[split.size - 1]
+        val split = packageName.split(".")
+        val fileName = split.last()
         sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
     }
 
@@ -78,7 +78,7 @@ object SaveKeyValues {
     }
 
     /**
-     * 移除某个key值已经对应的值
+     * 移除某个key和value
      */
     fun removeKey(key: String?) {
         try {
