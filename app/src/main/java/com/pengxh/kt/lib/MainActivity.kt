@@ -2,15 +2,9 @@ package com.pengxh.kt.lib
 
 import android.Manifest
 import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
 import com.pengxh.kt.lib.databinding.ActivityMainBinding
 import com.pengxh.kt.lite.base.KotlinBaseActivity
-import com.pengxh.kt.lite.utils.LoadingDialogHub
 import com.pengxh.kt.lite.widget.SteeringWheelView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import pub.devrel.easypermissions.EasyPermissions
 
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>(),
@@ -37,13 +31,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>(),
             binding.steeringWheelView.setOnWheelTouchListener(object :
                 SteeringWheelView.OnWheelTouchListener {
                 override fun onCenterClicked() {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        LoadingDialogHub.show(this@MainActivity, "数据加载中...")
-                        withContext(Dispatchers.IO) {
-                            delay(10000)
-                        }
-                        LoadingDialogHub.dismiss()
-                    }
+
                 }
 
                 override fun onLeftTurn() {
