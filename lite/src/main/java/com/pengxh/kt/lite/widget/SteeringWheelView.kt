@@ -80,7 +80,7 @@ class SteeringWheelView constructor(context: Context, attrs: AttributeSet) :
         directionPaint.isAntiAlias = true
         directionPaint.isDither = true
         directionPaint.style = Paint.Style.FILL
-        directionPaint.color = borderColor
+        directionPaint.color = Color.parseColor("#EEEEEE")
 
         val layoutParams = LayoutParams(diameter.toInt(), diameter.toInt())
 
@@ -96,6 +96,7 @@ class SteeringWheelView constructor(context: Context, attrs: AttributeSet) :
                     leftTurn = true
                     listener?.onLeftTurn()
                 }
+
                 MotionEvent.ACTION_UP -> {
                     leftTurn = false
                     listener?.onActionTurnUp(Direction.LEFT)
@@ -111,6 +112,7 @@ class SteeringWheelView constructor(context: Context, attrs: AttributeSet) :
                     topTurn = true
                     listener?.onTopTurn()
                 }
+
                 MotionEvent.ACTION_UP -> {
                     topTurn = false
                     listener?.onActionTurnUp(Direction.TOP)
@@ -125,6 +127,7 @@ class SteeringWheelView constructor(context: Context, attrs: AttributeSet) :
                     rightTurn = true
                     listener?.onRightTurn()
                 }
+
                 MotionEvent.ACTION_UP -> {
                     rightTurn = false
                     listener?.onActionTurnUp(Direction.RIGHT)
@@ -139,6 +142,7 @@ class SteeringWheelView constructor(context: Context, attrs: AttributeSet) :
                     bottomTurn = true
                     listener?.onBottomTurn()
                 }
+
                 MotionEvent.ACTION_UP -> {
                     bottomTurn = false
                     listener?.onActionTurnUp(Direction.BOTTOM)
@@ -158,7 +162,7 @@ class SteeringWheelView constructor(context: Context, attrs: AttributeSet) :
         canvasCenterX = w shr 1
         canvasCenterY = h shr 1
 
-        val outerCircleRadius = diameter.toInt() shr 1 //半径
+        val outerCircleRadius = (diameter - 20).toInt() shr 1 //半径
 
         // 大外圈区域
         outerCircleRectF = RectF(
@@ -190,22 +194,22 @@ class SteeringWheelView constructor(context: Context, attrs: AttributeSet) :
 
         if (leftTurn) {
             canvas.drawArc(
-                outerCircleRectF, (90 * 2 - 45).toFloat(), 90f, false, directionPaint
+                outerCircleRectF, (90 * 2 - 45).toFloat(), 90f, true, directionPaint
             )
         }
 
         if (topTurn) {
             canvas.drawArc(
-                outerCircleRectF, (90 * 3 - 45).toFloat(), 90f, false, directionPaint
+                outerCircleRectF, (90 * 3 - 45).toFloat(), 90f, true, directionPaint
             )
         }
 
         if (rightTurn) {
-            canvas.drawArc(outerCircleRectF, -45f, 90f, false, directionPaint)
+            canvas.drawArc(outerCircleRectF, -45f, 90f, true, directionPaint)
         }
 
         if (bottomTurn) {
-            canvas.drawArc(outerCircleRectF, 45f, 90f, false, directionPaint)
+            canvas.drawArc(outerCircleRectF, 45f, 90f, true, directionPaint)
         }
     }
 
