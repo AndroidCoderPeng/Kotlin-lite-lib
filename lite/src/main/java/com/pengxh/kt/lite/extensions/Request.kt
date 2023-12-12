@@ -18,7 +18,7 @@ fun Request.doRequest(listener: OnHttpRequestListener) {
     Observable.create(Observable.OnSubscribe<Response?> { subscriber ->
         val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
-                Log.d("Request", "log ===> $message")
+                Log.d("Request", ">>>>> $message")
             }
         })
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)

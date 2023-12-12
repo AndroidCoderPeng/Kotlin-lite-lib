@@ -158,7 +158,7 @@ fun String.isPhoneNumber(): Boolean {
         false
     } else {
         val regExp =
-            "^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$"
+            "^1((3[0-9])|(4[5-9])|(5[0-3,5-9])|(6[5,6])|(7[0-8])|(8[0-9])|(9[1,8,9]))[0-9]{8}$"
         val pattern = Pattern.compile(regExp)
         pattern.matcher(this).matches()
     }
@@ -212,7 +212,6 @@ fun String.downloadFile(downloadDir: String?, listener: OnDownloadListener) {
     val newCall = httpClient.newCall(request)
     /**
      * 如果已被加入下载队列，则取消之前的，重新下载
-     * 断点下载以后再考虑
      */
     if (newCall.isExecuted()) {
         newCall.cancel()
