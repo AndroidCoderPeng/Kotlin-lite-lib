@@ -18,9 +18,11 @@ abstract class NormalRecyclerAdapter<T>(
 
     override fun getItemCount(): Int = dataRows.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(xmlResource, parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(xmlResource, parent, false)
+        )
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         convertView(holder, position, dataRows[position])

@@ -23,7 +23,6 @@ class EditableImageAdapter(
     private val context: Context, private val imageCountLimit: Int, private val spacing: Float
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-    private val layoutInflater by lazy { LayoutInflater.from(context) }
     private val screenWidth by lazy { context.getScreenWidth() }
     private var images: MutableList<String> = ArrayList()
 
@@ -44,7 +43,7 @@ class EditableImageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            layoutInflater.inflate(R.layout.item_editable_rv_g, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.item_editable_rv_g, parent, false)
         )
     }
 
