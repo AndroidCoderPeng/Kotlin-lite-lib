@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.pengxh.kt.lite.widget.SteeringWheelView
-        android:id="@+id/steeringWheelView"
+    <com.pengxh.kt.lite.widget.audio.AudioPlayerView
+        android:id="@+id/audioPlayView"
+        style="@style/AudioPlayerViewBaseStyle"
+        android:layout_above="@id/audioPathView"
+        android:layout_margin="@dimen/dp_10"
+        android:background="@drawable/bg_audio_view"
+        android:text="00:00"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/audioPathView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/recodeAudioButton"
+        android:padding="@dimen/dp_20"
+        android:text="@string/app_name"
+        android:textSize="16sp" />
+
+    <ImageButton
+        android:id="@+id/recodeAudioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="#F7F7F7"
-        android:padding="@dimen/dp_5"
-        app:ctrl_backgroundColor="@color/white"
-        app:ctrl_borderColor="#64BFEB"
-        app:ctrl_borderStroke="@dimen/dp_5"
-        app:ctrl_diameter="@dimen/dp_200" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/dp_10"
+        android:padding="@dimen/dp_20"
+        android:src="@drawable/ic_voice" />
 </RelativeLayout>
