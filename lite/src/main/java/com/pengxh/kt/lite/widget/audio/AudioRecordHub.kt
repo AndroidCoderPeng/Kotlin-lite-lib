@@ -104,12 +104,13 @@ class AudioRecordHub private constructor(private val context: Context) {
      * 更新麦克状态
      */
     private fun updateMicStatus() {
-        val ratio = mediaRecorder?.maxAmplitude
-        val db = if (ratio == null) {
+        //调用时音频采样的最大绝对振幅
+        val amplitude = mediaRecorder?.maxAmplitude
+        val db = if (amplitude == null) {
             0.0
         } else {
-            if (ratio > 1) {
-                30 * log10(ratio.toDouble())
+            if (amplitude > 1) {
+                20 * log10(amplitude / 0.1)
             } else {
                 0.0
             }

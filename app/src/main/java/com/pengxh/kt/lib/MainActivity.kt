@@ -93,7 +93,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>(),
                                 initHub(createAudioFile())
                                 startRecord(object : AudioRecordHub.OnAudioStatusUpdateListener {
                                     override fun onUpdate(db: Double, time: Long) {
-                                        imageView.drawable.level = (3000 + 6000 * db / 100).toInt()
+                                        imageView.drawable.level = (1000 + 60 * db).toInt()
                                         textView.text = time.millsToTime()
                                     }
 
