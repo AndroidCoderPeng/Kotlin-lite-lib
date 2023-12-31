@@ -27,7 +27,7 @@ object Constant {
      * 最大录音时长5分钟
      */
     const val MAX_LENGTH = 1000 * 60 * 5
-    const val HTTP_TIMEOUT: Long = 15
+    const val HTTP_TIMEOUT = 15L
 
     /**
      * 连接超时时间10s
