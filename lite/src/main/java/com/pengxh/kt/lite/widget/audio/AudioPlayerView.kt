@@ -46,6 +46,7 @@ class AudioPlayerView(context: Context, attrs: AttributeSet) : AppCompatTextView
 
     private fun initMediaPlayer() {
         mediaPlayer = MediaPlayer()
+        //此时MediaPlayer进入Idle状态，不能进行任何操作，setDataSource会让播放器从Idle进入Loaded状态
         mediaPlayer?.apply {
             val inputStream = FileInputStream(audioSource)
             setDataSource(inputStream.fd)
@@ -66,10 +67,6 @@ class AudioPlayerView(context: Context, attrs: AttributeSet) : AppCompatTextView
                     val s = sec % 60
                     "$m:$s"
                 }
-            }
-
-            setOnCompletionListener {
-                stopAnimation()
             }
         }
     }
