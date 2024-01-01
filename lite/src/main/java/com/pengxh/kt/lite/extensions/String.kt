@@ -7,6 +7,11 @@ import android.widget.TextView
 import android.widget.Toast
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.callback.OnDownloadListener
+import net.sourceforge.pinyin4j.PinyinHelper
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
 import okhttp3.*
 import java.io.*
 import java.text.ParseException
@@ -14,6 +19,32 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.math.abs
+
+/**
+ * 获取汉语拼音首字母
+ * 如：汉语 ===> HY
+ */
+fun String.getHanYuPinyin(): String {
+    val pinyinStr = StringBuilder()
+    val newChar = this.toCharArray()
+    val defaultFormat = HanyuPinyinOutputFormat()
+    defaultFormat.caseType = HanyuPinyinCaseType.UPPERCASE
+    defaultFormat.toneType = HanyuPinyinToneType.WITHOUT_TONE
+    for (c in newChar) {
+        if (c.code > 128) {
+            try {
+                pinyinStr.append(
+                    PinyinHelper.toHanyuPinyinStringArray(c, defaultFormat)[0][0]
+                )
+            } catch (e: BadHanyuPinyinOutputFormatCombination) {
+                e.printStackTrace()
+            }
+        } else {
+            pinyinStr.append(c)
+        }
+    }
+    return pinyinStr.toString()
+}
 
 /**
  * 手动换行
@@ -206,7 +237,11 @@ fun String.writeToFile(file: File?) {
     }
 }
 
-fun String.downloadFile(downloadDir: String?, listener: OnDownloadListener) {
+@Deprecated(
+    "Using Coroutine to optimize code. Use FileDownloadManager instead.",
+    ReplaceWith("FileDownloadManager")
+)
+fun String.downloadFile(downloadDir: String, listener: OnDownloadListener) {
     val httpClient = OkHttpClient()
     val request = Request.Builder().get().url(this).build()
     val newCall = httpClient.newCall(request)
