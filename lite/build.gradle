@@ -60,4 +60,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     //Socket
     implementation 'io.netty:netty-all:4.1.23.Final'
+    //汉字转拼音（多音字无法完美转换）
+    implementation 'com.belerweb:pinyin4j:2.5.0'
 }
