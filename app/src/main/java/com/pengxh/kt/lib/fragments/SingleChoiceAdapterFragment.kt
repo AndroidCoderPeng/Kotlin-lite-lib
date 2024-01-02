@@ -36,7 +36,7 @@ class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentSingleChoiceAdapt
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val selectedAdapter = object : SingleChoiceAdapter<String>(
-            R.layout.item_single_choice_rv, items
+            R.layout.item_single_choice_rv_l, items
         ) {
             override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
                 viewHolder.setText(R.id.textView, item)

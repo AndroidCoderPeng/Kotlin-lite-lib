@@ -8,6 +8,7 @@ import com.pengxh.kt.lib.adapter.ViewPagerAdapter
 import com.pengxh.kt.lib.databinding.ActivityMainBinding
 import com.pengxh.kt.lib.fragments.AdapterPackageFragment
 import com.pengxh.kt.lib.fragments.BasePackageFragment
+import com.pengxh.kt.lib.fragments.DividerPackageFragment
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.getStatusBarHeight
@@ -15,15 +16,14 @@ import com.pengxh.kt.lite.extensions.getStatusBarHeight
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     private val itemTitles = arrayOf(
-        "adapter", "base", "callback",
-        "divider", "extensions", "utils", "vm",
-        "widget"
+        "adapter", "base", "divider", "extensions", "utils", "vm", "widget"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
         fragmentPages.add(AdapterPackageFragment())
         fragmentPages.add(BasePackageFragment())
+        fragmentPages.add(DividerPackageFragment())
     }
 
     override fun initViewBinding(): ActivityMainBinding {

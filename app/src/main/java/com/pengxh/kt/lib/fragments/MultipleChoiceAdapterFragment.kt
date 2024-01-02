@@ -37,7 +37,7 @@ class MultipleChoiceAdapterFragment : KotlinBaseFragment<FragmentMultipleChoiceA
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val selectedAdapter = object : MultipleChoiceAdapter<String>(
-            R.layout.item_multiple_choice_rv, items
+            R.layout.item_multiple_choice_rv_l, items
         ) {
             override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
                 viewHolder.setText(R.id.textView, item)

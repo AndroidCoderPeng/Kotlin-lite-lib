@@ -5,10 +5,10 @@
     android:orientation="horizontal">
 
     <ListView
-        android:scrollbars="none"
         android:id="@+id/listView"
         android:layout_width="@dimen/dp_125"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbars="none" />
 
     <View
         android:layout_width="@dimen/dp_1"

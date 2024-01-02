@@ -35,7 +35,7 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentNormalRecyclerA
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val normalAdapter = object : NormalRecyclerAdapter<String>(R.layout.item_normal_rv, items) {
+        val normalAdapter = object : NormalRecyclerAdapter<String>(R.layout.item_normal_rv_l, items) {
             override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
                 viewHolder.setText(R.id.textView, item)
             }
