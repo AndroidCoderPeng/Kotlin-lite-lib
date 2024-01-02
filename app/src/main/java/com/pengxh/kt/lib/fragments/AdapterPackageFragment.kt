@@ -21,7 +21,7 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
         fragmentPages.add(EditableImageAdapterFragment())
         fragmentPages.add(MultipleChoiceAdapterFragment())
         fragmentPages.add(NormalRecyclerAdapterFragment())
-//        fragmentPages.add(ReadOnlyImageAdapterFragment())
+        fragmentPages.add(ReadOnlyImageAdapterFragment())
 //        fragmentPages.add(SingleChoiceAdapterFragment())
     }
 
