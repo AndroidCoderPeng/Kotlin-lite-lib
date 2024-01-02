@@ -20,8 +20,9 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
     init {
         fragmentPages.add(EditableImageAdapterFragment())
         fragmentPages.add(MultipleChoiceAdapterFragment())
-//        fragmentPages.add(TaskPageFragment())
-//        fragmentPages.add(MinePageFragment())
+        fragmentPages.add(NormalRecyclerAdapterFragment())
+//        fragmentPages.add(ReadOnlyImageAdapterFragment())
+//        fragmentPages.add(SingleChoiceAdapterFragment())
     }
 
     override fun initViewBinding(
