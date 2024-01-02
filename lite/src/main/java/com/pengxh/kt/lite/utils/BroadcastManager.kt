@@ -7,7 +7,7 @@ import android.content.IntentFilter
 import android.util.Log
 import com.pengxh.kt.lite.base.BaseSingleton
 
-class BroadcastManager private constructor(private val context: Context) {
+class BroadcastManager(private val context: Context) {
 
     private val kTag = "BroadcastManager"
     private var receiverMap: MutableMap<String, BroadcastReceiver> = HashMap()
