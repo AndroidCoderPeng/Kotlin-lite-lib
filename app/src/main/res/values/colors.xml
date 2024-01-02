@@ -10,8 +10,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FF808080</color>
     <color name="green">#FF09BB07</color>
-    <color name="themeColor">#008CFF</color>
-    <color name="themeOpacityColor">#803d7eff</color>
+    <color name="mainColor">#0055FF</color>
+    <color name="darkMainColor">#0033FF</color>
     <color name="mainBackground">#FFF5F5F5</color>
     <color name="subMainBackground">#80F5F5F5</color>
     <color name="hintColor">#CCCCCC</color>
