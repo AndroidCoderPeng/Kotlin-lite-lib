@@ -19,7 +19,7 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
 
     init {
         fragmentPages.add(EditableImageAdapterFragment())
-//        fragmentPages.add(AlarmPageFragment())
+        fragmentPages.add(MultipleChoiceAdapterFragment())
 //        fragmentPages.add(TaskPageFragment())
 //        fragmentPages.add(MinePageFragment())
     }
@@ -56,7 +56,7 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
             slideAdapter.notifyDataSetInvalidated()
 
             //切换页面
-//            switchPage(fragmentPages[position])
+            switchPage(fragmentPages[position])
         }
     }
 

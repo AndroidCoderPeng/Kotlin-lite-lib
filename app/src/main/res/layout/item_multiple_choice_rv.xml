@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/titleViewHeight"
+    android:paddingHorizontal="@dimen/dp_10">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="样品编号：khyp202302160000"
+        android:textSize="@dimen/sp_12" />
+
+
+    <ImageView
+        android:id="@+id/checkImageView"
+        android:layout_width="@dimen/pngSize"
+        android:layout_height="@dimen/pngSize"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/tag_iv_selector" />
+</RelativeLayout>
