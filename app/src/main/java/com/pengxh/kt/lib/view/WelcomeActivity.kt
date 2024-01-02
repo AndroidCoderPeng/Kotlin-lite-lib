@@ -1,9 +1,10 @@
-package com.pengxh.kt.lib
+package com.pengxh.kt.lib.view
 
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.pengxh.kt.lib.R
 import com.pengxh.kt.lite.extensions.navigatePageTo
 import pub.devrel.easypermissions.EasyPermissions
 
