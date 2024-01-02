@@ -1,18 +1,17 @@
 package com.pengxh.kt.lib.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentRvItemDividerBinding
+import com.pengxh.kt.lib.databinding.FragmentRvItemOffsetsBinding
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.divider.RecyclerViewItemDivider
+import com.pengxh.kt.lite.divider.RecyclerViewItemOffsets
 import com.pengxh.kt.lite.extensions.show
 
-class RecyclerViewItemDividerFragment : KotlinBaseFragment<FragmentRvItemDividerBinding>() {
+class RecyclerViewItemOffsetsFragment : KotlinBaseFragment<FragmentRvItemOffsetsBinding>() {
 
     private val cities = mutableListOf(
         "安徽",
@@ -72,8 +71,8 @@ class RecyclerViewItemDividerFragment : KotlinBaseFragment<FragmentRvItemDivider
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentRvItemDividerBinding {
-        return FragmentRvItemDividerBinding.inflate(inflater, container, false)
+    ): FragmentRvItemOffsetsBinding {
+        return FragmentRvItemOffsetsBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {
@@ -82,13 +81,13 @@ class RecyclerViewItemDividerFragment : KotlinBaseFragment<FragmentRvItemDivider
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val cityAdapter = object : NormalRecyclerAdapter<String>(
-            R.layout.item_divider_rv_l, cities
+            R.layout.item_offsets_rv_l, cities
         ) {
             override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
                 viewHolder.setText(R.id.cityName, item)
             }
         }
-        binding.recyclerView.addItemDecoration(RecyclerViewItemDivider(1, Color.RED))
+        binding.recyclerView.addItemDecoration(RecyclerViewItemOffsets(30, 10, 30, 10))
         binding.recyclerView.adapter = cityAdapter
         cityAdapter.setOnItemClickedListener(object :
             NormalRecyclerAdapter.OnItemClickedListener<String> {

@@ -20,7 +20,7 @@ class DividerPackageFragment : KotlinBaseFragment<FragmentDividerPackageBinding>
     init {
         fragmentPages.add(RecyclerStickDecorationFragment())
         fragmentPages.add(RecyclerViewItemDividerFragment())
-//        fragmentPages.add(RecyclerViewItemOffsetsFragment())
+        fragmentPages.add(RecyclerViewItemOffsetsFragment())
     }
 
     override fun initViewBinding(
