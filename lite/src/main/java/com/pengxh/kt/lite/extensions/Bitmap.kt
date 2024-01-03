@@ -34,11 +34,9 @@ fun Bitmap.toBase64(): String {
         outputStream.close()
         val bitmapBytes = outputStream.toByteArray()
         val result = Base64.encodeToString(
-            bitmapBytes,
-            Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
+            bitmapBytes, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
         )
-        result.replace("-", "+")
-            .replace("_", "/")
+        return result.replace("-", "+").replace("_", "/")
     } catch (e: IOException) {
         e.printStackTrace()
     }
