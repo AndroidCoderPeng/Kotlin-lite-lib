@@ -8,19 +8,20 @@ import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentExtensionsPackageBinding
 import com.pengxh.kt.lib.fragments.extensions.ActivityExtensionFragment
+import com.pengxh.kt.lib.fragments.extensions.AnyExtensionFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBinding>() {
 
     private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
-        "Activity"
+        "Activity", "Any"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
         fragmentPages.add(ActivityExtensionFragment())
-//        fragmentPages.add(RecyclerViewItemDividerFragment())
+        fragmentPages.add(AnyExtensionFragment())
 //        fragmentPages.add(RecyclerViewItemOffsetsFragment())
     }
 
