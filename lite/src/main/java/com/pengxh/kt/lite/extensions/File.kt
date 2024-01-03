@@ -1,7 +1,12 @@
 package com.pengxh.kt.lite.extensions
 
 import android.util.Base64
-import java.io.*
+import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileReader
+import java.io.IOException
 
 fun File.read(): String {
     val builder: StringBuilder
@@ -37,10 +42,10 @@ fun File.toBase64(): String {
         fis.close()
         bos.close()
         val imgBytes = bos.toByteArray()
-        val result =
-            Base64.encodeToString(imgBytes, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
-        result.replace("-", "+")
-            .replace("_", "/")
+        val result = Base64.encodeToString(
+            imgBytes, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
+        )
+        return result.replace("-", "+").replace("_", "/")
     } catch (e: Exception) {
         e.printStackTrace()
     }
