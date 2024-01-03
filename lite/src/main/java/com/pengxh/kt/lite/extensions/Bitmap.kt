@@ -5,13 +5,15 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
-import android.graphics.drawable.Drawable
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.RectF
 import android.util.Base64
-import android.view.Gravity
-import androidx.annotation.ColorInt
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import kotlin.math.min
+
 
 /**
  * 旋转图片
@@ -43,45 +45,41 @@ fun Bitmap.toBase64(): String {
 /**
  * 圆形图片
  * */
-fun Bitmap.createRoundDrawable(context: Context, borderWidth: Int, @ColorInt color: Int): Drawable {
-    //原图宽度
-    val bitmapWidth: Int = this.width
+fun Bitmap.createRoundDrawable(context: Context, borderStroke: Float, color: Int): Bitmap {
+    //转换为正方形后的宽高。以最短边为正方形边长，也是圆形图像的直径
+    val squareBitmapBorderLength = min(this.width, this.height)
 
-    //原图高度
-    val bitmapHeight: Int = this.height
-
-    //转换为正方形后的宽高
-    val bitmapSquareWidth = bitmapWidth.coerceAtMost(bitmapHeight)
-
-    //最终图像的宽高
-    val newBitmapSquareWidth = bitmapSquareWidth + borderWidth
-
-    val roundedBitmap =
-        Bitmap.createBitmap(newBitmapSquareWidth, newBitmapSquareWidth, Bitmap.Config.ARGB_8888)
+    val roundedBitmap = Bitmap.createBitmap(
+        squareBitmapBorderLength, squareBitmapBorderLength, Bitmap.Config.ARGB_8888
+    )
     val canvas = Canvas(roundedBitmap)
-    val x = borderWidth + bitmapSquareWidth - bitmapWidth
-    val y = borderWidth + bitmapSquareWidth - bitmapHeight
+    val paint = Paint()
+    paint.isAntiAlias = true
+    //清屏
+    canvas.drawARGB(0, 0, 0, 0);
+    //画圆角
+    val rect = Rect(0, 0, squareBitmapBorderLength, squareBitmapBorderLength)
+    val rectF = RectF(rect)
+    canvas.drawRoundRect(
+        rectF, squareBitmapBorderLength / 2f, squareBitmapBorderLength / 2f, paint
+    )
 
-    //裁剪后图像,注意X,Y要除以2 来进行一个中心裁剪
-    canvas.drawBitmap(this, (x shr 1).toFloat(), (y shr 1).toFloat(), null)
+    // 取两层绘制，显示上层
+    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(this, rect, rect, paint)
 
     val borderPaint = Paint()
     borderPaint.style = Paint.Style.STROKE
     borderPaint.isAntiAlias = true
-    borderPaint.strokeWidth = borderWidth.toFloat()
+    borderPaint.strokeWidth = borderStroke.dp2px(context).toFloat()
     borderPaint.color = color
 
     //添加边框
     canvas.drawCircle(
-        (canvas.width shr 1).toFloat(),
-        (canvas.width shr 1).toFloat(),
-        (newBitmapSquareWidth shr 1).toFloat(),
+        squareBitmapBorderLength / 2f,
+        squareBitmapBorderLength / 2f,
+        (squareBitmapBorderLength - borderStroke.dp2px(context)) / 2f,
         borderPaint
     )
-
-    val roundedBitmapDrawable =
-        RoundedBitmapDrawableFactory.create(context.resources, roundedBitmap)
-    roundedBitmapDrawable.gravity = Gravity.CENTER
-    roundedBitmapDrawable.isCircular = true
-    return roundedBitmapDrawable
+    return roundedBitmap
 }
