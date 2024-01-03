@@ -29,14 +29,11 @@ fun Bitmap.rotateImage(angle: Int): Bitmap {
 fun Bitmap.toBase64(): String {
     try {
         val outputStream = ByteArrayOutputStream()
-        this.compress(Bitmap.CompressFormat.JPEG, 80, outputStream) //压缩质量
+        this.compress(Bitmap.CompressFormat.JPEG, 100, outputStream) //压缩质量
+        val bitmapBytes = outputStream.toByteArray()
         outputStream.flush()
         outputStream.close()
-        val bitmapBytes = outputStream.toByteArray()
-        val result = Base64.encodeToString(
-            bitmapBytes, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
-        )
-        return result.replace("-", "+").replace("_", "/")
+        return Base64.encodeToString(bitmapBytes, Base64.DEFAULT)
     } catch (e: IOException) {
         e.printStackTrace()
     }
