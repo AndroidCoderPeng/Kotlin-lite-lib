@@ -32,20 +32,17 @@ fun File.read(): String {
  */
 fun File.toBase64(): String {
     try {
-        val fis = FileInputStream(this)
-        val bos = ByteArrayOutputStream()
+        val fileInputStream = FileInputStream(this)
+        val byteArrayOutputStream = ByteArrayOutputStream()
         val b = ByteArray(1024)
         var n: Int
-        while (fis.read(b).also { n = it } != -1) {
-            bos.write(b, 0, n)
+        while (fileInputStream.read(b).also { n = it } != -1) {
+            byteArrayOutputStream.write(b, 0, n)
         }
-        fis.close()
-        bos.close()
-        val imgBytes = bos.toByteArray()
-        val result = Base64.encodeToString(
-            imgBytes, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
-        )
-        return result.replace("-", "+").replace("_", "/")
+        val imgBytes = byteArrayOutputStream.toByteArray()
+        fileInputStream.close()
+        byteArrayOutputStream.close()
+        return Base64.encodeToString(imgBytes, Base64.DEFAULT)
     } catch (e: Exception) {
         e.printStackTrace()
     }
