@@ -1,18 +1,18 @@
-package com.pengxh.kt.lib.fragments
+package com.pengxh.kt.lib.fragments.extensions
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pengxh.kt.lib.databinding.FragmentBaseFragmentBinding
+import com.pengxh.kt.lib.databinding.FragmentActivityExtensionBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
-class BaseFragmentFragment : KotlinBaseFragment<FragmentBaseFragmentBinding>() {
+class ActivityExtensionFragment : KotlinBaseFragment<FragmentActivityExtensionBinding>() {
 
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentBaseFragmentBinding {
-        return FragmentBaseFragmentBinding.inflate(inflater, container, false)
+    ): FragmentActivityExtensionBinding {
+        return FragmentActivityExtensionBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

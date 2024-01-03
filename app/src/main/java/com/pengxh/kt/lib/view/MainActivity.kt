@@ -9,6 +9,7 @@ import com.pengxh.kt.lib.databinding.ActivityMainBinding
 import com.pengxh.kt.lib.fragments.AdapterPackageFragment
 import com.pengxh.kt.lib.fragments.BasePackageFragment
 import com.pengxh.kt.lib.fragments.DividerPackageFragment
+import com.pengxh.kt.lib.fragments.ExtensionsPackageFragment
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.getStatusBarHeight
@@ -24,6 +25,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
         fragmentPages.add(AdapterPackageFragment())
         fragmentPages.add(BasePackageFragment())
         fragmentPages.add(DividerPackageFragment())
+        fragmentPages.add(ExtensionsPackageFragment())
     }
 
     override fun initViewBinding(): ActivityMainBinding {

@@ -7,6 +7,11 @@ import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentAdapterPackageBinding
+import com.pengxh.kt.lib.fragments.adapter.EditableImageAdapterFragment
+import com.pengxh.kt.lib.fragments.adapter.MultipleChoiceAdapterFragment
+import com.pengxh.kt.lib.fragments.adapter.NormalRecyclerAdapterFragment
+import com.pengxh.kt.lib.fragments.adapter.ReadOnlyImageAdapterFragment
+import com.pengxh.kt.lib.fragments.adapter.SingleChoiceAdapterFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>() {

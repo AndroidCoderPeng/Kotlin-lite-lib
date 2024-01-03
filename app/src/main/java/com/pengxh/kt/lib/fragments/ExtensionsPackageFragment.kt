@@ -6,31 +6,29 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
-import com.pengxh.kt.lib.databinding.FragmentDividerPackageBinding
-import com.pengxh.kt.lib.fragments.divider.RecyclerStickDecorationFragment
-import com.pengxh.kt.lib.fragments.divider.RecyclerViewItemDividerFragment
-import com.pengxh.kt.lib.fragments.divider.RecyclerViewItemOffsetsFragment
+import com.pengxh.kt.lib.databinding.FragmentExtensionsPackageBinding
+import com.pengxh.kt.lib.fragments.extensions.ActivityExtensionFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
-class DividerPackageFragment : KotlinBaseFragment<FragmentDividerPackageBinding>() {
+class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBinding>() {
 
     private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
-        "吸顶分割线", "普通分割线", "四周边框线"
+        "Activity"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
-        fragmentPages.add(RecyclerStickDecorationFragment())
-        fragmentPages.add(RecyclerViewItemDividerFragment())
-        fragmentPages.add(RecyclerViewItemOffsetsFragment())
+        fragmentPages.add(ActivityExtensionFragment())
+//        fragmentPages.add(RecyclerViewItemDividerFragment())
+//        fragmentPages.add(RecyclerViewItemOffsetsFragment())
     }
 
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentDividerPackageBinding {
-        return FragmentDividerPackageBinding.inflate(inflater, container, false)
+    ): FragmentExtensionsPackageBinding {
+        return FragmentExtensionsPackageBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

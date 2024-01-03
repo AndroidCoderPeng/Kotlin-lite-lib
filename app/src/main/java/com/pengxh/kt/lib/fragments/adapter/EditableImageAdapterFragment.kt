@@ -1,4 +1,4 @@
-package com.pengxh.kt.lib.fragments
+package com.pengxh.kt.lib.fragments.adapter
 
 import android.os.Bundle
 import android.view.LayoutInflater

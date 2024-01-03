@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentBasePackageBinding
+import com.pengxh.kt.lib.fragments.base.BaseActivityFragment
+import com.pengxh.kt.lib.fragments.base.BaseFragmentFragment
+import com.pengxh.kt.lib.fragments.base.BaseSingletonFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class BasePackageFragment : KotlinBaseFragment<FragmentBasePackageBinding>() {

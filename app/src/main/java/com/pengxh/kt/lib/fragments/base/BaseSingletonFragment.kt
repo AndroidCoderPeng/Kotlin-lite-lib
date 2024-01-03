@@ -1,4 +1,4 @@
-package com.pengxh.kt.lib.fragments
+package com.pengxh.kt.lib.fragments.base
 
 import android.content.BroadcastReceiver
 import android.content.Context
