@@ -25,9 +25,11 @@ import androidx.lifecycle.lifecycleScope
 import com.google.common.util.concurrent.ListenableFuture
 import com.pengxh.kt.lib.databinding.FragmentImageExtensionBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
+import com.pengxh.kt.lite.extensions.createImageFileDir
 import com.pengxh.kt.lite.extensions.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -35,6 +37,7 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+
 
 class ImageExtensionFragment : KotlinBaseFragment<FragmentImageExtensionBinding>() {
 
@@ -71,10 +74,14 @@ class ImageExtensionFragment : KotlinBaseFragment<FragmentImageExtensionBinding>
 
     }
 
+    private lateinit var imageFileDir: File
+
     override fun initOnCreate(savedInstanceState: Bundle?) {
         // Initialize our background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+
+        imageFileDir = requireContext().createImageFileDir()
     }
 
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
@@ -148,6 +155,8 @@ class ImageExtensionFragment : KotlinBaseFragment<FragmentImageExtensionBinding>
                             val image = imageProxy.image
 
                             val bitmap = image?.toBitmap(ImageFormat.YUV_420_888) ?: return@execute
+
+//                            bitmap.saveImage("${imageFileDir}${File.separator}${System.currentTimeMillis()}.jpeg")
 
                             faces = arrayOfNulls(maxFaceCount)
 

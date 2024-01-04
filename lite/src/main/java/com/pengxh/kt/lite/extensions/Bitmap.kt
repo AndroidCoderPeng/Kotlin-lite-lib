@@ -11,9 +11,25 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.util.Base64
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.math.min
 
+/**
+ * 保存图片，不压缩
+ */
+fun Bitmap.saveImage(imagePath: String) {
+    try {
+        val imageFile = File(imagePath)
+        val fileOutputStream = FileOutputStream(imageFile)
+        this.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+        fileOutputStream.flush()
+        fileOutputStream.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+}
 
 /**
  * 旋转图片
