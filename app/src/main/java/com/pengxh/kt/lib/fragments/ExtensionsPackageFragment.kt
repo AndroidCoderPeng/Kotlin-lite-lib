@@ -18,6 +18,7 @@ import com.pengxh.kt.lib.fragments.extensions.FileExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.FloatExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.FragmentExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.ImageExtensionFragment
+import com.pengxh.kt.lib.fragments.extensions.ImageViewExtensionFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBinding>() {
@@ -34,7 +35,8 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         "File",
         "Float",
         "Fragment",
-        "Image"
+        "Image",
+        "ImageView"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
@@ -50,6 +52,7 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         fragmentPages.add(FloatExtensionFragment())
         fragmentPages.add(FragmentExtensionFragment())
         fragmentPages.add(ImageExtensionFragment())
+        fragmentPages.add(ImageViewExtensionFragment())
     }
 
     override fun initViewBinding(
