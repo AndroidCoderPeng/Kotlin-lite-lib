@@ -37,7 +37,7 @@ class NoNetworkDialog private constructor(builder: Builder) : Dialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.resetParams(Gravity.CENTER, R.style.UserDefinedAnimation, 0.85)
+        this.resetParams(Gravity.CENTER, R.style.UserDefinedAnimation, 0.85f)
         setCancelable(false)
         setCanceledOnTouchOutside(false)
 

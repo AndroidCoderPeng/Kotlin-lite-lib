@@ -65,7 +65,7 @@ class BottomActionSheet private constructor(builder: Builder) : Dialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.resetParams(Gravity.BOTTOM, R.style.ActionSheetDialogAnimation, 1.0)
+        this.resetParams(Gravity.BOTTOM, R.style.ActionSheetDialogAnimation, 1f)
         setCancelable(true)
         setCanceledOnTouchOutside(true)
 

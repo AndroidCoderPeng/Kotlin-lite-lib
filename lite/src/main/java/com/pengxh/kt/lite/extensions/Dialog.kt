@@ -17,7 +17,7 @@ fun Dialog.initDialogLayoutParams(ratio: Float) {
     window.attributes = params
 }
 
-fun Dialog.resetParams(gravity: Int, @StyleRes resId: Int, ratio: Double) {
+fun Dialog.resetParams(gravity: Int, @StyleRes resId: Int, ratio: Float) {
     val window = this.window ?: return
     window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     window.decorView.setBackgroundColor(Color.TRANSPARENT)

@@ -2,14 +2,14 @@ package com.pengxh.kt.lib.example
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.pengxh.kt.lib.databinding.ActivityActivityExtensionExampleBinding
+import com.pengxh.kt.lib.databinding.ActivityExampleActivityExtensionBinding
 import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.utils.Constant
 
 class ActivityExtensionExample : AppCompatActivity() {
 
     //绑定布局，替换setContentView，省去findViewById操作
-    private val binding by binding<ActivityActivityExtensionExampleBinding>()
+    private val binding by binding<ActivityExampleActivityExtensionBinding>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

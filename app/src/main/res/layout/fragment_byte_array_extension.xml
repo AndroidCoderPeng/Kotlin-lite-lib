@@ -23,9 +23,9 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/dp_10"
-                android:text="ByteArray转Hex"
+                android:text="ByteArray转ASCII"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_18" />
+                android:textSize="@dimen/sp_16" />
 
             <Button
                 android:id="@+id/parseButton"
@@ -41,7 +41,7 @@
             android:padding="@dimen/dp_10"
             android:text="原字节数组："
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
 
         <TextView
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
             android:padding="@dimen/dp_10"
             android:text="[51, 51, 50, 48, 48, 48, 48, 49, 48, 48, 48, 50, 13, 10]"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
 
         <TextView
             android:layout_width="match_parent"
@@ -59,7 +59,7 @@
             android:padding="@dimen/dp_10"
             android:text="解码后："
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
 
         <TextView
             android:id="@+id/hexStringView"
@@ -67,6 +67,6 @@
             android:layout_height="match_parent"
             android:padding="@dimen/dp_10"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
     </LinearLayout>
 </LinearLayout>
