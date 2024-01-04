@@ -4,4 +4,8 @@
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/mainColor</item>
     </style>
+
+    <style name="Theme.BigImageActivity" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/ActivityInOutAnimation</item>
+    </style>
 </resources>

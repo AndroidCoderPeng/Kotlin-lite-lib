@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="网络状态"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                app:cardCornerRadius="@dimen/dp_10">
+
+                <View
+                    android:id="@+id/netStateView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/red" />
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="获取系统服务"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/getSystemServiceButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="例如：WIFI"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/noParamIntentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="无参跳转"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/hasParamIntentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="带参跳转"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/hasArrayIntentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="带集合跳转"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/showBigImageIntentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="查看大图"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/readAssertsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="读取asserts下文件"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/getSimCardButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="获取SIM卡序列号"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="屏幕尺寸[宽，高]"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/displaySizeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="屏幕尺寸"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="状态栏高度"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/statusBarHeightView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="状态栏高度"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="屏幕像素密度"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/screenDensityView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="屏幕像素密度"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/createLogFileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="创建Log文件"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/createAudioFileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="创建Audio文件"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/createDownloadDirButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="创建文件下载目录"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/createImageDirButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="创建图片保存目录"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:paddingHorizontal="@dimen/dp_10">
+
+            <Button
+                android:id="@+id/createCompressImageDirButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="创建压缩图片保存目录"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

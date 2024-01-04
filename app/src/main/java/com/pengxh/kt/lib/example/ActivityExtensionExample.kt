@@ -1,10 +1,10 @@
 package com.pengxh.kt.lib.example
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.pengxh.kt.lib.databinding.ActivityActivityExtensionExampleBinding
 import com.pengxh.kt.lite.extensions.binding
+import com.pengxh.kt.lite.utils.Constant
 
 class ActivityExtensionExample : AppCompatActivity() {
 
@@ -13,6 +13,18 @@ class ActivityExtensionExample : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.rootView.setBackgroundColor(Color.BLUE)
+        binding.backButton.setOnClickListener { finish() }
+
+        val args = intent.getStringArrayListExtra(Constant.INTENT_PARAM)
+        if (args == null) {
+            val extra = intent.getStringExtra(Constant.INTENT_PARAM)
+            binding.textView.text = extra
+        } else {
+            val builder = StringBuilder()
+            args.forEach {
+                builder.append(it).append("\r\n")
+            }
+            binding.textView.text = builder.toString()
+        }
     }
 }
