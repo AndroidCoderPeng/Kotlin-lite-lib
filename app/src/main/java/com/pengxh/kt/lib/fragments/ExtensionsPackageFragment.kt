@@ -20,6 +20,7 @@ import com.pengxh.kt.lib.fragments.extensions.FragmentExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.ImageExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.ImageViewExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.IntExtensionFragment
+import com.pengxh.kt.lib.fragments.extensions.LongExtensionFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBinding>() {
@@ -38,7 +39,8 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         "Fragment",
         "Image",
         "ImageView",
-        "Int"
+        "Int",
+        "Long"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
@@ -56,6 +58,7 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         fragmentPages.add(ImageExtensionFragment())
         fragmentPages.add(ImageViewExtensionFragment())
         fragmentPages.add(IntExtensionFragment())
+        fragmentPages.add(LongExtensionFragment())
     }
 
     override fun initViewBinding(

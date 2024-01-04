@@ -4,7 +4,9 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 /**
  * 判断时间是否在本月之内
@@ -12,9 +14,9 @@ import java.util.*
 fun Long.isInCurrentMonth(): Boolean {
     //所选时间对应的月份
     val dateFormat = SimpleDateFormat("MM", Locale.CHINA)
-    val selectedMonth: String = dateFormat.format(Date(this))
+    val selectedMonth = dateFormat.format(Date(this))
     //系统时间对应的月份
-    val systemMonth: String = dateFormat.format(Date())
+    val systemMonth = dateFormat.format(Date())
     return selectedMonth == systemMonth
 }
 
@@ -45,7 +47,7 @@ fun Long.timestampToTime(): String {
 /**
  * 时间戳转分秒
  */
-fun Long.millsToTime(): String? {
+fun Long.millsToTime(): String {
     val dateFormat = SimpleDateFormat("mm:ss", Locale.CHINA)
     return dateFormat.format(Date(this))
 }
@@ -53,7 +55,7 @@ fun Long.millsToTime(): String? {
 /**
  * 根据时间戳得到上个月的日期
  */
-fun Long.timestampToLastMonthDate(): String? {
+fun Long.timestampToLastMonthDate(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
     val calendar = Calendar.getInstance()
     calendar.time = Date(this)
@@ -64,7 +66,7 @@ fun Long.timestampToLastMonthDate(): String? {
 /**
  * 根据时间戳得到上周的日期
  */
-fun Long.timestampToLastWeekDate(): String? {
+fun Long.timestampToLastWeekDate(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
     val calendar = Calendar.getInstance()
     calendar.time = Date(this)
@@ -75,7 +77,7 @@ fun Long.timestampToLastWeekDate(): String? {
 /**
  * 根据时间戳得到上周的时间
  */
-fun Long.timestampToLastWeekTime(): String? {
+fun Long.timestampToLastWeekTime(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
     val calendar = Calendar.getInstance()
     calendar.time = Date(this)
@@ -86,7 +88,7 @@ fun Long.timestampToLastWeekTime(): String? {
 /**
  * 获取当前月份所在季度
  */
-fun Long.obtainQuarterOfYear(): Int {
+fun Long.getQuarterOfYear(): Int {
     val calendar = Calendar.getInstance()
     calendar.time = Date(this)
     return calendar[Calendar.MONTH] / 3 + 1
@@ -116,12 +118,15 @@ fun Long.formatFileSize(): String {
         this < 1024 -> {
             df.format(this) + "B"
         }
+
         this < 1048576 -> {
             df.format(this.toDouble() / 1024) + "K"
         }
+
         this < 1073741824 -> {
             df.format(this.toDouble() / 1048576) + "M"
         }
+
         else -> {
             df.format(this.toDouble() / 1073741824) + "G"
         }
