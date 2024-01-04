@@ -214,7 +214,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="屏幕像素密度"
+                android:text="屏幕像素密度比值"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
 
@@ -224,7 +224,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:text="屏幕像素密度"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </RelativeLayout>

@@ -2,7 +2,10 @@ package com.pengxh.kt.lite.extensions
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import androidx.core.content.ContextCompat
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 /**
  * 获取xml颜色值
@@ -16,4 +19,36 @@ fun Int.convertColor(context: Context): Int {
  * */
 fun Int.convertDrawable(context: Context): Drawable? {
     return ContextCompat.getDrawable(context, this)
+}
+
+private val decimalFormat = DecimalFormat("#")
+
+/**
+ * px转dp
+ */
+fun Int.px2dp(context: Context): Int {
+    decimalFormat.roundingMode = RoundingMode.CEILING
+    val result = decimalFormat.format(this / context.getScreenDensity())
+    return result.toInt()
+}
+
+/**
+ * dp转px
+ */
+fun Int.dp2px(context: Context): Int {
+    decimalFormat.roundingMode = RoundingMode.CEILING
+    val result = decimalFormat.format(this * context.getScreenDensity())
+    return result.toInt()
+}
+
+/**
+ * sp转px
+ */
+fun Int.sp2px(context: Context): Int {
+    val floatValue = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP, this.toFloat(), context.resources.displayMetrics
+    )
+    decimalFormat.roundingMode = RoundingMode.CEILING
+    val result = decimalFormat.format(floatValue)
+    return result.toInt()
 }

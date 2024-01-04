@@ -6,24 +6,22 @@ import android.util.TypedValue
 /**
  * px转dp
  */
-fun Float.px2dp(context: Context): Int {
-    val scale = context.getScreenDensity()
-    return (this / scale + 0.5f).toInt()
+fun Float.px2dp(context: Context): Float {
+    return this / context.getScreenDensity()
 }
 
 /**
  * dp转px
  */
-fun Float.dp2px(context: Context): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics
-    ).toInt()
+fun Float.dp2px(context: Context): Float {
+    return this * context.getScreenDensity()
 }
 
 /**
- * sp转换成px
+ * sp转px
  */
-fun Float.sp2px(context: Context): Int {
-    val fontScale = context.getScreenDensity()
-    return (this * fontScale + 0.5f).toInt()
+fun Float.sp2px(context: Context): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP, this, context.resources.displayMetrics
+    )
 }

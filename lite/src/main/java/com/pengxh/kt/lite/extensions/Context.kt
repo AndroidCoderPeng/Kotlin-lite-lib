@@ -193,10 +193,7 @@ fun Context.getStatusBarHeight(): Int {
 }
 
 /**
- * 获取屏幕密度
- *
- * Dpi（dots per inch 像素密度）
- * Density 密度
+ * 获取屏幕密度比值
  */
 fun Context.getScreenDensity(): Float {
     val windowManager = this.getSystemService<WindowManager>()!!
@@ -207,7 +204,7 @@ fun Context.getScreenDensity(): Float {
         windowManager.defaultDisplay
     }
     if (display == null) {
-        return 0f
+        return 1f
     }
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         this.resources.displayMetrics.density

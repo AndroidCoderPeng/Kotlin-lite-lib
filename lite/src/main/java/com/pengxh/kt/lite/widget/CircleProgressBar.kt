@@ -13,7 +13,6 @@ import android.util.AttributeSet
 import android.view.View
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.extensions.sp2px
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,13 +53,13 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         val type = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar)
 
         ringRadius = type.getDimensionPixelOffset(
-            R.styleable.CircleProgressBar_cpb_ring_radius, 100f.dp2px(context)
+            R.styleable.CircleProgressBar_cpb_ring_radius, 100.dp2px(context)
         )
         ringWidth = type.getDimensionPixelOffset(
-            R.styleable.CircleProgressBar_cpb_ring_width, 10f.dp2px(context)
+            R.styleable.CircleProgressBar_cpb_ring_width, 10.dp2px(context)
         )
         //需要给外围刻度留位置
-        viewSideLength = ringRadius + 30f.dp2px(context)
+        viewSideLength = ringRadius + 30.dp2px(context)
         //辅助框
         viewRect = Rect(-viewSideLength, -viewSideLength, viewSideLength, viewSideLength)
 
@@ -112,7 +111,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         textPaint.isAntiAlias = true
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.color = Color.LTGRAY
-        textPaint.textSize = 14f.sp2px(context).toFloat()
+        textPaint.textSize = 14f
     }
 
     //计算出中心位置，便于定位

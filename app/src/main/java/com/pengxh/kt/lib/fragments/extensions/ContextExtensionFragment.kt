@@ -65,7 +65,7 @@ class ContextExtensionFragment : KotlinBaseFragment<FragmentContextExtensionBind
             "[${requireContext().getScreenWidth()},${requireContext().getScreenHeight()}]"
 
         binding.statusBarHeightView.text = "${requireContext().getStatusBarHeight()}"
-        binding.screenDensityView.text = "${requireContext().getScreenDensity()}dpi"
+        binding.screenDensityView.text = "${requireContext().getScreenDensity()}"
     }
 
     override fun observeRequestState() {

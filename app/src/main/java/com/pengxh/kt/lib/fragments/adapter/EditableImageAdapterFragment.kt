@@ -30,7 +30,7 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentEditableImageAda
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        editableImageAdapter = EditableImageAdapter(requireContext(), 9, 1f)
+        editableImageAdapter = EditableImageAdapter(requireContext(), 9, 1)
     }
 
     override fun observeRequestState() {

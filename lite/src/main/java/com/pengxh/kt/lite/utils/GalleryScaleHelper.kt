@@ -32,8 +32,8 @@ class GalleryScaleHelper {
     fun attachToRecyclerView(recyclerView: RecyclerView) {
         recyclerView.post {
             val galleryWidth = recyclerView.width
-            cardWidth = galleryWidth - 2 * (pagePadding + leftCardShowWidth).toFloat()
-                .dp2px(recyclerView.context)
+            cardWidth = galleryWidth - 2 * (pagePadding + leftCardShowWidth)
+                    .dp2px(recyclerView.context)
         }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

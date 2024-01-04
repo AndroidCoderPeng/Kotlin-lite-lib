@@ -15,13 +15,14 @@ import com.pengxh.kt.lib.fragments.extensions.ContextExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.DialogExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.DrawableExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.FileExtensionFragment
+import com.pengxh.kt.lib.fragments.extensions.FloatExtensionFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBinding>() {
 
     private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
-        "Activity", "Any", "Bitmap", "ByteArray", "Context", "Dialog", "Drawable", "File"
+        "Activity", "Any", "Bitmap", "ByteArray", "Context", "Dialog", "Drawable", "File", "Float"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
@@ -34,6 +35,7 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         fragmentPages.add(DialogExtensionFragment())
         fragmentPages.add(DrawableExtensionFragment())
         fragmentPages.add(FileExtensionFragment())
+        fragmentPages.add(FloatExtensionFragment())
     }
 
     override fun initViewBinding(

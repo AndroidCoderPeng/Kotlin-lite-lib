@@ -128,7 +128,7 @@ class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecora
 
         /***吸顶***start************************************/
         stickDecoration.setContext(requireContext())
-            .setTopGap(24f.dp2px(requireContext()))
+            .setTopGap(24.dp2px(requireContext()))
             .setViewGroupListener(
                 object : RecyclerStickDecoration.ViewGroupListener {
                     override fun groupTag(position: Int): Long {

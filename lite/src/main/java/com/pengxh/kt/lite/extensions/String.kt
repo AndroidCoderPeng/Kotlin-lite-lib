@@ -310,9 +310,9 @@ fun String.show(context: Context) {
     textView.textSize = 16f
     textView.text = this
     textView.setPadding(
-        20f.dp2px(context), 10f.dp2px(context), 20f.dp2px(context), 10f.dp2px(context)
+        20.dp2px(context), 10.dp2px(context), 20.dp2px(context), 10.dp2px(context)
     )
-    toast.setGravity(Gravity.BOTTOM, 0, 90f.dp2px(context))
+    toast.setGravity(Gravity.BOTTOM, 0, 90.dp2px(context))
     toast.view = textView
     toast.duration = Toast.LENGTH_SHORT
     toast.show()

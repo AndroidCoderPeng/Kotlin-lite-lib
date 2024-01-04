@@ -123,7 +123,7 @@ class BottomActionSheet private constructor(builder: Builder) : Dialog(
             holder.sheetItemView.setTextColor(itemTextColor)
             //需要动态设置item的高度
             val param: AbsListView.LayoutParams = AbsListView.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT, 44f.dp2px(ctx)
+                WindowManager.LayoutParams.MATCH_PARENT, 44.dp2px(ctx)
             )
             view.layoutParams = param
             return view

@@ -86,10 +86,10 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
          * getDimensionPixelOffset返回的是实际数值去掉后面的小数点
          */
         ringRadius = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_ring_radius, 100f.dp2px(context)
+            R.styleable.AirDashBoardView_air_ring_radius, 100.dp2px(context)
         )
         //需要给外围刻度留位置
-        viewSideLength = ringRadius + 30f.dp2px(context)
+        viewSideLength = ringRadius + 30.dp2px(context)
         //辅助框
         viewRect = Rect(-viewSideLength, -viewSideLength, viewSideLength, viewSideLength)
         ringRectF = RectF(
@@ -97,20 +97,20 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
         )
         background = type.getColor(R.styleable.AirDashBoardView_air_ring_background, Color.LTGRAY)
         ringWidth = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_ring_width, 5f.dp2px(context)
+            R.styleable.AirDashBoardView_air_ring_width, 5.dp2px(context)
         )
 
         thresholdTextSize = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_valueSize, 12f.dp2px(context)
+            R.styleable.AirDashBoardView_air_valueSize, 12.dp2px(context)
         )
         thresholdColor = type.getColor(R.styleable.AirDashBoardView_air_valueColor, Color.LTGRAY)
 
         currentValueTextSize = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_current_valueSize, 24f.dp2px(context)
+            R.styleable.AirDashBoardView_air_current_valueSize, 24.dp2px(context)
         )
         centerText = type.getString(R.styleable.AirDashBoardView_air_center_text).toString()
         centerTextSize = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_center_textSize, 12f.dp2px(context)
+            R.styleable.AirDashBoardView_air_center_textSize, 12.dp2px(context)
         )
 
         type.recycle()

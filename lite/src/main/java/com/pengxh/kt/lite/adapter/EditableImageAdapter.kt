@@ -20,7 +20,7 @@ import com.pengxh.kt.lite.extensions.getScreenWidth
  * @param spacing 上下左右外边距，无需在 [androidx.recyclerview.widget.RecyclerView] 设置边距
  * */
 class EditableImageAdapter(
-    private val context: Context, private val imageCountLimit: Int, private val spacing: Float
+    private val context: Context, private val imageCountLimit: Int, private val spacing: Int
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     private val screenWidth by lazy { context.getScreenWidth() }
