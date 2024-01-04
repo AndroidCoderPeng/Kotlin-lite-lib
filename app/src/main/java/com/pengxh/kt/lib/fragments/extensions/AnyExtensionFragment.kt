@@ -8,6 +8,9 @@ import com.pengxh.kt.lib.databinding.FragmentAnyExtensionBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.toJson
 
+/**
+ * 对象转Json字符串
+ * */
 class AnyExtensionFragment : KotlinBaseFragment<FragmentAnyExtensionBinding>() {
 
     private val kTag = "AnyExtensionFragment"

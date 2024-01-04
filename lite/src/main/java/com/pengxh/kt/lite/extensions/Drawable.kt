@@ -13,6 +13,11 @@ import kotlin.math.roundToInt
 
 private const val BITMAP_SCALE = 0.4f
 
+/**
+ * radius 模糊半径，值越大越模糊
+ *
+ * 取值区间[0,25]
+ * */
 fun Drawable.toBlurBitmap(context: Context, radius: Float): Bitmap {
     val bitmap = this.toBitmap()
 

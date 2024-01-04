@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import com.pengxh.kt.lib.databinding.FragmentActivityExtensionBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
+/**
+ * Activity委托方式初始化View，省去findViewById操作
+ * */
 class ActivityExtensionFragment : KotlinBaseFragment<FragmentActivityExtensionBinding>() {
 
     override fun initViewBinding(

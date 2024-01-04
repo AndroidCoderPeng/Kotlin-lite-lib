@@ -9,6 +9,15 @@ import com.pengxh.kt.lib.databinding.FragmentDialogExtensionBinding
 import com.pengxh.kt.lib.example.DialogExample
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
+/**
+ * 对话框扩展函数
+ *
+ * 1、根据实际情况设置dialog占屏幕宽度比例，默认0.75f
+ *
+ * 2、设置自定义dialog出现/消失的动画
+ *
+ * 3、设置dialog出现的位置，默认居中
+ * */
 class DialogExtensionFragment : KotlinBaseFragment<FragmentDialogExtensionBinding>() {
 
     private val kTag = "DialogExtensionFragment"
