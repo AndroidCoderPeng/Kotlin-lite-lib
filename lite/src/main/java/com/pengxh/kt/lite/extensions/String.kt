@@ -100,7 +100,7 @@ fun String.breakLine(length: Int): String {
 fun String.dateToTimestamp(): Long {
     try {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-        val date: Date = dateFormat.parse(this)!!
+        val date = dateFormat.parse(this)!!
         return date.time
     } catch (e: ParseException) {
         e.printStackTrace()

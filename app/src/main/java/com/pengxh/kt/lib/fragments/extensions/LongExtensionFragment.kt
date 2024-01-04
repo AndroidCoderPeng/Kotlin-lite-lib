@@ -15,13 +15,13 @@ import com.pengxh.kt.lite.extensions.isEarlierThanStart
 import com.pengxh.kt.lite.extensions.isInCurrentMonth
 import com.pengxh.kt.lite.extensions.millsToTime
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
+import com.pengxh.kt.lite.extensions.timestampToDate
 import com.pengxh.kt.lite.extensions.timestampToLastMonthDate
 import com.pengxh.kt.lite.extensions.timestampToLastWeekDate
 import com.pengxh.kt.lite.extensions.timestampToLastWeekTime
+import com.pengxh.kt.lite.extensions.timestampToTime
 
 class LongExtensionFragment : KotlinBaseFragment<FragmentLongExtensionBinding>() {
-
-    private val dataModels = ArrayList<LongDataModel>()
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -35,6 +35,7 @@ class LongExtensionFragment : KotlinBaseFragment<FragmentLongExtensionBinding>()
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
+        val dataModels = ArrayList<LongDataModel>()
         val timeMillis = System.currentTimeMillis()
         dataModels.add(
             LongDataModel(
@@ -43,6 +44,12 @@ class LongExtensionFragment : KotlinBaseFragment<FragmentLongExtensionBinding>()
         )
         dataModels.add(
             LongDataModel("当前时间戳转年月日时分秒", timeMillis.timestampToCompleteDate())
+        )
+        dataModels.add(
+            LongDataModel("时间戳转年月日", timeMillis.timestampToDate())
+        )
+        dataModels.add(
+            LongDataModel("时间戳转时分秒", timeMillis.timestampToTime())
         )
         dataModels.add(
             LongDataModel("当前时间戳转分秒", timeMillis.millsToTime())

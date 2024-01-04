@@ -40,15 +40,19 @@ class ImageViewExtensionFragment : KotlinBaseFragment<FragmentImageViewExtension
 
     private val blurRunnable = Runnable {
         lifecycleScope.launch(Dispatchers.Main) {
-            val drawable = withContext(Dispatchers.IO) {
-                Glide.with(requireContext())
-                    .load("https://pic1.zhimg.com/v2-0cc45f5fda6e8ff79350ec1303835629_r.jpg")
-                    .submit()
-                    .get()
+            try {
+                val drawable = withContext(Dispatchers.IO) {
+                    Glide.with(requireContext())
+                        .load("https://pic1.zhimg.com/v2-0cc45f5fda6e8ff79350ec1303835629_r.jpg")
+                        .submit()
+                        .get()
+                }
+                binding.blurImageView.switchBackground(
+                    drawable.toBlurBitmap(requireContext(), 20f)
+                )
+            } catch (e: IllegalStateException) {
+                e.printStackTrace()
             }
-            binding.blurImageView.switchBackground(
-                drawable.toBlurBitmap(requireContext(), 20f)
-            )
         }
     }
 

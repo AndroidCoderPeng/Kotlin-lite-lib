@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="汉语转拼音首字母"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/chineseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="chinese" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/chineseView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/chineseResultView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="String手动换行"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/breakLineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="breakLine" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/breakLineView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_3"
+                android:singleLine="true"
+                android:text="String手动换行String手动换行String手动换行String手动换行"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/breakLineResultView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_3"
+                android:textColor="@color/darkMainColor"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="时间转时间戳"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/timeToTimestampButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="time" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/timeView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dp_3"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/timestampResultView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dp_3"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="时间是否已过"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/earlierResultView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="时间差"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/timeDiffButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="diff" />
+        </LinearLayout>
+
+        <TimePicker
+            android:id="@+id/timePickerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner" />
+
+        <TextView
+            android:id="@+id/selectedTimeView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16" />
+
+        <TextView
+            android:id="@+id/diffTimeView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="时间去掉时分秒"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/deleteHourMinuteSecondsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="time" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/currentTimeView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16" />
+
+        <TextView
+            android:id="@+id/currentDateView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="判断数字"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/judgeNumberButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="judge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/numberInputView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/numberResultView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="判断数字数字和字母"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/judgeNumberAndLetterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="judge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/numberAndLetterInputView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/numberAndLetterResultView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="判断汉字"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/judgeChineseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="judge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/chineseInputView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/chineseCharacterResultView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="判断手机号"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/judgePhoneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="judge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/phoneInputView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/phoneResultView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="判断邮箱"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/judgeEmailButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="judge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/emailInputView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/emailResultView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
