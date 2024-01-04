@@ -51,4 +51,12 @@ dependencies {
     //协程核心包
     def vm_version = '2.5.1'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:${vm_version}"
+    //CameraX
+    def camerax_version = '1.2.3'
+    // CameraX PreviewView
+    implementation "androidx.camera:camera-view:$camerax_version"
+    // CameraX Lifecycle ProcessCameraProvider
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    // CameraX Camera2 extensions(CameraX is not configured properly. The most likely cause is you did not include a default implementation in your build such as 'camera-camera2'.)
+    implementation "androidx.camera:camera-camera2:$camerax_version"
 }

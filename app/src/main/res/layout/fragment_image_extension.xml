@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/cameraPreView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/faceCountView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginBottom="90dp"
+            android:background="#99000000"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16" />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/openCameraButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="打开相机" />
+</LinearLayout>

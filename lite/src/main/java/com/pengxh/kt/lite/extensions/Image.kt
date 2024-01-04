@@ -1,10 +1,12 @@
 package com.pengxh.kt.lite.extensions
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageFormat
+import android.graphics.Rect
+import android.graphics.YuvImage
 import android.media.Image
-import android.util.Log
 import java.io.ByteArrayOutputStream
-import java.nio.ByteBuffer
 
 
 /**
@@ -18,9 +20,9 @@ fun Image.toBitmap(format: Int): Bitmap? {
         buffer.get(bytes)
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, null)
     } else if (format == ImageFormat.YUV_420_888) {
-        val yBuffer: ByteBuffer = this.planes[0].buffer
-        val uBuffer: ByteBuffer = this.planes[1].buffer
-        val vBuffer: ByteBuffer = this.planes[2].buffer
+        val yBuffer = this.planes[0].buffer
+        val uBuffer = this.planes[1].buffer
+        val vBuffer = this.planes[2].buffer
 
         val ySize = yBuffer.remaining()
         val uSize = uBuffer.remaining()
@@ -39,6 +41,5 @@ fun Image.toBitmap(format: Int): Bitmap? {
         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         return bitmap.rotateImage(-90)
     }
-    Log.e("Image", "toBitmap: ImageFormat error")
     return null
 }
