@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pengxh.kt.lib.databinding.FragmentAnyExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionAnyBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.toJson
 
 /**
  * 对象转Json字符串
  * */
-class AnyExtensionFragment : KotlinBaseFragment<FragmentAnyExtensionBinding>() {
+class AnyExtensionFragment : KotlinBaseFragment<FragmentExtensionAnyBinding>() {
 
     private val kTag = "AnyExtensionFragment"
     private val cities = mutableListOf(
@@ -72,8 +72,8 @@ class AnyExtensionFragment : KotlinBaseFragment<FragmentAnyExtensionBinding>() {
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentAnyExtensionBinding {
-        return FragmentAnyExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionAnyBinding {
+        return FragmentExtensionAnyBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

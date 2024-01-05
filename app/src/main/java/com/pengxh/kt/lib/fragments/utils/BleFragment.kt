@@ -1,21 +1,17 @@
-package com.pengxh.kt.lib.fragments.extensions
+package com.pengxh.kt.lib.fragments.utils
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pengxh.kt.lib.databinding.FragmentExtensionActivityBinding
+import com.pengxh.kt.lib.databinding.FragmentUtilsBleBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
-/**
- * Activity委托方式初始化View，省去findViewById操作
- * */
-class ActivityExtensionFragment : KotlinBaseFragment<FragmentExtensionActivityBinding>() {
-
+class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentExtensionActivityBinding {
-        return FragmentExtensionActivityBinding.inflate(inflater, container, false)
+    ): FragmentUtilsBleBinding {
+        return FragmentUtilsBleBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {
@@ -33,4 +29,5 @@ class ActivityExtensionFragment : KotlinBaseFragment<FragmentExtensionActivityBi
     override fun initEvent() {
 
     }
+
 }

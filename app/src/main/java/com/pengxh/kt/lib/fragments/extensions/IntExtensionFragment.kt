@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentIntExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionIntBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.convertDrawable
@@ -13,12 +13,12 @@ import com.pengxh.kt.lite.extensions.getScreenDensity
 import com.pengxh.kt.lite.extensions.px2dp
 import com.pengxh.kt.lite.extensions.sp2px
 
-class IntExtensionFragment : KotlinBaseFragment<FragmentIntExtensionBinding>() {
+class IntExtensionFragment : KotlinBaseFragment<FragmentExtensionIntBinding>() {
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentIntExtensionBinding {
-        return FragmentIntExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionIntBinding {
+        return FragmentExtensionIntBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

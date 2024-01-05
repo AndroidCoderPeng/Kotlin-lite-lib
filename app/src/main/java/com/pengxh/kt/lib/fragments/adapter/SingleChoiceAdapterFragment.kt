@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentSingleChoiceAdapterBinding
+import com.pengxh.kt.lib.databinding.FragmentAdapterSingleChoiceBinding
 import com.pengxh.kt.lite.adapter.SingleChoiceAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
 
-class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentSingleChoiceAdapterBinding>() {
+class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentAdapterSingleChoiceBinding>() {
 
     private val kTag = "SingleChoiceAdapterFragment"
     private val items: MutableList<String> = ArrayList()
@@ -26,8 +26,8 @@ class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentSingleChoiceAdapt
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentSingleChoiceAdapterBinding {
-        return FragmentSingleChoiceAdapterBinding.inflate(inflater, container, false)
+    ): FragmentAdapterSingleChoiceBinding {
+        return FragmentAdapterSingleChoiceBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

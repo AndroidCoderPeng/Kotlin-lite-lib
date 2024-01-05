@@ -3,19 +3,19 @@ package com.pengxh.kt.lib.fragments.extensions
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pengxh.kt.lib.databinding.FragmentByteArrayExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionByteArrayBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.toASCII
 
-class ByteArrayExtensionFragment : KotlinBaseFragment<FragmentByteArrayExtensionBinding>() {
+class ByteArrayExtensionFragment : KotlinBaseFragment<FragmentExtensionByteArrayBinding>() {
 
     private val kTag = "ByteArrayExtensionFragment"
 
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentByteArrayExtensionBinding {
-        return FragmentByteArrayExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionByteArrayBinding {
+        return FragmentExtensionByteArrayBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

@@ -2,4 +2,4 @@ package com.pengxh.kt.lite.utils.ble
 
 import android.bluetooth.BluetoothDevice
 
-class BlueToothBean(var bluetoothDevice: BluetoothDevice, var rssi: Int)
+data class BluetoothDevice(var device: BluetoothDevice, var rssi: Int)

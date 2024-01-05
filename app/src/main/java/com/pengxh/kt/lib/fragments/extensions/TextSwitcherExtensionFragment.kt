@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
-import com.pengxh.kt.lib.databinding.FragmentTextSwitcherExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionTextSwitcherBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.setAnimation
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import java.util.Random
 import java.util.Timer
 import java.util.TimerTask
 
-class TextSwitcherExtensionFragment : KotlinBaseFragment<FragmentTextSwitcherExtensionBinding>() {
+class TextSwitcherExtensionFragment : KotlinBaseFragment<FragmentExtensionTextSwitcherBinding>() {
 
     private val random by lazy { Random() }
     private val timer by lazy { Timer() }
@@ -32,8 +32,8 @@ class TextSwitcherExtensionFragment : KotlinBaseFragment<FragmentTextSwitcherExt
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentTextSwitcherExtensionBinding {
-        return FragmentTextSwitcherExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionTextSwitcherBinding {
+        return FragmentExtensionTextSwitcherBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

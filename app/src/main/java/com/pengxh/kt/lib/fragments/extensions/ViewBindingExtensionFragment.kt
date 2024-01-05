@@ -3,16 +3,16 @@ package com.pengxh.kt.lib.fragments.extensions
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pengxh.kt.lib.databinding.FragmentViewBindingExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionViewBindingBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
-class ViewBindingExtensionFragment : KotlinBaseFragment<FragmentViewBindingExtensionBinding>() {
+class ViewBindingExtensionFragment : KotlinBaseFragment<FragmentExtensionViewBindingBinding>() {
 
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentViewBindingExtensionBinding {
-        return FragmentViewBindingExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionViewBindingBinding {
+        return FragmentExtensionViewBindingBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

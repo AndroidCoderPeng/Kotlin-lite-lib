@@ -5,16 +5,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentViewExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionViewBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.toBitmap
 
-class ViewExtensionFragment : KotlinBaseFragment<FragmentViewExtensionBinding>() {
+class ViewExtensionFragment : KotlinBaseFragment<FragmentExtensionViewBinding>() {
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentViewExtensionBinding {
-        return FragmentViewExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionViewBinding {
+        return FragmentExtensionViewBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

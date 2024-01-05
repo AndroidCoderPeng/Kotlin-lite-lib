@@ -8,12 +8,12 @@ import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
-import com.pengxh.kt.lib.databinding.FragmentEditableImageAdapterBinding
+import com.pengxh.kt.lib.databinding.FragmentAdapterEditableImageBinding
 import com.pengxh.kt.lib.utils.GlideLoadEngine
 import com.pengxh.kt.lite.adapter.EditableImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
-class EditableImageAdapterFragment : KotlinBaseFragment<FragmentEditableImageAdapterBinding>() {
+class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableImageBinding>() {
 
     private lateinit var editableImageAdapter: EditableImageAdapter
     private val recyclerViewImages = ArrayList<String>()
@@ -21,8 +21,8 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentEditableImageAda
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentEditableImageAdapterBinding {
-        return FragmentEditableImageAdapterBinding.inflate(inflater, container, false)
+    ): FragmentAdapterEditableImageBinding {
+        return FragmentAdapterEditableImageBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

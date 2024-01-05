@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.AdapterView
-import com.pengxh.kt.lib.databinding.FragmentReadonlyImageAdapterBinding
+import com.pengxh.kt.lib.databinding.FragmentAdapterReadonlyImageBinding
 import com.pengxh.kt.lite.adapter.ReadOnlyImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
-class ReadOnlyImageAdapterFragment : KotlinBaseFragment<FragmentReadonlyImageAdapterBinding>() {
+class ReadOnlyImageAdapterFragment : KotlinBaseFragment<FragmentAdapterReadonlyImageBinding>() {
 
     private val images = mutableListOf(
         "https://img.zcool.cn/community/010d5c5b9d17c9a8012099c8781b7e.jpg@1280w_1l_2o_100sh.jpg",
@@ -24,8 +24,8 @@ class ReadOnlyImageAdapterFragment : KotlinBaseFragment<FragmentReadonlyImageAda
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentReadonlyImageAdapterBinding {
-        return FragmentReadonlyImageAdapterBinding.inflate(inflater, container, false)
+    ): FragmentAdapterReadonlyImageBinding {
+        return FragmentAdapterReadonlyImageBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

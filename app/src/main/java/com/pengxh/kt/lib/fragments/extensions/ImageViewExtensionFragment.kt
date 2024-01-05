@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.pengxh.kt.lib.databinding.FragmentImageViewExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionImageViewBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.switchBackground
 import com.pengxh.kt.lite.extensions.toBlurBitmap
@@ -13,12 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ImageViewExtensionFragment : KotlinBaseFragment<FragmentImageViewExtensionBinding>() {
+class ImageViewExtensionFragment : KotlinBaseFragment<FragmentExtensionImageViewBinding>() {
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentImageViewExtensionBinding {
-        return FragmentImageViewExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionImageViewBinding {
+        return FragmentExtensionImageViewBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

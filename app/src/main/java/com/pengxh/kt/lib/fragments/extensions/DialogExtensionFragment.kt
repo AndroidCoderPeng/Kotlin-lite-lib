@@ -5,7 +5,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RadioButton
-import com.pengxh.kt.lib.databinding.FragmentDialogExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionDialogBinding
 import com.pengxh.kt.lib.example.DialogExample
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
@@ -18,7 +18,7 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
  *
  * 3、设置dialog出现的位置，默认居中
  * */
-class DialogExtensionFragment : KotlinBaseFragment<FragmentDialogExtensionBinding>() {
+class DialogExtensionFragment : KotlinBaseFragment<FragmentExtensionDialogBinding>() {
 
     private val kTag = "DialogExtensionFragment"
 
@@ -28,8 +28,8 @@ class DialogExtensionFragment : KotlinBaseFragment<FragmentDialogExtensionBindin
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentDialogExtensionBinding {
-        return FragmentDialogExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionDialogBinding {
+        return FragmentExtensionDialogBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

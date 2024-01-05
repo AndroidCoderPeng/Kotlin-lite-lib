@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.pengxh.kt.lib.databinding.FragmentBitmapExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionBitmapBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.createRoundDrawable
 import com.pengxh.kt.lite.extensions.rotateImage
@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class BitmapExtensionFragment : KotlinBaseFragment<FragmentBitmapExtensionBinding>() {
+class BitmapExtensionFragment : KotlinBaseFragment<FragmentExtensionBitmapBinding>() {
 
     private val imageUrl =
         "https://p3-search.byteimg.com/obj/labis/454148a01600dc78269a68b08d440ede"
@@ -33,8 +33,8 @@ class BitmapExtensionFragment : KotlinBaseFragment<FragmentBitmapExtensionBindin
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentBitmapExtensionBinding {
-        return FragmentBitmapExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionBitmapBinding {
+        return FragmentExtensionBitmapBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

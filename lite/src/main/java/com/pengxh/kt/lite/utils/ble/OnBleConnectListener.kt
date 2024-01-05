@@ -1,7 +1,6 @@
 package com.pengxh.kt.lite.utils.ble
 
 import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
 
 interface OnBleConnectListener {
     fun onConnecting(bluetoothGatt: BluetoothGatt?) //正在连接
@@ -18,9 +17,7 @@ interface OnBleConnectListener {
 
     fun onServiceDiscoveryFailed(bluetoothGatt: BluetoothGatt?, msg: String?) //发现服务失败
 
-    fun onReceiveMessage(
-        bluetoothGatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?
-    ) //收到消息
+    fun onReceiveMessage(bluetoothGatt: BluetoothGatt?, value: ByteArray) //收到消息
 
     fun onReceiveError(errorMsg: String?) //接收数据出错
 

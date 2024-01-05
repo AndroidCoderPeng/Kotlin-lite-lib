@@ -4,16 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.pengxh.kt.lib.databinding.FragmentWindowExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionWindowBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.setScreenBrightness
 
-class WindowExtensionFragment : KotlinBaseFragment<FragmentWindowExtensionBinding>() {
+class WindowExtensionFragment : KotlinBaseFragment<FragmentExtensionWindowBinding>() {
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentWindowExtensionBinding {
-        return FragmentWindowExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionWindowBinding {
+        return FragmentExtensionWindowBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

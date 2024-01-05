@@ -1,24 +1,25 @@
 package com.pengxh.kt.lib.fragments.extensions
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.pengxh.kt.lib.databinding.FragmentViewModelExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionViewModelBinding
 import com.pengxh.kt.lib.example.ViewModelExample
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.utils.LoadingDialogHub
 import com.pengxh.kt.lite.vm.LoadState
 
-class ViewModelExtensionFragment : KotlinBaseFragment<FragmentViewModelExtensionBinding>() {
+class ViewModelExtensionFragment : KotlinBaseFragment<FragmentExtensionViewModelBinding>() {
 
+    private val kTag = "ViewModelExtensionFragment"
     private lateinit var viewModelExample: ViewModelExample
 
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentViewModelExtensionBinding {
-        return FragmentViewModelExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionViewModelBinding {
+        return FragmentExtensionViewModelBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {
@@ -38,11 +39,9 @@ class ViewModelExtensionFragment : KotlinBaseFragment<FragmentViewModelExtension
     override fun observeRequestState() {
         viewModelExample.loadState.observe(this) {
             when (it) {
-                LoadState.Loading -> {
-                    LoadingDialogHub.show(requireActivity(), "加载数据中，请稍后...")
-                }
-
-                else -> LoadingDialogHub.dismiss()
+                LoadState.Loading -> Log.d(kTag, "加载数据中，请稍后...")
+                LoadState.Success -> Log.d(kTag, "加载成功")
+                LoadState.Fail -> Log.d(kTag, "加载失败，请重试")
             }
         }
     }

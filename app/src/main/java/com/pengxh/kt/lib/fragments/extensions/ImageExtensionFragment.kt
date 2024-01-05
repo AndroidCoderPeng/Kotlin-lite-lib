@@ -23,7 +23,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.common.util.concurrent.ListenableFuture
-import com.pengxh.kt.lib.databinding.FragmentImageExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionImageBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.createImageFileDir
 import com.pengxh.kt.lite.extensions.toBitmap
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 
-class ImageExtensionFragment : KotlinBaseFragment<FragmentImageExtensionBinding>() {
+class ImageExtensionFragment : KotlinBaseFragment<FragmentExtensionImageBinding>() {
 
     companion object {
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
@@ -66,8 +66,8 @@ class ImageExtensionFragment : KotlinBaseFragment<FragmentImageExtensionBinding>
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentImageExtensionBinding {
-        return FragmentImageExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionImageBinding {
+        return FragmentExtensionImageBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

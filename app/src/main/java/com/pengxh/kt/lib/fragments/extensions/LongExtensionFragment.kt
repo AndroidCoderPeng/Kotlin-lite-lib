@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentLongExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionLongBinding
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -21,13 +21,13 @@ import com.pengxh.kt.lite.extensions.timestampToLastWeekDate
 import com.pengxh.kt.lite.extensions.timestampToLastWeekTime
 import com.pengxh.kt.lite.extensions.timestampToTime
 
-class LongExtensionFragment : KotlinBaseFragment<FragmentLongExtensionBinding>() {
+class LongExtensionFragment : KotlinBaseFragment<FragmentExtensionLongBinding>() {
 
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentLongExtensionBinding {
-        return FragmentLongExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionLongBinding {
+        return FragmentExtensionLongBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

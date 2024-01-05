@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentMultipleChoiceAdapterBinding
+import com.pengxh.kt.lib.databinding.FragmentAdapterMultipleChoiceBinding
 import com.pengxh.kt.lite.adapter.MultipleChoiceAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
 import com.pengxh.kt.lite.extensions.toJson
 
-class MultipleChoiceAdapterFragment : KotlinBaseFragment<FragmentMultipleChoiceAdapterBinding>() {
+class MultipleChoiceAdapterFragment : KotlinBaseFragment<FragmentAdapterMultipleChoiceBinding>() {
 
     private val kTag = "MultipleChoiceAdapterFragment"
     private val items: MutableList<String> = ArrayList()
@@ -27,8 +27,8 @@ class MultipleChoiceAdapterFragment : KotlinBaseFragment<FragmentMultipleChoiceA
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentMultipleChoiceAdapterBinding {
-        return FragmentMultipleChoiceAdapterBinding.inflate(inflater, container, false)
+    ): FragmentAdapterMultipleChoiceBinding {
+        return FragmentAdapterMultipleChoiceBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

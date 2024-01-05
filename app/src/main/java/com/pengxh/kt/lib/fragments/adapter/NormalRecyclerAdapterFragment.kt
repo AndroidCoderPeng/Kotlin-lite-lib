@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentNormalRecyclerAdapterBinding
+import com.pengxh.kt.lib.databinding.FragmentAdapterNormalRecyclerBinding
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
 
-class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentNormalRecyclerAdapterBinding>() {
+class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRecyclerBinding>() {
 
     private val kTag = "NormalRecyclerAdapterFragment"
     private val items: MutableList<String> = ArrayList()
@@ -26,8 +26,8 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentNormalRecyclerA
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentNormalRecyclerAdapterBinding {
-        return FragmentNormalRecyclerAdapterBinding.inflate(inflater, container, false)
+    ): FragmentAdapterNormalRecyclerBinding {
+        return FragmentAdapterNormalRecyclerBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

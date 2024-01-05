@@ -1,5 +1,6 @@
 package com.pengxh.kt.lite.utils.ble
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -12,13 +13,16 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
-import android.os.Looper
-import android.text.TextUtils
+import android.os.Message
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.pengxh.kt.lite.extensions.getSystemService
+import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.utils.Constant
+import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import java.util.UUID
 
 
@@ -32,10 +36,10 @@ import java.util.UUID
  * 8、数据通讯（发送数据、接收数据）
  * 9、断开连接
  */
-@SuppressLint("MissingPermission", "StaticFieldLeak")
-object BLEManager {
-    private const val kTag = "BLEManager"
-    private val bleHandler = Handler(Looper.getMainLooper())
+@SuppressLint("all")
+class BLEManager : Handler.Callback {
+    private val kTag = "BLEManager"
+    private lateinit var weakReferenceHandler: WeakReferenceHandler
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var discoveredListener: OnDeviceDiscoveredListener
     private lateinit var serviceUuid: UUID
@@ -48,11 +52,22 @@ object BLEManager {
     private lateinit var context: Context
     private var isConnecting = false
 
+    override fun handleMessage(msg: Message): Boolean {
+        return true
+    }
+
+    private fun checkSelfPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context, Manifest.permission.BLUETOOTH
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
     /**
      * 初始化BLE
      */
     fun initBLE(context: Context): Boolean {
         this.context = context
+        weakReferenceHandler = WeakReferenceHandler(this)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             val bluetoothManager = context.getSystemService<BluetoothManager>()!!
             bluetoothAdapter = bluetoothManager.adapter
@@ -65,7 +80,7 @@ object BLEManager {
     /**
      * 蓝牙是否可用
      */
-    fun isBluetoothEnable(): Boolean {
+    private fun isBluetoothEnabled(): Boolean {
         return bluetoothAdapter.isEnabled
     }
 
@@ -75,15 +90,14 @@ object BLEManager {
      * @param isDirectly true 直接打开蓝牙  false 提示用户打开
      */
     fun openBluetooth(isDirectly: Boolean) {
-        if (!isBluetoothEnable()) {
+        if (!isBluetoothEnabled()) {
             if (isDirectly) {
-                Log.d(kTag, "直接打开手机蓝牙")
                 bluetoothAdapter.enable()
             } else {
                 context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
             }
         } else {
-            Log.d(kTag, "手机蓝牙状态已开")
+            "手机蓝牙已打开".show(context)
         }
     }
 
@@ -91,30 +105,28 @@ object BLEManager {
      * 本地蓝牙是否处于正在扫描状态
      * @return true false
      */
-    fun isDiscovery(): Boolean {
+    fun isDiscovering(): Boolean {
         return bluetoothAdapter.isDiscovering
     }
 
     /**
      * 开始扫描设备
      */
-    fun startDiscoverDevice(listener: OnDeviceDiscoveredListener, scanTime: Long) {
+    fun startScanDevice(listener: OnDeviceDiscoveredListener, scanTime: Long) {
         this.discoveredListener = listener
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            bluetoothAdapter.bluetoothLeScanner.startScan(scanCallback)
-        }
+        bluetoothAdapter.bluetoothLeScanner.startScan(scanCallback)
         //设定最长扫描时间
-        bleHandler.postDelayed(stopDiscoverRunnable, scanTime)
+        weakReferenceHandler.postDelayed(stopScanRunnable, scanTime)
     }
 
     /**
      * 停止扫描设备
      */
     fun stopDiscoverDevice() {
-        bleHandler.removeCallbacks(stopDiscoverRunnable)
+        weakReferenceHandler.removeCallbacks(stopScanRunnable)
     }
 
-    private val stopDiscoverRunnable = Runnable {
+    private val stopScanRunnable = Runnable {
         discoveredListener.onDiscoveryTimeout()
         //scanTime之后还没有扫描到设备，就停止扫描。
         bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
@@ -125,12 +137,10 @@ object BLEManager {
      */
     private val scanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            if (result == null) {
-                return
-            }
-            val device = result.device
-            if (device.name != null || !TextUtils.isEmpty(device.name)) {
-                discoveredListener.onDeviceFound(BlueToothBean(device, result.rssi))
+            result?.apply {
+                if (device.name.isNullOrBlank()) {
+                    discoveredListener.onDeviceFound(BluetoothDevice(device, result.rssi))
+                }
             }
         }
 
@@ -144,19 +154,21 @@ object BLEManager {
     }
 
     fun connectBleDevice(
-        context: Context, bluetoothDevice: BluetoothDevice,
-        outTime: Long, serviceUUID: String,
-        readUUID: String, writeUUID: String,
-        onBleConnectListener: OnBleConnectListener
+        bluetoothDevice: BluetoothDevice,
+        serviceUuid: String,
+        readUuid: String,
+        writeUuid: String,
+        outTime: Long,
+        connectListener: OnBleConnectListener
     ) {
         if (isConnecting) {
             Log.d(kTag, "connectBleDevice() ===> isConnecting = true")
             return
         }
-        this.serviceUuid = UUID.fromString(serviceUUID)
-        this.readUuid = UUID.fromString(readUUID)
-        this.writeUuid = UUID.fromString(writeUUID)
-        this.bleConnectListener = onBleConnectListener
+        this.serviceUuid = UUID.fromString(serviceUuid)
+        this.readUuid = UUID.fromString(readUuid)
+        this.writeUuid = UUID.fromString(writeUuid)
+        this.bleConnectListener = connectListener
         Log.d(kTag, "开始准备连接：" + bluetoothDevice.name + "-->" + bluetoothDevice.address)
         try {
             bluetoothGatt = bluetoothDevice.connectGatt(context, false, bluetoothGattCallback)
@@ -164,8 +176,8 @@ object BLEManager {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        //设置连接超时时间10s
-        bleHandler.postDelayed(connectOutTimeRunnable, outTime)
+        //设置连接超时时间
+        weakReferenceHandler.postDelayed(connectTimeoutRunnable, outTime)
     }
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
@@ -175,7 +187,7 @@ object BLEManager {
             Log.d(kTag, "连接的设备：" + bluetoothDevice?.name + "  " + bluetoothDevice?.address)
             isConnecting = true
             //移除连接超时
-            bleHandler.removeCallbacks(connectOutTimeRunnable)
+            weakReferenceHandler.removeCallbacks(connectTimeoutRunnable)
             when (newState) {
                 BluetoothGatt.STATE_CONNECTING -> {
                     Log.d(kTag, "正在连接...")
@@ -187,9 +199,8 @@ object BLEManager {
                     //连接成功去发现服务
                     gatt?.discoverServices()
                     //设置发现服务超时时间
-                    bleHandler.postDelayed(
-                        serviceDiscoverOutTimeRunnable,
-                        Constant.MAX_CONNECT_TIME
+                    weakReferenceHandler.postDelayed(
+                        serviceDiscoverTimeoutRunnable, Constant.MAX_CONNECT_TIME
                     )
                     bleConnectListener.onConnectSuccess(gatt, status)
                 }
@@ -200,25 +211,20 @@ object BLEManager {
                 }
 
                 BluetoothGatt.STATE_DISCONNECTED -> {
-                    Log.d(kTag, "断开连接status: $status")
+                    Log.d(kTag, "断开连接，status = $status")
                     gatt?.close()
                     isConnecting = false
                     when (status) {
                         133 -> {//133连接异常,无法连接
                             gatt?.close()
-                            bleConnectListener.onConnectFailure(
-                                gatt, "连接异常！", status
-                            )
-                            Log.d(
-                                kTag,
-                                "连接失败status：" + status + "  " + bluetoothDevice?.address
-                            )
+                            bleConnectListener.onConnectFailure(gatt, "连接异常！", status)
+                            Log.d(kTag, "${bluetoothDevice?.address}连接失败")
                         }
 
                         62 -> {//62没有发现服务 异常断开
                             gatt?.close()
                             bleConnectListener.onConnectFailure(
-                                gatt, "连接成功服务未发现断开！", status
+                                gatt, "没有发现服务，异常断开！", status
                             )
                         }
 
@@ -237,29 +243,31 @@ object BLEManager {
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
             isConnecting = false
-            //移除发现服务超时
-            bleHandler.removeCallbacks(serviceDiscoverOutTimeRunnable)
+            //移除发现超时服务
+            weakReferenceHandler.removeCallbacks(serviceDiscoverTimeoutRunnable)
             //配置服务信息
-            if (setupService(gatt!!, serviceUuid, readUuid, writeUuid)) {
-                //成功发现服务回调
-                bleConnectListener.onServiceDiscoverySucceed(gatt, status)
-            } else {
-                bleConnectListener.onServiceDiscoveryFailed(gatt, "获取服务特征异常")
+            gatt?.apply {
+                if (setupService(this, serviceUuid, readUuid, writeUuid)) {
+                    //成功发现服务回调
+                    bleConnectListener.onServiceDiscoverySucceed(this, status)
+                } else {
+                    bleConnectListener.onServiceDiscoveryFailed(this, "获取服务特征异常")
+                }
             }
         }
 
         //读取蓝牙设备发出来的数据回调
         override fun onCharacteristicRead(
-            gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int
+            gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic,
+            value: ByteArray, status: Int
         ) {
-            super.onCharacteristicRead(gatt, characteristic, status)
-            Log.d(kTag, "onCharacteristicRead: $status")
+            super.onCharacteristicRead(gatt, characteristic, value, status)
+            Log.d(kTag, "onCharacteristicRead => $status")
         }
 
         //向蓝牙设备写入数据结果回调
         override fun onCharacteristicWrite(
-            gatt: BluetoothGatt?,
-            characteristic: BluetoothGattCharacteristic?, status: Int
+            gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int
         ) {
             super.onCharacteristicWrite(gatt, characteristic, status)
             if (characteristic?.value == null) {
@@ -279,26 +287,25 @@ object BLEManager {
                 }
 
                 BluetoothGatt.GATT_WRITE_NOT_PERMITTED -> {
-                    Log.d(kTag, "没有权限")
+                    "没有写入设备权限".show(context)
                 }
             }
         }
 
         override fun onCharacteristicChanged(
-            gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?
+            gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray
         ) {
-            super.onCharacteristicChanged(gatt, characteristic)
+            super.onCharacteristicChanged(gatt, characteristic, value)
             //接收数据
-            Log.d(kTag, "收到数据:" + characteristic?.value!!.toList())
-            bleConnectListener.onReceiveMessage(gatt, characteristic)  //接收数据回调
+            Log.d(kTag, "收到数据:" + value.toList())
+            bleConnectListener.onReceiveMessage(gatt, value)  //接收数据回调
         }
 
         override fun onDescriptorRead(
-            gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int
+            gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int, value: ByteArray
         ) {
-            super.onDescriptorRead(gatt, descriptor, status)
-            //开启监听成功，可以从设备读数据了
-            Log.d(kTag, "onDescriptorRead开启监听成功")
+            super.onDescriptorRead(gatt, descriptor, status, value)
+            Log.d(kTag, "onDescriptorRead => 开启监听成功，可以读取设备")
         }
 
         override fun onDescriptorWrite(
@@ -306,7 +313,7 @@ object BLEManager {
         ) {
             super.onDescriptorWrite(gatt, descriptor, status)
             //开启监听成功，可以向设备写入命令了
-            Log.d(kTag, "onDescriptorWrite开启监听成功")
+            Log.d(kTag, "onDescriptorWrite => 开启监听成功，可以写入设备")
         }
 
         //蓝牙信号强度
@@ -314,31 +321,29 @@ object BLEManager {
             super.onReadRemoteRssi(gatt, rssi, status)
             when (status) {
                 BluetoothGatt.GATT_SUCCESS -> {
-                    Log.w(kTag, "读取RSSI值成功，RSSI值: $rssi ,status: $status")
+                    Log.d(kTag, "onReadRemoteRssi => RSSI值: $rssi")
                     bleConnectListener.onReadRssi(gatt, rssi, status)  //成功读取连接的信号强度回调
                 }
 
-                BluetoothGatt.GATT_FAILURE -> Log.w(kTag, "读取RSSI值失败，status: $status")
+                BluetoothGatt.GATT_FAILURE -> {
+                    Log.d(kTag, "读取RSSI值失败，status: $status")
+                }
             }
         }
     }
 
-    private val connectOutTimeRunnable = Runnable {
+    private val connectTimeoutRunnable = Runnable {
         isConnecting = false
         bluetoothGatt.disconnect()
         //连接超时当作连接失败回调
-        bleConnectListener.onConnectFailure(
-            bluetoothGatt, "连接超时", -1
-        )  //连接失败回调
+        bleConnectListener.onConnectFailure(bluetoothGatt, "连接超时", -1)
     }
 
-    private val serviceDiscoverOutTimeRunnable = Runnable {
+    private val serviceDiscoverTimeoutRunnable = Runnable {
         isConnecting = false
         bluetoothGatt.disconnect()
         //发现服务超时当作连接失败回调
-        bleConnectListener.onConnectFailure(
-            bluetoothGatt, "发现服务超时！", -1
-        )  //连接失败回调
+        bleConnectListener.onConnectFailure(bluetoothGatt, "发现服务超时", -1)
     }
 
     private fun setupService(
@@ -357,14 +362,13 @@ object BLEManager {
                         writeCharacteristic = characteristic
                     }
                     if (charaProp and BluetoothGattCharacteristic.PROPERTY_NOTIFY > 0) {
-                        val notifyServiceUUID = service.uuid
-                        val notifyCharacteristicUUID = characteristic.uuid
-                        Log.d(
-                            kTag,
-                            "notifyCharacteristicUUID = $notifyCharacteristicUUID, notifyServiceUUID = $notifyServiceUUID"
-                        )
-                        notifyCharacteristic = bluetoothGatt.getService(notifyServiceUUID)
-                            .getCharacteristic(notifyCharacteristicUUID)
+                        val notifyServiceUuid = service.uuid
+                        val notifyCharacteristicUuid = characteristic.uuid
+                        Log.d(kTag, "notifyServiceUuid => $notifyServiceUuid")
+                        Log.d(kTag, "notifyCharacteristicUuid => $notifyCharacteristicUuid")
+                        notifyCharacteristic = bluetoothGatt
+                            .getService(notifyServiceUuid)
+                            .getCharacteristic(notifyCharacteristicUuid)
                     }
                 }
             }
@@ -372,19 +376,26 @@ object BLEManager {
         //打开读通知，打开的是notifyCharacteristic！！！，不然死活不走onCharacteristicChanged回调
         bluetoothGatt.setCharacteristicNotification(notifyCharacteristic, true)
         //一定要重新设置
-        for (descriptor in notifyCharacteristic!!.descriptors) {
-            descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-            bluetoothGatt.writeDescriptor(descriptor)
+        notifyCharacteristic?.descriptors?.forEach {
+            it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+            bluetoothGatt.writeDescriptor(it)
         }
         //延迟2s，保证所有通知都能及时打开
-        bleHandler.postDelayed({ }, 2000)
+        weakReferenceHandler.postDelayed({ }, 2000)
         return true
     }
 
     fun sendCommand(cmd: ByteArray) {
-        val value = writeCharacteristic.setValue(cmd)
-        Log.d(kTag, "写特征设置值结果：$value")
-        bluetoothGatt.writeCharacteristic(writeCharacteristic)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val result = bluetoothGatt.writeCharacteristic(
+                writeCharacteristic, cmd, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+            )
+            Log.d(kTag, "写特征设置值结果 => $result")
+        } else {
+            val value = writeCharacteristic.setValue(cmd)
+            bluetoothGatt.writeCharacteristic(writeCharacteristic)
+            Log.d(kTag, "写特征设置值结果 => $value")
+        }
     }
 
     fun disConnectDevice() {

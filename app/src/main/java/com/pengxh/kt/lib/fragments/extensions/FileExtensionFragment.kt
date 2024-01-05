@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pengxh.kt.lib.databinding.FragmentFileExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionFileBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.calculateSize
 import com.pengxh.kt.lite.extensions.deleteFile
@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class FileExtensionFragment : KotlinBaseFragment<FragmentFileExtensionBinding>() {
+class FileExtensionFragment : KotlinBaseFragment<FragmentExtensionFileBinding>() {
 
     private lateinit var documentDir: File
     private lateinit var imageFilePath: String
@@ -29,8 +29,8 @@ class FileExtensionFragment : KotlinBaseFragment<FragmentFileExtensionBinding>()
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentFileExtensionBinding {
-        return FragmentFileExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionFileBinding {
+        return FragmentExtensionFileBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

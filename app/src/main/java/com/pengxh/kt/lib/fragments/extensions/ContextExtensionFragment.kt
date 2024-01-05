@@ -10,7 +10,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentContextExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionContextBinding
 import com.pengxh.kt.lib.example.ActivityExtensionExample
 import com.pengxh.kt.lib.view.BigImageActivity
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -33,7 +33,7 @@ import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
 import java.util.Locale
 
-class ContextExtensionFragment : KotlinBaseFragment<FragmentContextExtensionBinding>() {
+class ContextExtensionFragment : KotlinBaseFragment<FragmentExtensionContextBinding>() {
 
     private val kTag = "ContextExtensionFragment"
     private val imageArray = arrayListOf(
@@ -46,8 +46,8 @@ class ContextExtensionFragment : KotlinBaseFragment<FragmentContextExtensionBind
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentContextExtensionBinding {
-        return FragmentContextExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionContextBinding {
+        return FragmentExtensionContextBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

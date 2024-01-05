@@ -3,7 +3,7 @@ package com.pengxh.kt.lib.fragments.extensions
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pengxh.kt.lib.databinding.FragmentStringExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionStringBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.breakLine
 import com.pengxh.kt.lite.extensions.createLogFile
@@ -23,7 +23,7 @@ import com.pengxh.kt.lite.extensions.writeToFile
 import java.io.File
 import java.util.Calendar
 
-class StringExtensionFragment : KotlinBaseFragment<FragmentStringExtensionBinding>() {
+class StringExtensionFragment : KotlinBaseFragment<FragmentExtensionStringBinding>() {
 
     private val kTag = "StringExtensionFragment"
     private val calendar by lazy { Calendar.getInstance() }
@@ -32,8 +32,8 @@ class StringExtensionFragment : KotlinBaseFragment<FragmentStringExtensionBindin
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentStringExtensionBinding {
-        return FragmentStringExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionStringBinding {
+        return FragmentExtensionStringBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

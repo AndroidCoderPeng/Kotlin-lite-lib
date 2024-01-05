@@ -10,7 +10,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.pengxh.kt.lib.databinding.FragmentUriExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionUriBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.realFilePath
 import kotlinx.coroutines.Dispatchers
@@ -18,12 +18,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class UriExtensionFragment : KotlinBaseFragment<FragmentUriExtensionBinding>() {
+class UriExtensionFragment : KotlinBaseFragment<FragmentExtensionUriBinding>() {
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentUriExtensionBinding {
-        return FragmentUriExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionUriBinding {
+        return FragmentExtensionUriBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {

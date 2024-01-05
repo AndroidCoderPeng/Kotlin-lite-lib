@@ -3,19 +3,19 @@ package com.pengxh.kt.lib.fragments.extensions
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pengxh.kt.lib.databinding.FragmentFloatExtensionBinding
+import com.pengxh.kt.lib.databinding.FragmentExtensionFloatBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.getScreenDensity
 import com.pengxh.kt.lite.extensions.px2dp
 import com.pengxh.kt.lite.extensions.sp2px
 
-class FloatExtensionFragment : KotlinBaseFragment<FragmentFloatExtensionBinding>() {
+class FloatExtensionFragment : KotlinBaseFragment<FragmentExtensionFloatBinding>() {
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentFloatExtensionBinding {
-        return FragmentFloatExtensionBinding.inflate(inflater, container, false)
+    ): FragmentExtensionFloatBinding {
+        return FragmentExtensionFloatBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {
