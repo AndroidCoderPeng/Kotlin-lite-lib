@@ -22,7 +22,7 @@ fun Uri.realFilePath(context: Context): String {
                 val displayName = cursor.getString(columnIndex)
                 val inputStream = context.contentResolver.openInputStream(this)
                 if (inputStream != null) {
-                    //Android 10需要转移到沙盒
+                    //Android 10+需要转移到沙盒
                     val cache = File(context.cacheDir.absolutePath, displayName)
                     val fos = FileOutputStream(cache)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

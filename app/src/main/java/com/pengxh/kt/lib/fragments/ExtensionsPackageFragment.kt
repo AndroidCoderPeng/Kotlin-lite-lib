@@ -23,6 +23,7 @@ import com.pengxh.kt.lib.fragments.extensions.IntExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.LongExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.StringExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.TextSwitcherExtensionFragment
+import com.pengxh.kt.lib.fragments.extensions.UriExtensionFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBinding>() {
@@ -44,7 +45,8 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         "Int",
         "Long",
         "String",
-        "TextSwitcher"
+        "TextSwitcher",
+        "Uri"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
@@ -65,6 +67,7 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         fragmentPages.add(LongExtensionFragment())
         fragmentPages.add(StringExtensionFragment())
         fragmentPages.add(TextSwitcherExtensionFragment())
+        fragmentPages.add(UriExtensionFragment())
     }
 
     override fun initViewBinding(
