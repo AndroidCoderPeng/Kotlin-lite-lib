@@ -1,6 +1,5 @@
 package com.pengxh.kt.lite.utils.ble
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -13,12 +12,9 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import androidx.core.content.ContextCompat
 import com.pengxh.kt.lite.extensions.getSystemService
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.utils.Constant
@@ -37,10 +33,10 @@ import java.util.UUID
  * 9、断开连接
  */
 @SuppressLint("all")
-class BLEManager : Handler.Callback {
+class BLEManager(private val context: Context) : Handler.Callback {
     private val kTag = "BLEManager"
-    private lateinit var weakReferenceHandler: WeakReferenceHandler
-    private lateinit var bluetoothAdapter: BluetoothAdapter
+    private var weakReferenceHandler = WeakReferenceHandler(this)
+    private var bluetoothAdapter: BluetoothAdapter
     private lateinit var discoveredListener: OnDeviceDiscoveredListener
     private lateinit var serviceUuid: UUID
     private lateinit var readUuid: UUID
@@ -49,39 +45,15 @@ class BLEManager : Handler.Callback {
     private lateinit var bluetoothGatt: BluetoothGatt
     private lateinit var readCharacteristic: BluetoothGattCharacteristic
     private lateinit var writeCharacteristic: BluetoothGattCharacteristic
-    private lateinit var context: Context
     private var isConnecting = false
 
     override fun handleMessage(msg: Message): Boolean {
         return true
     }
 
-    private fun checkSelfPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            context, Manifest.permission.BLUETOOTH
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    /**
-     * 初始化BLE
-     */
-    fun initBLE(context: Context): Boolean {
-        this.context = context
-        weakReferenceHandler = WeakReferenceHandler(this)
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            val bluetoothManager = context.getSystemService<BluetoothManager>()!!
-            bluetoothAdapter = bluetoothManager.adapter
-            true
-        } else {
-            false
-        }
-    }
-
-    /**
-     * 蓝牙是否可用
-     */
-    private fun isBluetoothEnabled(): Boolean {
-        return bluetoothAdapter.isEnabled
+    init {
+        val bluetoothManager = context.getSystemService<BluetoothManager>()!!
+        bluetoothAdapter = bluetoothManager.adapter
     }
 
     /**
@@ -90,15 +62,20 @@ class BLEManager : Handler.Callback {
      * @param isDirectly true 直接打开蓝牙  false 提示用户打开
      */
     fun openBluetooth(isDirectly: Boolean) {
-        if (!isBluetoothEnabled()) {
+        if (!bluetoothAdapter.isEnabled) {
             if (isDirectly) {
                 bluetoothAdapter.enable()
             } else {
                 context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
             }
-        } else {
-            "手机蓝牙已打开".show(context)
         }
+    }
+
+    /**
+     * 蓝牙是否已打开
+     */
+    fun isBluetoothEnabled(): Boolean {
+        return bluetoothAdapter.isEnabled
     }
 
     /**
@@ -138,7 +115,7 @@ class BLEManager : Handler.Callback {
     private val scanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             result?.apply {
-                if (device.name.isNullOrBlank()) {
+                if (!device.name.isNullOrBlank()) {
                     discoveredListener.onDeviceFound(BluetoothDevice(device, result.rssi))
                 }
             }
@@ -386,16 +363,10 @@ class BLEManager : Handler.Callback {
     }
 
     fun sendCommand(cmd: ByteArray) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val result = bluetoothGatt.writeCharacteristic(
-                writeCharacteristic, cmd, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-            )
-            Log.d(kTag, "写特征设置值结果 => $result")
-        } else {
-            val value = writeCharacteristic.setValue(cmd)
-            bluetoothGatt.writeCharacteristic(writeCharacteristic)
-            Log.d(kTag, "写特征设置值结果 => $value")
-        }
+        val result = bluetoothGatt.writeCharacteristic(
+            writeCharacteristic, cmd, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+        )
+        Log.d(kTag, "写特征设置值结果 => $result")
     }
 
     fun disConnectDevice() {

@@ -22,6 +22,7 @@ class WelcomeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks
             Manifest.permission.CAMERA,
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.BLUETOOTH_CONNECT
         )
     } else {
@@ -35,6 +36,7 @@ class WelcomeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks
                 Manifest.permission.CAMERA,
                 Manifest.permission.BLUETOOTH,
                 Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_ADMIN,
                 Manifest.permission.BLUETOOTH_CONNECT
             )
         } else {
@@ -46,6 +48,7 @@ class WelcomeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks
                 Manifest.permission.CAMERA,
                 Manifest.permission.BLUETOOTH,
                 Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_ADMIN,
                 Manifest.permission.BLUETOOTH_CONNECT
             )
         }
