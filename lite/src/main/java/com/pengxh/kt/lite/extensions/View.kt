@@ -14,7 +14,7 @@ fun View.toBitmap(): Bitmap? {
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
         this.layout(0, 0, this.measuredWidth, this.measuredHeight)
-        this.buildDrawingCache()
+        this.buildDrawingCache(false)
         bitmap = this.drawingCache
     } catch (e: Exception) {
         e.printStackTrace()
