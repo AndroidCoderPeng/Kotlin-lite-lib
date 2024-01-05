@@ -12,7 +12,11 @@ fun Dialog.initDialogLayoutParams(ratio: Float) {
     window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     window.decorView.setBackgroundColor(Color.TRANSPARENT)
     val params = window.attributes
-    params.width = ((this.context.getScreenWidth() * ratio).toInt())
+    var r = ratio
+    if (r >= 1) {
+        r = 1f
+    }
+    params.width = ((this.context.getScreenWidth() * r).toInt())
     params.height = WindowManager.LayoutParams.WRAP_CONTENT
     window.attributes = params
 }
@@ -25,7 +29,11 @@ fun Dialog.resetParams(gravity: Int, @StyleRes resId: Int, ratio: Float) {
     //设置Dialog出现的动画
     window.setWindowAnimations(resId)
     val params = window.attributes
-    params.width = ((this.context.getScreenWidth() * ratio).toInt())
+    var r = ratio
+    if (r >= 1) {
+        r = 1f
+    }
+    params.width = ((this.context.getScreenWidth() * r).toInt())
     params.height = WindowManager.LayoutParams.WRAP_CONTENT
     window.attributes = params
 }
