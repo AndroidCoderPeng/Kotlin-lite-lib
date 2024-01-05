@@ -27,6 +27,7 @@ import com.pengxh.kt.lib.fragments.extensions.UriExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.ViewBindingExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.ViewExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.ViewModelExtensionFragment
+import com.pengxh.kt.lib.fragments.extensions.WindowExtensionFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBinding>() {
@@ -51,7 +52,9 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         "TextSwitcher",
         "Uri",
         "View",
-        "ViewBinding"
+        "ViewBinding",
+        "ViewModel",
+        "Window"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
@@ -76,6 +79,7 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         fragmentPages.add(ViewExtensionFragment())
         fragmentPages.add(ViewBindingExtensionFragment())
         fragmentPages.add(ViewModelExtensionFragment())
+        fragmentPages.add(WindowExtensionFragment())
     }
 
     override fun initViewBinding(
