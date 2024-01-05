@@ -25,61 +25,49 @@ class SocketClient : LifecycleOwner {
     private val registry = LifecycleRegistry(this)
     private var host = ""
     private var port = 8888
-    private lateinit var listener: ISocketListener
     private var nioEventLoopGroup: NioEventLoopGroup? = null
     private var channel: Channel? = null
     private var reconnectNum = Int.MAX_VALUE
     private var isNeedReconnect = true
-    private var isConnected = false
-    private var reconnectInterval = 15000L
+    private var isConnecting = false
+    private var reconnectInterval = 15 * 1000L
+    private lateinit var listener: ISocketListener
+    var isConnected = false
 
     override fun getLifecycle(): Lifecycle {
         return registry
     }
 
-    /***建造者模式***开始*****************************************************************************/
-
-    fun setHost(host: String): SocketClient {
-        this.host = host
-        return this
-    }
-
-    fun setPort(port: Int): SocketClient {
-        this.port = port
-        return this
-    }
-
-    fun setReconnectNum(reconnectNum: Int): SocketClient {
+    fun setReconnectNum(reconnectNum: Int) {
         this.reconnectNum = reconnectNum
-        return this
     }
 
-    fun setReconnectIntervalTime(reconnectInterval: Long): SocketClient {
+    fun setReconnectInterval(reconnectInterval: Long) {
         this.reconnectInterval = reconnectInterval
-        return this
     }
 
-    fun setSocketListener(socketListener: ISocketListener): SocketClient {
+    fun setSocketListener(socketListener: ISocketListener) {
         this.listener = socketListener
-        return this
     }
 
-    fun connect() {
-        if (isConnected) {
-            disconnect()
+    fun connect(host: String, port: Int) {
+        this.host = host
+        this.port = port
+        if (isConnecting) {
             return
         }
         Log.d(kTag, "connect ===> 开始连接TCP服务器")
         isNeedReconnect = true
         reconnectNum = Int.MAX_VALUE
-        connectServer()
+        synchronized(this@SocketClient) {
+            connectServer()
+        }
     }
-
-    /***建造者模式***结束*****************************************************************************/
 
     private fun connectServer() {
         var channelFuture: ChannelFuture? = null //连接管理对象
         if (!isConnected) {
+            isConnecting = true
             nioEventLoopGroup = NioEventLoopGroup() //设置的连接group
             val bootstrap = Bootstrap()
             bootstrap.group(nioEventLoopGroup) //设置的一系列连接参数操作等
@@ -114,6 +102,7 @@ class SocketClient : LifecycleOwner {
                             } else {
                                 isConnected = false
                             }
+                            isConnecting = false
                         }
                     }).sync()
                 // 等待连接关闭
@@ -137,7 +126,6 @@ class SocketClient : LifecycleOwner {
 
     //断开连接
     fun disconnect() {
-        Log.d(kTag, "disconnect ===> 断开连接")
         nioEventLoopGroup?.shutdownGracefully()
         isNeedReconnect = false
         isConnected = false

@@ -12,7 +12,7 @@ class SocketManager : LifecycleOwner, ISocketListener {
 
     private val kTag = "SocketManager"
     private val registry = LifecycleRegistry(this)
-    private var nettyClient = SocketClient()
+    private val tcpClient by lazy { SocketClient() }
 
     override fun getLifecycle(): Lifecycle {
         return registry
@@ -20,20 +20,14 @@ class SocketManager : LifecycleOwner, ISocketListener {
 
     fun connectServer(hostname: String, port: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
-            SocketClient()
-                .setHost(hostname)
-                .setPort(port)
-                .setReconnectNum(3)
-                .setReconnectIntervalTime(15 * 1000)
-                .setSocketListener(object : ISocketListener {
-                    override fun onMessageResponse(data: ByteArray?) {
-
-                    }
-
-                    override fun onConnectStatusChanged(state: ConnectState) {
-
-                    }
-                }).connect()
+            if (!tcpClient.isConnected) {
+                tcpClient.setReconnectNum(3)
+                tcpClient.setReconnectInterval(10 * 1000)
+                tcpClient.setSocketListener(this@SocketManager)
+                tcpClient.connect(hostname, port)
+            } else {
+                tcpClient.disconnect()
+            }
         }
     }
 
@@ -53,10 +47,10 @@ class SocketManager : LifecycleOwner, ISocketListener {
     }
 
     fun sendData(bytes: ByteArray) {
-        nettyClient.sendData(bytes)
+        tcpClient.sendData(bytes)
     }
 
     fun close() {
-        nettyClient.disconnect()
+        tcpClient.disconnect()
     }
 }
