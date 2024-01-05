@@ -6,17 +6,18 @@ import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.callback.OnDownloadListener
 import net.sourceforge.pinyin4j.PinyinHelper
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
-import okhttp3.*
-import java.io.*
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import java.util.regex.Pattern
 import kotlin.math.abs
 
@@ -189,7 +190,7 @@ fun String.isPhoneNumber(): Boolean {
         false
     } else {
         val regExp =
-            "^1((3[0-9])|(4[5-9])|(5[0-3,5-9])|(6[5,6])|(7[0-8])|(8[0-9])|(9[1,8,9]))[0-9]{8}$"
+            "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}\$"
         val pattern = Pattern.compile(regExp)
         pattern.matcher(this).matches()
     }
@@ -202,29 +203,13 @@ fun String.isEmail(): Boolean {
     return if (this.isBlank()) {
         false
     } else {
-        val regExp =
-            "^[a-z0-9]+([._\\\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"
+        val regExp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$"
         val pattern = Pattern.compile(regExp)
         pattern.matcher(this).matches()
     }
 }
 
-/**
- * 过滤空格，回车
- */
-fun String.filterSpaceOrEnter(): String {
-    if (this.isBlank()) {
-        return this
-    }
-    //先过滤回车换行
-    val p = Pattern.compile("\\s*|\\t|\\r|\\n")
-    val m = p.matcher(this)
-    m.replaceAll("")
-    //再过滤空格
-    return this.trim { it <= ' ' }.replace(" ", "")
-}
-
-fun String.writeToFile(file: File?) {
+fun String.writeToFile(file: File) {
     try {
         val fileWriter = FileWriter(file, true)
         val writer = BufferedWriter(fileWriter)
@@ -235,71 +220,6 @@ fun String.writeToFile(file: File?) {
     } catch (e: IOException) {
         e.printStackTrace()
     }
-}
-
-@Deprecated(
-    "Using Coroutine to optimize code. Use FileDownloadManager instead.",
-    ReplaceWith("FileDownloadManager")
-)
-fun String.downloadFile(downloadDir: String, listener: OnDownloadListener) {
-    val httpClient = OkHttpClient()
-    val request = Request.Builder().get().url(this).build()
-    val newCall = httpClient.newCall(request)
-    /**
-     * 如果已被加入下载队列，则取消之前的，重新下载
-     */
-    if (newCall.isExecuted()) {
-        newCall.cancel()
-    }
-    newCall.enqueue(object : Callback {
-        override fun onFailure(call: Call, e: IOException) {
-            call.cancel()
-            e.printStackTrace()
-        }
-
-        @Throws(IOException::class)
-        override fun onResponse(call: Call, response: Response) {
-            var stream: InputStream? = null
-            val buf = ByteArray(2048)
-            var len: Int
-            var fos: FileOutputStream? = null
-            try {
-                val fileBody = response.body
-                if (fileBody != null) {
-                    stream = fileBody.byteStream()
-                    val total = fileBody.contentLength()
-                    listener.onDownloadStart(total)
-                    val file = File(
-                        downloadDir,
-                        this@downloadFile.substring(this@downloadFile.lastIndexOf("/") + 1)
-                    )
-                    fos = FileOutputStream(file)
-                    var current: Long = 0
-                    while (stream.read(buf).also { len = it } != -1) {
-                        fos.write(buf, 0, len)
-                        current += len.toLong()
-                        listener.onProgressChanged(current)
-                    }
-                    fos.flush()
-                    listener.onDownloadEnd(file)
-                }
-            } catch (e: Exception) {
-                call.cancel()
-                e.printStackTrace()
-            } finally {
-                try {
-                    stream!!.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                try {
-                    fos!!.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
-        }
-    })
 }
 
 fun String.show(context: Context) {
