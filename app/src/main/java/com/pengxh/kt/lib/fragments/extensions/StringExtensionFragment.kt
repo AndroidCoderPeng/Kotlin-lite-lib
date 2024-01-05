@@ -6,19 +6,28 @@ import android.view.ViewGroup
 import com.pengxh.kt.lib.databinding.FragmentStringExtensionBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.breakLine
+import com.pengxh.kt.lite.extensions.createLogFile
 import com.pengxh.kt.lite.extensions.dateToTimestamp
 import com.pengxh.kt.lite.extensions.diffCurrentTime
 import com.pengxh.kt.lite.extensions.formatToYearMonthDay
 import com.pengxh.kt.lite.extensions.getHanYuPinyin
+import com.pengxh.kt.lite.extensions.isChinese
 import com.pengxh.kt.lite.extensions.isEarlierThenCurrent
+import com.pengxh.kt.lite.extensions.isEmail
+import com.pengxh.kt.lite.extensions.isLetterAndDigit
+import com.pengxh.kt.lite.extensions.isNumber
+import com.pengxh.kt.lite.extensions.isPhoneNumber
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
+import com.pengxh.kt.lite.extensions.writeToFile
+import java.io.File
 import java.util.Calendar
 
 class StringExtensionFragment : KotlinBaseFragment<FragmentStringExtensionBinding>() {
 
     private val kTag = "StringExtensionFragment"
     private val calendar by lazy { Calendar.getInstance() }
+    private lateinit var logFile: File
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -40,6 +49,8 @@ class StringExtensionFragment : KotlinBaseFragment<FragmentStringExtensionBindin
         binding.timePickerView.setIs24HourView(true)
 
         binding.currentTimeView.text = System.currentTimeMillis().timestampToCompleteDate()
+
+        logFile = requireContext().createLogFile()
     }
 
     override fun observeRequestState() {
@@ -82,6 +93,62 @@ class StringExtensionFragment : KotlinBaseFragment<FragmentStringExtensionBindin
         binding.deleteHourMinuteSecondsButton.setOnClickListener {
             binding.currentDateView.text =
                 binding.currentTimeView.text.toString().formatToYearMonthDay()
+        }
+
+        binding.judgeNumberButton.setOnClickListener {
+            if (binding.numberInputView.text.isNullOrBlank()) {
+                binding.numberResultView.text = false.toString()
+            } else {
+                binding.numberResultView.text =
+                    binding.numberInputView.text.toString().isNumber().toString()
+            }
+        }
+
+        binding.judgeNumberAndLetterButton.setOnClickListener {
+            if (binding.numberAndLetterInputView.text.isNullOrBlank()) {
+                binding.numberAndLetterResultView.text = false.toString()
+            } else {
+                binding.numberAndLetterResultView.text =
+                    binding.numberAndLetterInputView.text.toString().isLetterAndDigit().toString()
+            }
+        }
+
+        binding.judgeChineseButton.setOnClickListener {
+            if (binding.chineseInputView.text.isNullOrBlank()) {
+                binding.chineseCharacterResultView.text = false.toString()
+            } else {
+                binding.chineseCharacterResultView.text =
+                    binding.chineseInputView.text.toString().isChinese().toString()
+            }
+        }
+
+        binding.judgePhoneButton.setOnClickListener {
+            if (binding.phoneInputView.text.isNullOrBlank()) {
+                binding.phoneResultView.text = false.toString()
+            } else {
+                binding.phoneResultView.text =
+                    binding.phoneInputView.text.toString().isPhoneNumber().toString()
+            }
+        }
+
+        binding.judgeEmailButton.setOnClickListener {
+            if (binding.emailInputView.text.isNullOrBlank()) {
+                binding.emailResultView.text = false.toString()
+            } else {
+                binding.emailResultView.text =
+                    binding.emailInputView.text.toString().isEmail().toString()
+            }
+        }
+
+        binding.writeFileButton.setOnClickListener {
+            for (i in 1..1000) {
+                "${System.currentTimeMillis().timestampToCompleteDate()}".writeToFile(logFile)
+            }
+            binding.writeResultView.text = "文件写入成功，路径：${logFile.absolutePath}"
+        }
+
+        binding.showToastButton.setOnClickListener {
+            "showToastButton".show(requireContext())
         }
     }
 

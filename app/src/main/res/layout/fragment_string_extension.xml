@@ -518,5 +518,50 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:text="文件写入"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <Button
+                android:id="@+id/writeFileButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="write" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/writeResultView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:textColor="@color/darkMainColor"
+            android:textSize="@dimen/sp_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titleViewHeight"
+            android:background="@color/mainColor"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/showToastButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="show Toast" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
