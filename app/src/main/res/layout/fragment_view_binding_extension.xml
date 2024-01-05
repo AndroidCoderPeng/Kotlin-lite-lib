@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="见代码\nlite/src/main/java/com/pengxh/kt/lite/extensions/Dialog.kt第33行\n或者\nlite/src/main/java/com/pengxh/kt/lite/extensions/Activity.kt第6行"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_18" />
+</LinearLayout>
