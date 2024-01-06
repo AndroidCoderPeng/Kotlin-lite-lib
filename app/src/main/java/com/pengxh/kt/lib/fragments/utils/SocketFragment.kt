@@ -55,8 +55,16 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnSocke
 
     override fun onConnectStateChanged(state: ConnectState) {
         when (state) {
-            ConnectState.SUCCESS -> Log.d(kTag, "onConnectStatusChanged => 连接成功")
-            ConnectState.CLOSED -> Log.d(kTag, "onConnectStatusChanged => 连接关闭")
+            ConnectState.SUCCESS -> {
+                Log.d(kTag, "onConnectStatusChanged => 连接成功")
+                binding.connectTcpButton.text = "断开"
+            }
+
+            ConnectState.CLOSED -> {
+                Log.d(kTag, "onConnectStatusChanged => 连接关闭")
+                binding.connectTcpButton.text = "连接"
+            }
+
             else -> Log.d(kTag, "onConnectStatusChanged => 连接断开，正在重连")
         }
     }

@@ -2,9 +2,6 @@ package com.pengxh.kt.lite.utils.socket.tcp
 
 import android.os.SystemClock
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.AdaptiveRecvByteBufAllocator
 import io.netty.channel.Channel
@@ -19,7 +16,7 @@ import io.netty.handler.codec.bytes.ByteArrayDecoder
 import io.netty.handler.codec.bytes.ByteArrayEncoder
 import io.netty.handler.timeout.IdleStateHandler
 
-class SocketClient : LifecycleOwner {
+class SocketClient {
 
     private val kTag = "SocketClient"
     private var host = ""
@@ -142,10 +139,5 @@ class SocketClient : LifecycleOwner {
                 nioEventLoopGroup!!.shutdownGracefully()
             }
         })
-    }
-
-    private val registry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle {
-        return registry
     }
 }
