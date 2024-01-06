@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SocketManager : LifecycleOwner, ISocketListener {
+class SocketManager : LifecycleOwner, OnSocketListener {
 
     private val kTag = "SocketManager"
     private val registry = LifecycleRegistry(this)
@@ -21,8 +21,8 @@ class SocketManager : LifecycleOwner, ISocketListener {
     fun connectServer(hostname: String, port: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             if (!tcpClient.isConnected) {
-                tcpClient.setReconnectNum(3)
-                tcpClient.setReconnectInterval(10 * 1000)
+                tcpClient.setRetryTimes(3)
+                tcpClient.setRetryInterval(10 * 1000)
                 tcpClient.setSocketListener(this@SocketManager)
                 tcpClient.connect(hostname, port)
             } else {
@@ -38,7 +38,7 @@ class SocketManager : LifecycleOwner, ISocketListener {
 
     }
 
-    override fun onConnectStatusChanged(state: ConnectState) {
+    override fun onConnectStateChanged(state: ConnectState) {
         when (state) {
             ConnectState.SUCCESS -> Log.d(kTag, "onConnectStatusChanged => 连接成功")
             ConnectState.CLOSED -> Log.d(kTag, "onConnectStatusChanged => 连接关闭")

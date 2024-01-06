@@ -24,29 +24,29 @@ class SocketClient : LifecycleOwner {
     private val kTag = "SocketClient"
     private val registry = LifecycleRegistry(this)
     private var host = ""
-    private var port = 8888
+    private var port = 0
     private var nioEventLoopGroup: NioEventLoopGroup? = null
     private var channel: Channel? = null
-    private var reconnectNum = Int.MAX_VALUE
+    private var retryTimes = 3
     private var isNeedReconnect = true
     private var isConnecting = false
-    private var reconnectInterval = 15 * 1000L
-    private lateinit var listener: ISocketListener
+    private var retryInterval = 10 * 1000L
+    private lateinit var listener: OnSocketListener
     var isConnected = false
 
     override fun getLifecycle(): Lifecycle {
         return registry
     }
 
-    fun setReconnectNum(reconnectNum: Int) {
-        this.reconnectNum = reconnectNum
+    fun setRetryTimes(retryTimes: Int) {
+        this.retryTimes = retryTimes
     }
 
-    fun setReconnectInterval(reconnectInterval: Long) {
-        this.reconnectInterval = reconnectInterval
+    fun setRetryInterval(retryInterval: Long) {
+        this.retryInterval = retryInterval
     }
 
-    fun setSocketListener(socketListener: ISocketListener) {
+    fun setSocketListener(socketListener: OnSocketListener) {
         this.listener = socketListener
     }
 
@@ -58,7 +58,6 @@ class SocketClient : LifecycleOwner {
         }
         Log.d(kTag, "connect ===> 开始连接TCP服务器")
         isNeedReconnect = true
-        reconnectNum = Int.MAX_VALUE
         synchronized(this@SocketClient) {
             connectServer()
         }
@@ -133,9 +132,9 @@ class SocketClient : LifecycleOwner {
 
     //重新连接
     private fun reconnect() {
-        if (isNeedReconnect && reconnectNum > 0 && !isConnected) {
-            reconnectNum--
-            SystemClock.sleep(reconnectInterval)
+        if (isNeedReconnect && retryTimes > 0 && !isConnected) {
+            retryTimes--
+            SystemClock.sleep(retryInterval)
             Log.d(kTag, "reconnect ===> 重新连接")
             connectServer()
         }

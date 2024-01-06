@@ -3,17 +3,17 @@ package com.pengxh.kt.lite.utils.socket.tcp
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 
-class SocketChannelHandle(private val listener: ISocketListener) :
+class SocketChannelHandle(private val listener: OnSocketListener) :
     SimpleChannelInboundHandler<ByteArray>() {
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         super.channelActive(ctx)
-        listener.onConnectStatusChanged(ConnectState.SUCCESS)
+        listener.onConnectStateChanged(ConnectState.SUCCESS)
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
         super.channelInactive(ctx)
-        listener.onConnectStatusChanged(ConnectState.CLOSED)
+        listener.onConnectStateChanged(ConnectState.CLOSED)
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, data: ByteArray?) {
@@ -22,7 +22,7 @@ class SocketChannelHandle(private val listener: ISocketListener) :
 
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
         super.exceptionCaught(ctx, cause)
-        listener.onConnectStatusChanged(ConnectState.ERROR)
+        listener.onConnectStateChanged(ConnectState.ERROR)
         ctx.close()
     }
 }
