@@ -45,10 +45,15 @@ class UdpClient(private val messageCallback: OnUdpMessageCallback) : LifecycleOw
     fun bind(remote: String, port: Int) {
         this.socketAddress = InetSocketAddress(remote, port)
         lifecycleScope.launch(Dispatchers.IO) {
-            val channelFuture = bootStrap.bind(port).sync()
-            channel = channelFuture.channel()
-            channel?.apply {
-                closeFuture().sync()
+            try {
+                val channelFuture = bootStrap.bind(port).sync()
+                channel = channelFuture.channel()
+                channel?.apply {
+                    closeFuture().sync()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                release()
             }
         }
     }

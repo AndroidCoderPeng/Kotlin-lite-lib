@@ -157,4 +157,9 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpMe
         }
         return true
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        udpClient.release()
+    }
 }
