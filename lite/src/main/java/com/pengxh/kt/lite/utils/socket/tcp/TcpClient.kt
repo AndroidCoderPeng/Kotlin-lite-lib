@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TcpClient constructor(private val socketListener: OnTcpMessageCallback) : LifecycleOwner {
+class TcpClient constructor(private val messageCallback: OnTcpMessageCallback) : LifecycleOwner {
 
     private val kTag = "SocketClient"
     private var host = ""
@@ -31,6 +31,7 @@ class TcpClient constructor(private val socketListener: OnTcpMessageCallback) : 
     private var isConnected = false
     private lateinit var eventLoopGroup: NioEventLoopGroup
     private lateinit var channel: Channel
+    private val channelHandler by lazy { TcpChannelHandler(messageCallback) }
 
     /*************************************/
     //默认重连3次，每次间隔10s
@@ -84,7 +85,7 @@ class TcpClient constructor(private val socketListener: OnTcpMessageCallback) : 
                     pipeline.addLast(IdleStateHandler(60, 10, 0))
                     pipeline.addLast(ByteArrayDecoder())
                     pipeline.addLast(ByteArrayEncoder())
-                    pipeline.addLast(TcpChannelHandle(socketListener))
+                    pipeline.addLast(channelHandler)
                 }
             })
         lifecycleScope.launch(Dispatchers.IO) {

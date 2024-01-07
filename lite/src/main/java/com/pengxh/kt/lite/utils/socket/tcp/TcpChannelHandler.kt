@@ -10,7 +10,7 @@ import io.netty.channel.SimpleChannelInboundHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TcpChannelHandle(private val listener: OnTcpMessageCallback) :
+class TcpChannelHandler(private val messageCallback: OnTcpMessageCallback) :
     SimpleChannelInboundHandler<ByteArray>(), LifecycleOwner {
 
     private fun isOnMainThread(): Boolean {
@@ -20,10 +20,10 @@ class TcpChannelHandle(private val listener: OnTcpMessageCallback) :
     override fun channelActive(ctx: ChannelHandlerContext) {
         super.channelActive(ctx)
         if (isOnMainThread()) {
-            listener.onConnectStateChanged(ConnectState.SUCCESS)
+            messageCallback.onConnectStateChanged(ConnectState.SUCCESS)
         } else {
             lifecycleScope.launch(Dispatchers.Main) {
-                listener.onConnectStateChanged(ConnectState.SUCCESS)
+                messageCallback.onConnectStateChanged(ConnectState.SUCCESS)
             }
         }
     }
@@ -31,20 +31,20 @@ class TcpChannelHandle(private val listener: OnTcpMessageCallback) :
     override fun channelInactive(ctx: ChannelHandlerContext) {
         super.channelInactive(ctx)
         if (isOnMainThread()) {
-            listener.onConnectStateChanged(ConnectState.CLOSED)
+            messageCallback.onConnectStateChanged(ConnectState.CLOSED)
         } else {
             lifecycleScope.launch(Dispatchers.Main) {
-                listener.onConnectStateChanged(ConnectState.CLOSED)
+                messageCallback.onConnectStateChanged(ConnectState.CLOSED)
             }
         }
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, data: ByteArray?) {
         if (isOnMainThread()) {
-            listener.onReceivedTcpMessage(data)
+            messageCallback.onReceivedTcpMessage(data)
         } else {
             lifecycleScope.launch(Dispatchers.Main) {
-                listener.onReceivedTcpMessage(data)
+                messageCallback.onReceivedTcpMessage(data)
             }
         }
     }
@@ -52,11 +52,11 @@ class TcpChannelHandle(private val listener: OnTcpMessageCallback) :
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
         super.exceptionCaught(ctx, cause)
         if (isOnMainThread()) {
-            listener.onConnectStateChanged(ConnectState.ERROR)
+            messageCallback.onConnectStateChanged(ConnectState.ERROR)
             ctx.close()
         } else {
             lifecycleScope.launch(Dispatchers.Main) {
-                listener.onConnectStateChanged(ConnectState.ERROR)
+                messageCallback.onConnectStateChanged(ConnectState.ERROR)
                 ctx.close()
             }
         }
