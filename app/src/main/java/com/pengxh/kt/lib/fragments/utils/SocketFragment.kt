@@ -8,12 +8,12 @@ import com.pengxh.kt.lib.databinding.FragmentUtilsSocketBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.utils.socket.tcp.ConnectState
 import com.pengxh.kt.lite.utils.socket.tcp.OnSocketListener
-import com.pengxh.kt.lite.utils.socket.tcp.SocketManager
+import com.pengxh.kt.lite.utils.socket.tcp.SocketClient
 
 class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnSocketListener {
 
     private val kTag = "SocketFragment"
-    private val socketManager by lazy { SocketManager(this) }
+    private val tcpClient by lazy { SocketClient(this) }
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -42,7 +42,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnSocke
             }
             val address = text.toString()
             val strings = address.split(":")
-            socketManager.connectServer(strings[0], strings[1].toInt())
+            tcpClient.connectServer(strings[0], strings[1].toInt())
         }
     }
 

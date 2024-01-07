@@ -2,6 +2,10 @@ package com.pengxh.kt.lite.utils.socket.tcp
 
 import android.os.SystemClock
 import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.lifecycleScope
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.AdaptiveRecvByteBufAllocator
 import io.netty.channel.Channel
@@ -15,21 +19,23 @@ import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.handler.codec.bytes.ByteArrayDecoder
 import io.netty.handler.codec.bytes.ByteArrayEncoder
 import io.netty.handler.timeout.IdleStateHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class SocketClient {
+class SocketClient constructor(private val socketListener: OnSocketListener) : LifecycleOwner {
 
     private val kTag = "SocketClient"
     private var host = ""
     private var port = 0
-    private var nioEventLoopGroup: NioEventLoopGroup? = null
-    private var channel: Channel? = null
-    private var isConnecting = false
-    private lateinit var listener: OnSocketListener
-    var isConnected = false
+    private var isConnected = false
+    private lateinit var eventLoopGroup: NioEventLoopGroup
+    private lateinit var channel: Channel
 
+    /*************************************/
     //默认重连3次，每次间隔10s
     private var retryTimes = 3
-    private var retryInterval = 10 * 1000L
+    private var retryInterval = 5 * 1000L
 
     fun setRetryTimes(retryTimes: Int) {
         this.retryTimes = retryTimes
@@ -39,105 +45,105 @@ class SocketClient {
         this.retryInterval = retryInterval
     }
 
-    fun setSocketListener(socketListener: OnSocketListener) {
-        this.listener = socketListener
-    }
-
-    fun connect(host: String, port: Int) {
+    fun connectServer(host: String, port: Int) {
         this.host = host
         this.port = port
-        if (isConnecting) {
-            return
+        if (!isConnected) {
+            /**
+             * 使用协程连接TCP Server
+             * */
+            connect()
+        } else {
+            eventLoopGroup.shutdownGracefully()
+            isConnected = false
+            retryTimes = 0
         }
-        Log.d(kTag, "connect ===> 开始连接TCP服务器")
-        connectServer()
     }
 
-    private fun connectServer() {
-        synchronized(this@SocketClient) {
-            var channelFuture: ChannelFuture? = null //连接管理对象
-            if (!isConnected) {
-                isConnecting = true
-                nioEventLoopGroup = NioEventLoopGroup() //设置的连接group
-                val bootstrap = Bootstrap()
-                bootstrap.group(nioEventLoopGroup) //设置的一系列连接参数操作等
-                    .channel(NioSocketChannel::class.java)
-                    .option(ChannelOption.TCP_NODELAY, true) //无阻塞
-                    .option(ChannelOption.SO_KEEPALIVE, true) //长连接
-                    .option(
-                        ChannelOption.RCVBUF_ALLOCATOR,
-                        AdaptiveRecvByteBufAllocator(5000, 5000, 8000)
-                    ) //接收缓冲区 最小值太小时数据接收不全
-                    .handler(object : ChannelInitializer<SocketChannel>() {
-                        override fun initChannel(channel: SocketChannel) {
-                            val pipeline = channel.pipeline()
-                            //参数1：代表读套接字超时的时间，没收到数据会触发读超时回调;
-                            //参数2：代表写套接字超时时间，没进行写会触发写超时回调;
-                            //参数3：将在未执行读取或写入时触发超时回调，0代表不处理;
-                            //读超时尽量设置大于写超时，代表多次写超时时写心跳包，多次写了心跳数据仍然读超时代表当前连接错误，即可断开连接重新连接
-                            pipeline.addLast(IdleStateHandler(60, 10, 0))
-                            pipeline.addLast(ByteArrayDecoder())
-                            pipeline.addLast(ByteArrayEncoder())
-                            pipeline.addLast(SocketChannelHandle(listener))
-                        }
-                    })
-                try {
-                    //连接监听
-                    channelFuture = bootstrap.connect(host, port)
-                        .addListener(object : ChannelFutureListener {
-                            override fun operationComplete(channelFuture: ChannelFuture) {
-                                if (channelFuture.isSuccess) {
-                                    channel = channelFuture.channel()
-                                    isConnected = true
-                                } else {
-                                    isConnected = false
-                                }
-                                isConnecting = false
+    /*************************************/
+
+    private fun connect() {
+        Log.d(kTag, "connect: 连接TCP服务器")
+        eventLoopGroup = NioEventLoopGroup()
+        val bootstrap = Bootstrap()
+        bootstrap.group(eventLoopGroup)
+            .channel(NioSocketChannel::class.java)
+            .option(ChannelOption.TCP_NODELAY, true) //无阻塞
+            .option(ChannelOption.SO_KEEPALIVE, true) //长连接
+            .option(
+                ChannelOption.RCVBUF_ALLOCATOR, AdaptiveRecvByteBufAllocator(5000, 5000, 8000)
+            )
+            .handler(object : ChannelInitializer<SocketChannel>() {
+                override fun initChannel(channel: SocketChannel) {
+                    val pipeline = channel.pipeline()
+                    /**
+                     * 参数3：将在未执行读取或写入时触发超时回调，0代表不处理;
+                     *
+                     * 读超时尽量设置大于写超时，代表多次写超时时写心跳包，多次写了心跳数据仍然读超时代表当前连接错误，即可断开连接重新连接
+                     * */
+                    pipeline.addLast(IdleStateHandler(60, 10, 0))
+                    pipeline.addLast(ByteArrayDecoder())
+                    pipeline.addLast(ByteArrayEncoder())
+                    pipeline.addLast(SocketChannelHandle(socketListener))
+                }
+            })
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val channelFuture = bootstrap.connect(host, port)
+                    .addListener(object : ChannelFutureListener {
+                        override fun operationComplete(channelFuture: ChannelFuture) {
+                            isConnected = channelFuture.isSuccess
+                            if (isConnected) {
+                                channel = channelFuture.channel()
                             }
-                        }).sync()
-                    // 等待连接关闭
-                    channelFuture.channel().closeFuture().sync()
-                } catch (e: Exception) {
+                        }
+                    }).sync()
+                // 等待连接关闭
+                channelFuture.channel().closeFuture().sync()
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
                     e.printStackTrace()
-                } finally {
-                    channelFuture?.apply {
-                        channel?.apply {
-                            if (isOpen) {
-                                close()
-                            }
-                        }
-                    }
-                    nioEventLoopGroup?.shutdownGracefully()
+                    eventLoopGroup.shutdownGracefully()
                     isConnected = false
-                    reconnect() //重新连接
+
+                    retryConnect()
                 }
             }
         }
     }
 
-    //断开连接
-    fun disconnect() {
-        nioEventLoopGroup?.shutdownGracefully()
-        isConnected = false
-        retryTimes = 0
-    }
-
     //重新连接
-    private fun reconnect() {
-        if (retryTimes > 0 && !isConnected) {
+    private fun retryConnect() {
+        if (isConnected) {
+            return
+        }
+        if (retryTimes > 0) {
             retryTimes--
             SystemClock.sleep(retryInterval)
-            Log.d(kTag, "reconnect ===> 重新连接")
-            connectServer()
+            Log.d(kTag, "retryConnect ===> retryTimes = $retryTimes")
+            connect()
         }
     }
 
     fun sendData(bytes: ByteArray) {
-        channel?.writeAndFlush(bytes)?.addListener(ChannelFutureListener { future ->
-            if (!future.isSuccess) {
-                future.channel().close()
-                nioEventLoopGroup!!.shutdownGracefully()
+        if (!isConnected) {
+            return
+        }
+        channel.writeAndFlush(bytes).addListener(object : ChannelFutureListener {
+            override fun operationComplete(future: ChannelFuture?) {
+                future?.apply {
+                    if (isSuccess) {
+                        channel().close()
+                        eventLoopGroup.shutdownGracefully()
+                    }
+                }
             }
         })
+    }
+
+    private val registry = LifecycleRegistry(this)
+
+    override fun getLifecycle(): Lifecycle {
+        return registry
     }
 }
