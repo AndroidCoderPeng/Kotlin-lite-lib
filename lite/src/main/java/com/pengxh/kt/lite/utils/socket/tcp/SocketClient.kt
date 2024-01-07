@@ -125,14 +125,14 @@ class SocketClient constructor(private val socketListener: OnSocketListener) : L
         }
     }
 
-    fun sendData(bytes: ByteArray) {
+    fun sendMessage(bytes: ByteArray) {
         if (!isConnected) {
             return
         }
         channel.writeAndFlush(bytes).addListener(object : ChannelFutureListener {
             override fun operationComplete(future: ChannelFuture?) {
                 future?.apply {
-                    if (isSuccess) {
+                    if (!isSuccess) {
                         channel().close()
                         eventLoopGroup.shutdownGracefully()
                     }
