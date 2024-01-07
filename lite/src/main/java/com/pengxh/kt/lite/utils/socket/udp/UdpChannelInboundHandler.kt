@@ -29,11 +29,14 @@ class UdpChannelInboundHandler(private val messageCallback: OnUdpMessageCallback
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, datagramPacket: DatagramPacket) {
+        val byteBuf = datagramPacket.content()
+        val byteArray = ByteArray(byteBuf.readableBytes())
+        byteBuf.readBytes(byteArray)
         if (isOnMainThread()) {
-            messageCallback.onReceivedUdpMessage(datagramPacket.content().array())
+            messageCallback.onReceivedUdpMessage(byteArray)
         } else {
             lifecycleScope.launch(Dispatchers.Main) {
-                messageCallback.onReceivedUdpMessage(datagramPacket.content().array())
+                messageCallback.onReceivedUdpMessage(byteArray)
             }
         }
     }

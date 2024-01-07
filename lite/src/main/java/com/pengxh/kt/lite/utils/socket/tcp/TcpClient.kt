@@ -31,7 +31,6 @@ class TcpClient constructor(private val messageCallback: OnTcpMessageCallback) :
     private var isConnected = false
     private lateinit var eventLoopGroup: NioEventLoopGroup
     private lateinit var channel: Channel
-    private val channelHandler by lazy { TcpChannelHandler(messageCallback) }
 
     /*************************************/
     //默认重连3次，每次间隔10s
@@ -76,16 +75,16 @@ class TcpClient constructor(private val messageCallback: OnTcpMessageCallback) :
             )
             .handler(object : ChannelInitializer<SocketChannel>() {
                 override fun initChannel(channel: SocketChannel) {
-                    val pipeline = channel.pipeline()
                     /**
                      * 参数3：将在未执行读取或写入时触发超时回调，0代表不处理;
                      *
                      * 读超时尽量设置大于写超时，代表多次写超时时写心跳包，多次写了心跳数据仍然读超时代表当前连接错误，即可断开连接重新连接
                      * */
-                    pipeline.addLast(IdleStateHandler(60, 10, 0))
-                    pipeline.addLast(ByteArrayDecoder())
-                    pipeline.addLast(ByteArrayEncoder())
-                    pipeline.addLast(channelHandler)
+                    channel.pipeline()
+                        .addLast(IdleStateHandler(60, 10, 0))
+                        .addLast(ByteArrayDecoder())
+                        .addLast(ByteArrayEncoder())
+                        .addLast(TcpChannelHandler(messageCallback))
                 }
             })
         lifecycleScope.launch(Dispatchers.IO) {

@@ -24,8 +24,6 @@ class UdpClient(private val messageCallback: OnUdpMessageCallback) : LifecycleOw
 
     private val bootStrap by lazy { Bootstrap() }
     private val eventLoopGroup by lazy { NioEventLoopGroup() }
-    private val idleStateHandler by lazy { IdleStateHandler(15, 15, 0) }
-    private val channelHandler by lazy { UdpChannelInboundHandler(messageCallback) }
     private lateinit var socketAddress: InetSocketAddress
     private var channel: Channel? = null
 
@@ -37,12 +35,14 @@ class UdpClient(private val messageCallback: OnUdpMessageCallback) : LifecycleOw
             .handler(object : ChannelInitializer<DatagramChannel>() {
                 override fun initChannel(datagramChannel: DatagramChannel) {
                     val channelPipeline = datagramChannel.pipeline()
-                    channelPipeline.addLast(idleStateHandler).addLast(channelHandler)
+                    channelPipeline.addLast(
+                        IdleStateHandler(15, 15, 0)
+                    ).addLast(UdpChannelInboundHandler(messageCallback))
                 }
             })
     }
 
-    fun bind(remote: String, port: Int): UdpClient {
+    fun bind(remote: String, port: Int) {
         this.socketAddress = InetSocketAddress(remote, port)
         lifecycleScope.launch(Dispatchers.IO) {
             val channelFuture = bootStrap.bind(port).sync()
@@ -51,7 +51,6 @@ class UdpClient(private val messageCallback: OnUdpMessageCallback) : LifecycleOw
                 closeFuture().sync()
             }
         }
-        return this
     }
 
     fun sendMessage(value: String) {
