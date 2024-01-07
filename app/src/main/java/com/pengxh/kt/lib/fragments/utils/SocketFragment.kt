@@ -27,7 +27,8 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpMe
     private val tcpMessageArray: MutableList<MessageModel> = ArrayList()
     private val udpMessageArray: MutableList<MessageModel> = ArrayList()
     private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
-    private lateinit var messageAdapter: MessageRecyclerAdapter
+    private lateinit var tcpAdapter: MessageRecyclerAdapter
+    private lateinit var udpAdapter: MessageRecyclerAdapter
     private var type = 0
 
     override fun initViewBinding(
@@ -42,8 +43,19 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpMe
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        messageAdapter = MessageRecyclerAdapter(requireContext(), tcpMessageArray)
-        binding.tcpRecyclerView.adapter = messageAdapter
+        tcpAdapter = MessageRecyclerAdapter(requireContext(), tcpMessageArray)
+        binding.tcpRecyclerView.adapter = tcpAdapter
+
+        udpAdapter = MessageRecyclerAdapter(requireContext(), udpMessageArray)
+        binding.udpRecyclerView.adapter = udpAdapter
+
+        val text = binding.udpIpInputView.text
+        if (text.isNullOrBlank()) {
+            return
+        }
+        val address = text.toString()
+        val strings = address.split(":")
+        udpClient.bind(strings[0], strings[1].toInt())
     }
 
     override fun observeRequestState() {
@@ -79,13 +91,6 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpMe
         }
 
         binding.sendUdpButton.setOnClickListener {
-            val text = binding.udpIpInputView.text
-            if (text.isNullOrBlank()) {
-                return@setOnClickListener
-            }
-            val address = text.toString()
-            val strings = address.split(":")
-
             val message = binding.udpMsgInputView.text
             if (message.isNullOrBlank()) {
                 return@setOnClickListener
@@ -98,7 +103,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpMe
                     message.toString()
                 )
             )
-            udpClient.bind(strings[0], strings[1].toInt()).sendMessage(message.toString())
+            udpClient.sendMessage(message.toString())
             weakReferenceHandler.sendEmptyMessage(1)
         }
     }
@@ -145,10 +150,11 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpMe
     override fun handleMessage(msg: Message): Boolean {
         if (msg.what == 0) {
             binding.tcpRecyclerView.scrollToPosition(tcpMessageArray.size - 1)
+            tcpAdapter.notifyDataSetChanged()
         } else if (msg.what == 1) {
             binding.udpRecyclerView.scrollToPosition(udpMessageArray.size - 1)
+            udpAdapter.notifyDataSetChanged()
         }
-        messageAdapter.notifyDataSetChanged()
         return true
     }
 }
