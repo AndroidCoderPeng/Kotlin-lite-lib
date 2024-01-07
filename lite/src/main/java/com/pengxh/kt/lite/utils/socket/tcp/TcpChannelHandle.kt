@@ -10,7 +10,7 @@ import io.netty.channel.SimpleChannelInboundHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SocketChannelHandle(private val listener: OnSocketListener) :
+class TcpChannelHandle(private val listener: OnTcpMessageCallback) :
     SimpleChannelInboundHandler<ByteArray>(), LifecycleOwner {
 
     private fun isOnMainThread(): Boolean {
@@ -41,10 +41,10 @@ class SocketChannelHandle(private val listener: OnSocketListener) :
 
     override fun channelRead0(ctx: ChannelHandlerContext, data: ByteArray?) {
         if (isOnMainThread()) {
-            listener.onMessageResponse(data)
+            listener.onReceivedTcpMessage(data)
         } else {
             lifecycleScope.launch(Dispatchers.Main) {
-                listener.onMessageResponse(data)
+                listener.onReceivedTcpMessage(data)
             }
         }
     }

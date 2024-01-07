@@ -90,28 +90,15 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/titleViewHeight"
         android:background="@color/mainColor"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/dp_10"
-            android:text="Socket - UDP"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_16" />
-
-        <Button
-            android:id="@+id/connectUdpButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="连接" />
-    </LinearLayout>
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/dp_10"
+        android:text="Socket - UDP"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -157,6 +144,7 @@
             android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/udpMsgInputView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

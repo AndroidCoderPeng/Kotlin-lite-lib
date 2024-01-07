@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SocketClient constructor(private val socketListener: OnSocketListener) : LifecycleOwner {
+class TcpClient constructor(private val socketListener: OnTcpMessageCallback) : LifecycleOwner {
 
     private val kTag = "SocketClient"
     private var host = ""
@@ -84,7 +84,7 @@ class SocketClient constructor(private val socketListener: OnSocketListener) : L
                     pipeline.addLast(IdleStateHandler(60, 10, 0))
                     pipeline.addLast(ByteArrayDecoder())
                     pipeline.addLast(ByteArrayEncoder())
-                    pipeline.addLast(SocketChannelHandle(socketListener))
+                    pipeline.addLast(TcpChannelHandle(socketListener))
                 }
             })
         lifecycleScope.launch(Dispatchers.IO) {
