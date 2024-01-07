@@ -1,98 +1,88 @@
 package com.pengxh.kt.lite.utils.socket.udp
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.lifecycleScope
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
+import io.netty.channel.Channel
+import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.DatagramChannel
 import io.netty.channel.socket.DatagramPacket
 import io.netty.channel.socket.nio.NioDatagramChannel
+import io.netty.handler.timeout.IdleStateHandler
 import io.netty.util.CharsetUtil
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
-/**
- * UDP客户端
- *
- *  private val udpClient by lazy { UdpClient() }
- *
- *  udpClient.send("")
- *
- *  udpClient.release()
- * */
-class UdpClient(private val remote: String, private val port: Int) : UdpChannelInboundHandler(),
-    Runnable {
+class UdpClient(private val messageCallback: OnUdpMessageCallback) : LifecycleOwner {
 
     private val bootStrap by lazy { Bootstrap() }
     private val eventLoopGroup by lazy { NioEventLoopGroup() }
-    private val udpChannelInitializer by lazy { UdpChannelInitializer(this) }
-    private var executorService: ExecutorService
+    private val idleStateHandler by lazy { IdleStateHandler(15, 15, 0) }
+    private val channelHandler by lazy { UdpChannelInboundHandler(messageCallback) }
+    private lateinit var socketAddress: InetSocketAddress
+    private var channel: Channel? = null
 
     init {
         bootStrap.group(eventLoopGroup)
         bootStrap.channel(NioDatagramChannel::class.java)
             .option(ChannelOption.SO_RCVBUF, 1024)
             .option(ChannelOption.SO_SNDBUF, 1024)
-        bootStrap.handler(udpChannelInitializer)
-
-        executorService = Executors.newSingleThreadExecutor()
-        executorService.execute(this)
+            .handler(object : ChannelInitializer<DatagramChannel>() {
+                override fun initChannel(datagramChannel: DatagramChannel) {
+                    val channelPipeline = datagramChannel.pipeline()
+                    channelPipeline.addLast(idleStateHandler).addLast(channelHandler)
+                }
+            })
     }
 
-    override fun run() {
-        try {
+    fun bind(remote: String, port: Int): UdpClient {
+        this.socketAddress = InetSocketAddress(remote, port)
+        lifecycleScope.launch(Dispatchers.IO) {
             val channelFuture = bootStrap.bind(port).sync()
-            channelFuture.channel().closeFuture().sync()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        } finally {
-            eventLoopGroup.shutdownGracefully()
+            channel = channelFuture.channel()
+            channel?.apply {
+                closeFuture().sync()
+            }
+        }
+        return this
+    }
+
+    fun sendMessage(value: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val byteBuf = Unpooled.copiedBuffer(value, CharsetUtil.UTF_8)
+            val datagramPacket = DatagramPacket(byteBuf, socketAddress)
+            channel?.writeAndFlush(datagramPacket)
         }
     }
 
-    fun send(value: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
-                val datagramPacket = DatagramPacket(
-                    Unpooled.copiedBuffer(value, CharsetUtil.UTF_8), InetSocketAddress(remote, port)
-                )
-                sendDatagramPacket(datagramPacket)
-            }
+    fun sendMessage(value: ByteArray) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val datagramPacket = DatagramPacket(Unpooled.copiedBuffer(value), socketAddress)
+            channel?.writeAndFlush(datagramPacket)
         }
     }
 
-    fun send(value: ByteArray) {
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
-                val datagramPacket = DatagramPacket(
-                    Unpooled.copiedBuffer(value), InetSocketAddress(remote, port)
-                )
-                sendDatagramPacket(datagramPacket)
-            }
-        }
-    }
-
-    fun send(value: ByteBuf) {
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
-                val datagramPacket = DatagramPacket(
-                    Unpooled.copiedBuffer(value), InetSocketAddress(remote, port)
-                )
-                sendDatagramPacket(datagramPacket)
-            }
+    fun sendMessage(value: ByteBuf) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val datagramPacket = DatagramPacket(Unpooled.copiedBuffer(value), socketAddress)
+            channel?.writeAndFlush(datagramPacket)
         }
     }
 
     fun release() {
-        releasePort()
+        eventLoopGroup.shutdownGracefully()
     }
 
-    override fun receivedMessage(data: String) {
+    private val registry = LifecycleRegistry(this)
 
+    override fun getLifecycle(): Lifecycle {
+        return registry
     }
 }

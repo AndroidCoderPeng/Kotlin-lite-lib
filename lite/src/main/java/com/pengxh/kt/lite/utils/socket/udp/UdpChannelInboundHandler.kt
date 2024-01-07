@@ -1,36 +1,46 @@
 package com.pengxh.kt.lite.utils.socket.udp
 
+import android.os.Looper
+import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.lifecycleScope
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 import io.netty.channel.socket.DatagramPacket
-import io.netty.util.CharsetUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
-abstract class UdpChannelInboundHandler : SimpleChannelInboundHandler<DatagramPacket>() {
+class UdpChannelInboundHandler(private val messageCallback: OnUdpMessageCallback) :
+    SimpleChannelInboundHandler<DatagramPacket>(), LifecycleOwner {
 
-    private var handlerContext: ChannelHandlerContext? = null
+    private val kTag = "UdpChannelInboundHandler"
 
-    override fun channelActive(ctx: ChannelHandlerContext?) {
-        super.channelActive(ctx)
-        handlerContext = ctx
+    private fun isOnMainThread(): Boolean {
+        return Looper.getMainLooper().thread == Thread.currentThread()
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext?) {
         super.channelInactive(ctx)
-        handlerContext?.close()
-    }
-
-    fun sendDatagramPacket(obj: Any) {
-        handlerContext?.writeAndFlush(obj)
-    }
-
-    fun releasePort() {
-        handlerContext?.close()
+        ctx?.close()
+        Log.d(kTag, "channelInactive: 连接关闭")
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, datagramPacket: DatagramPacket) {
-        receivedMessage(datagramPacket.content().toString(CharsetUtil.UTF_8))
+        if (isOnMainThread()) {
+            messageCallback.onReceivedUdpMessage(datagramPacket.content().array())
+        } else {
+            lifecycleScope.launch(Dispatchers.Main) {
+                messageCallback.onReceivedUdpMessage(datagramPacket.content().array())
+            }
+        }
     }
 
-    abstract fun receivedMessage(data: String)
+    private val registry = LifecycleRegistry(this)
+
+    override fun getLifecycle(): Lifecycle {
+        return registry
+    }
 }

@@ -13,17 +13,22 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.timestampToTime
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import com.pengxh.kt.lite.utils.socket.tcp.ConnectState
-import com.pengxh.kt.lite.utils.socket.tcp.OnSocketListener
-import com.pengxh.kt.lite.utils.socket.tcp.SocketClient
+import com.pengxh.kt.lite.utils.socket.tcp.OnTcpMessageCallback
+import com.pengxh.kt.lite.utils.socket.tcp.TcpClient
+import com.pengxh.kt.lite.utils.socket.udp.OnUdpMessageCallback
+import com.pengxh.kt.lite.utils.socket.udp.UdpClient
 
-class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnSocketListener,
-    Handler.Callback {
+class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpMessageCallback,
+    OnUdpMessageCallback, Handler.Callback {
 
     private val kTag = "SocketFragment"
-    private val tcpClient by lazy { SocketClient(this) }
-    private val messageArray: MutableList<MessageModel> = ArrayList()
+    private val tcpClient by lazy { TcpClient(this) }
+    private val udpClient by lazy { UdpClient(this) }
+    private val tcpMessageArray: MutableList<MessageModel> = ArrayList()
+    private val udpMessageArray: MutableList<MessageModel> = ArrayList()
     private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
     private lateinit var messageAdapter: MessageRecyclerAdapter
+    private var type = 0
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -37,7 +42,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnSocke
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        messageAdapter = MessageRecyclerAdapter(requireContext(), messageArray)
+        messageAdapter = MessageRecyclerAdapter(requireContext(), tcpMessageArray)
         binding.tcpRecyclerView.adapter = messageAdapter
     }
 
@@ -62,7 +67,8 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnSocke
                 return@setOnClickListener
             }
 
-            messageArray.add(
+            type = 0
+            tcpMessageArray.add(
                 MessageModel(
                     System.currentTimeMillis().timestampToTime(),
                     message.toString()
@@ -71,13 +77,37 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnSocke
             tcpClient.sendMessage(message.toString().toByteArray())
             weakReferenceHandler.sendEmptyMessage(0)
         }
+
+        binding.sendUdpButton.setOnClickListener {
+            val text = binding.udpIpInputView.text
+            if (text.isNullOrBlank()) {
+                return@setOnClickListener
+            }
+            val address = text.toString()
+            val strings = address.split(":")
+
+            val message = binding.udpMsgInputView.text
+            if (message.isNullOrBlank()) {
+                return@setOnClickListener
+            }
+
+            type = 1
+            udpMessageArray.add(
+                MessageModel(
+                    System.currentTimeMillis().timestampToTime(),
+                    message.toString()
+                )
+            )
+            udpClient.bind(strings[0], strings[1].toInt()).sendMessage(message.toString())
+            weakReferenceHandler.sendEmptyMessage(1)
+        }
     }
 
     /**
      * 处理接收消息
      * */
-    override fun onMessageResponse(data: ByteArray?) {
-        messageArray.add(
+    override fun onReceivedTcpMessage(data: ByteArray?) {
+        tcpMessageArray.add(
             MessageModel(
                 System.currentTimeMillis().timestampToTime(),
                 data.contentToString()
@@ -102,11 +132,23 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnSocke
         }
     }
 
+    override fun onReceivedUdpMessage(data: ByteArray) {
+        udpMessageArray.add(
+            MessageModel(
+                System.currentTimeMillis().timestampToTime(),
+                data.contentToString()
+            )
+        )
+        weakReferenceHandler.sendEmptyMessage(1)
+    }
+
     override fun handleMessage(msg: Message): Boolean {
         if (msg.what == 0) {
-            binding.tcpRecyclerView.scrollToPosition(messageArray.size - 1)
-            messageAdapter.notifyDataSetChanged()
+            binding.tcpRecyclerView.scrollToPosition(tcpMessageArray.size - 1)
+        } else if (msg.what == 1) {
+            binding.udpRecyclerView.scrollToPosition(udpMessageArray.size - 1)
         }
+        messageAdapter.notifyDataSetChanged()
         return true
     }
 }
