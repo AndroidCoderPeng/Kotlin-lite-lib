@@ -12,6 +12,7 @@ import com.pengxh.kt.lib.fragments.utils.BroadcastReceiverFragment
 import com.pengxh.kt.lib.fragments.utils.FileDownloadManagerFragment
 import com.pengxh.kt.lib.fragments.utils.GalleryScaleHelperFragment
 import com.pengxh.kt.lib.fragments.utils.HtmlRenderEngineFragment
+import com.pengxh.kt.lib.fragments.utils.HttpRequestFragment
 import com.pengxh.kt.lib.fragments.utils.SocketFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
@@ -43,7 +44,7 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         fragmentPages.add(FileDownloadManagerFragment())
         fragmentPages.add(GalleryScaleHelperFragment())
         fragmentPages.add(HtmlRenderEngineFragment())
-//        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(HttpRequestFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
