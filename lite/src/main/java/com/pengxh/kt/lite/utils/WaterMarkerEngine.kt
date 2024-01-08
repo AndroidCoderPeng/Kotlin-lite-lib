@@ -21,7 +21,7 @@ import java.io.FileOutputStream
 /**
  * 绘制水印
  */
-class WaterMarkEngine : LifecycleOwner {
+class WaterMarkerEngine : LifecycleOwner {
 
     private val registry = LifecycleRegistry(this)
     private val textPaint by lazy { TextPaint() }
@@ -40,7 +40,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置上下文
      * */
-    fun setContext(context: Context): WaterMarkEngine {
+    fun setContext(context: Context): WaterMarkerEngine {
         this.context = context
         return this
     }
@@ -48,7 +48,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置原始Bitmap
      * */
-    fun setOriginalBitmap(bitmap: Bitmap): WaterMarkEngine {
+    fun setOriginalBitmap(bitmap: Bitmap): WaterMarkerEngine {
         this.originalBitmap = bitmap
         return this
     }
@@ -56,7 +56,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置水印文字
      * */
-    fun setTextMaker(marker: String): WaterMarkEngine {
+    fun setTextMaker(marker: String): WaterMarkerEngine {
         this.marker = marker
         return this
     }
@@ -64,7 +64,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置水印文字颜色
      * */
-    fun setTextColor(textColor: Int): WaterMarkEngine {
+    fun setTextColor(textColor: Int): WaterMarkerEngine {
         this.textColor = textColor
         return this
     }
@@ -72,7 +72,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置水印文字大小
      * */
-    fun setTextSize(textSize: Float): WaterMarkEngine {
+    fun setTextSize(textSize: Float): WaterMarkerEngine {
         this.textSize = textSize
         return this
     }
@@ -80,7 +80,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置水印文字位置
      * */
-    fun setMarkerPosition(@WaterMarkPosition position: Int): WaterMarkEngine {
+    fun setMarkerPosition(@WaterMarkPosition position: Int): WaterMarkerEngine {
         this.position = position
         return this
     }
@@ -88,7 +88,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置水印文字距离Bitmap内边距
      * */
-    fun setTextPadding(textPadding: Float): WaterMarkEngine {
+    fun setTextPadding(textPadding: Float): WaterMarkerEngine {
         this.textPadding = textPadding
         return this
     }
@@ -96,7 +96,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置水印图片保存路径
      * */
-    fun setMarkedSavePath(fileName: String): WaterMarkEngine {
+    fun setMarkedSavePath(fileName: String): WaterMarkerEngine {
         this.fileName = fileName
         return this
     }
@@ -104,7 +104,7 @@ class WaterMarkEngine : LifecycleOwner {
     /**
      * 设置水印图片回调监听
      * */
-    fun setOnWaterMarkerAddedListener(addedListener: OnWaterMarkerAddedListener): WaterMarkEngine {
+    fun setOnWaterMarkerAddedListener(addedListener: OnWaterMarkerAddedListener): WaterMarkerEngine {
         this.addedListener = addedListener
         return this
     }

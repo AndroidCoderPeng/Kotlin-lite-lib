@@ -16,7 +16,10 @@ import com.pengxh.kt.lib.fragments.utils.HtmlRenderEngineFragment
 import com.pengxh.kt.lib.fragments.utils.HttpRequestFragment
 import com.pengxh.kt.lib.fragments.utils.LoadingDialogFragment
 import com.pengxh.kt.lib.fragments.utils.RetrofitFactoryFragment
+import com.pengxh.kt.lib.fragments.utils.SaveKeyValuesFragment
 import com.pengxh.kt.lib.fragments.utils.SocketFragment
+import com.pengxh.kt.lib.fragments.utils.WaterMarkerEngineFragment
+import com.pengxh.kt.lib.fragments.utils.WeakReferenceHandlerFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
@@ -40,7 +43,6 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
-
         fragmentPages.add(BleFragment())
         fragmentPages.add(SocketFragment())
         fragmentPages.add(ActivityStackManagerFragment())
@@ -51,9 +53,9 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         fragmentPages.add(HttpRequestFragment())
         fragmentPages.add(LoadingDialogFragment())
         fragmentPages.add(RetrofitFactoryFragment())
-//        fragmentPages.add(FileDownloadManagerFragment())
-//        fragmentPages.add(FileDownloadManagerFragment())
-//        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(SaveKeyValuesFragment())
+        fragmentPages.add(WaterMarkerEngineFragment())
+        fragmentPages.add(WeakReferenceHandlerFragment())
     }
 
     override fun initViewBinding(
