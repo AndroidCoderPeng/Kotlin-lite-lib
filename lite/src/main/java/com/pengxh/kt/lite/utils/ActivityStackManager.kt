@@ -1,9 +1,9 @@
 package com.pengxh.kt.lite.utils
 
 import android.app.Activity
-import java.util.*
+import java.util.Stack
 
-object PageNavigationManager {
+object ActivityStackManager {
     private val activityStack = Stack<Activity>()
 
     /**

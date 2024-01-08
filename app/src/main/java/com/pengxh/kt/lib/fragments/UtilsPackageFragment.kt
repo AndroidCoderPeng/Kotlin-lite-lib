@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentUtilsPackageBinding
+import com.pengxh.kt.lib.fragments.utils.ActivityStackManagerFragment
 import com.pengxh.kt.lib.fragments.utils.BleFragment
 import com.pengxh.kt.lib.fragments.utils.BroadcastReceiverFragment
 import com.pengxh.kt.lib.fragments.utils.FileDownloadManagerFragment
@@ -14,6 +15,7 @@ import com.pengxh.kt.lib.fragments.utils.GalleryScaleHelperFragment
 import com.pengxh.kt.lib.fragments.utils.HtmlRenderEngineFragment
 import com.pengxh.kt.lib.fragments.utils.HttpRequestFragment
 import com.pengxh.kt.lib.fragments.utils.LoadingDialogFragment
+import com.pengxh.kt.lib.fragments.utils.RetrofitFactoryFragment
 import com.pengxh.kt.lib.fragments.utils.SocketFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
@@ -23,13 +25,13 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
     private val itemTitles = arrayOf(
         "低功耗蓝牙",
         "Socket",
+        "Activity栈管理",
         "广播接受者管理器",
         "文件下载管理器",
         "模糊背景画廊",
         "HTML富文本渲染",
         "Http请求",
         "加载对话框",
-        "Activity栈管理",
         "Retrofit构造器",
         "SharedPreferences",
         "水印绘制引擎",
@@ -38,17 +40,17 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
+
         fragmentPages.add(BleFragment())
         fragmentPages.add(SocketFragment())
+        fragmentPages.add(ActivityStackManagerFragment())
         fragmentPages.add(BroadcastReceiverFragment())
         fragmentPages.add(FileDownloadManagerFragment())
         fragmentPages.add(GalleryScaleHelperFragment())
         fragmentPages.add(HtmlRenderEngineFragment())
         fragmentPages.add(HttpRequestFragment())
         fragmentPages.add(LoadingDialogFragment())
-//        fragmentPages.add(FileDownloadManagerFragment())
-//        fragmentPages.add(FileDownloadManagerFragment())
-//        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(RetrofitFactoryFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
