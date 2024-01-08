@@ -10,18 +10,20 @@ import com.pengxh.kt.lib.databinding.FragmentBasePackageBinding
 import com.pengxh.kt.lib.fragments.base.BaseActivityFragment
 import com.pengxh.kt.lib.fragments.base.BaseFragmentFragment
 import com.pengxh.kt.lib.fragments.base.BaseSingletonFragment
+import com.pengxh.kt.lib.fragments.base.BaseViewModelFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class BasePackageFragment : KotlinBaseFragment<FragmentBasePackageBinding>() {
 
     private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
-        "带参单例抽象类", "Activity抽象类", "Fragment抽象类"
+        "带参单例抽象类", "ViewModel抽象类", "Activity抽象类", "Fragment抽象类"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
         fragmentPages.add(BaseSingletonFragment())
+        fragmentPages.add(BaseViewModelFragment())
         fragmentPages.add(BaseActivityFragment())
         fragmentPages.add(BaseFragmentFragment())
     }

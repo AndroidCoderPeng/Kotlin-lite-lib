@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.pengxh.kt.lib.databinding.FragmentExtensionViewModelBinding
 import com.pengxh.kt.lib.example.ViewModelExample
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.vm.LoadState
+import com.pengxh.kt.lite.utils.LoadState
 
 class ViewModelExtensionFragment : KotlinBaseFragment<FragmentExtensionViewModelBinding>() {
 

@@ -1,4 +1,4 @@
-package com.pengxh.kt.lite.vm
+package com.pengxh.kt.lite.utils
 
 /**
  * 加载状态

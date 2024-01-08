@@ -3,9 +3,9 @@ package com.pengxh.kt.lib.example
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.pengxh.kt.lite.base.BaseViewModel
 import com.pengxh.kt.lite.extensions.launch
-import com.pengxh.kt.lite.vm.BaseViewModel
-import com.pengxh.kt.lite.vm.LoadState
+import com.pengxh.kt.lite.utils.LoadState
 
 class ViewModelExample : BaseViewModel() {
 

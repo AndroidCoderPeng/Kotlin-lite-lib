@@ -6,7 +6,7 @@
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="@dimen/dp_125"
+        android:layout_width="@dimen/dp_100"
         android:layout_height="match_parent"
         android:scrollbars="none" />
 
