@@ -6,7 +6,7 @@ object Constant {
     /**
      * 广播接收者消息Key
      */
-    const val BROADCAST_INTENT_DATA_KEY = "DataMessageKey"
+    const val BROADCAST_MESSAGE_KEY = "DataMessageKey"
 
     /**
      * 查看大图Intent IndexKey
