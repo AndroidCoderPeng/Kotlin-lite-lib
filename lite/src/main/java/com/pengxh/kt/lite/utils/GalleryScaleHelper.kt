@@ -3,7 +3,6 @@ package com.pengxh.kt.lite.utils
 import android.view.View
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.pengxh.kt.lite.extensions.dp2px
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -31,9 +30,7 @@ class GalleryScaleHelper {
 
     fun attachToRecyclerView(recyclerView: RecyclerView) {
         recyclerView.post {
-            val galleryWidth = recyclerView.width
-            cardWidth = galleryWidth - 2 * (pagePadding + leftCardShowWidth)
-                    .dp2px(recyclerView.context)
+            cardWidth = recyclerView.width - 2 * (pagePadding + leftCardShowWidth)
         }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -77,6 +74,7 @@ class GalleryScaleHelper {
         snapHelper.attachToRecyclerView(recyclerView)
     }
 
+    @Throws(IndexOutOfBoundsException::class)
     fun getCurrentIndex(): Int {
         return currentItemPos
     }
