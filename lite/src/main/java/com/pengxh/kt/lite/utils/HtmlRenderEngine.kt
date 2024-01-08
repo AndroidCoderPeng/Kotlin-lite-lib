@@ -15,7 +15,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.pengxh.kt.lite.extensions.getScreenWidth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -81,7 +80,7 @@ class HtmlRenderEngine : LifecycleOwner {
                     var height = drawable.intrinsicHeight
 
                     //对图片按比例缩放尺寸
-                    val scale = context.getScreenWidth() / width.toFloat()
+                    val scale = textView.width / width.toFloat()
                     width = (scale * width).toInt()
                     height = (scale * height).toInt()
                     drawable.setBounds(0, 0, width, height)
