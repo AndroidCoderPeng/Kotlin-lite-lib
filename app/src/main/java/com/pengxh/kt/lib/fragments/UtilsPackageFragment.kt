@@ -13,6 +13,7 @@ import com.pengxh.kt.lib.fragments.utils.FileDownloadManagerFragment
 import com.pengxh.kt.lib.fragments.utils.GalleryScaleHelperFragment
 import com.pengxh.kt.lib.fragments.utils.HtmlRenderEngineFragment
 import com.pengxh.kt.lib.fragments.utils.HttpRequestFragment
+import com.pengxh.kt.lib.fragments.utils.LoadingDialogFragment
 import com.pengxh.kt.lib.fragments.utils.SocketFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
@@ -27,7 +28,6 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         "模糊背景画廊",
         "HTML富文本渲染",
         "Http请求",
-        "沉浸式状态栏",
         "加载对话框",
         "Activity栈管理",
         "Retrofit构造器",
@@ -45,7 +45,7 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         fragmentPages.add(GalleryScaleHelperFragment())
         fragmentPages.add(HtmlRenderEngineFragment())
         fragmentPages.add(HttpRequestFragment())
-//        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(LoadingDialogFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())

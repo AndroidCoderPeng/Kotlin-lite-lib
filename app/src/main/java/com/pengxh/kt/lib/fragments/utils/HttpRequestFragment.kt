@@ -13,6 +13,7 @@ import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.divider.RecyclerViewItemDivider
+import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.utils.HttpRequestHub
 
 class HttpRequestFragment : KotlinBaseFragment<FragmentUtilsHttpRequestBinding>() {
@@ -35,6 +36,10 @@ class HttpRequestFragment : KotlinBaseFragment<FragmentUtilsHttpRequestBinding>(
         httpRequestHub.setRequestTarget("https://way.jd.com/jisuapi/get?channel=头条&num=15&start=1&appkey=e957ed7ad90436a57e604127d9d8fa32")
             .setOnHttpRequestListener(object : HttpRequestHub.OnHttpRequestListener {
                 override fun onSuccess(result: String) {
+                    if (result.contains("请求超过次数限制")) {
+                        "请求超过次数限制".show(requireContext())
+                        return
+                    }
                     val listModel = gson.fromJson<NewsListModel>(
                         result, object : TypeToken<NewsListModel>() {}.type
                     )

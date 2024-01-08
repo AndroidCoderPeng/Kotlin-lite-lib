@@ -47,7 +47,7 @@
                 android:paddingHorizontal="@dimen/dp_5"
                 android:text="Server："
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_16" />
 
             <EditText
                 android:id="@+id/tcpIpInputView"
@@ -57,7 +57,7 @@
                 android:singleLine="true"
                 android:text="192.168.3.2:7777"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -79,7 +79,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_16" />
 
             <Button
                 android:id="@+id/sendTcpButton"
@@ -87,7 +87,7 @@
                 android:layout_height="match_parent"
                 android:text="发送"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_16" />
         </LinearLayout>
     </LinearLayout>
 
@@ -119,7 +119,7 @@
                 android:paddingHorizontal="@dimen/dp_5"
                 android:text="Server："
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_16" />
 
             <EditText
                 android:id="@+id/udpIpInputView"
@@ -129,7 +129,7 @@
                 android:singleLine="true"
                 android:text="192.168.3.2:7777"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -151,7 +151,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_16" />
 
             <Button
                 android:id="@+id/sendUdpButton"
@@ -159,7 +159,7 @@
                 android:layout_height="match_parent"
                 android:text="发送"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_16" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
