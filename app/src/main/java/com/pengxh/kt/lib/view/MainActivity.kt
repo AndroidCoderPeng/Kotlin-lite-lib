@@ -18,7 +18,7 @@ import com.pengxh.kt.lite.extensions.getStatusBarHeight
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     private val itemTitles = arrayOf(
-        "adapter", "base", "divider", "extensions", "utils", "vm", "widget"
+        "adapter", "base", "divider", "extensions", "utils", "widget"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
