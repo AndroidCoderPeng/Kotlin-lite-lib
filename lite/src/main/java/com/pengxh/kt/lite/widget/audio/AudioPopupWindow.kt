@@ -6,40 +6,38 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.base.BaseSingleton
 import com.pengxh.kt.lite.extensions.getScreenHeight
 import com.pengxh.kt.lite.extensions.getScreenWidth
 
 /**
- * 录音弹框，Example:
- *
- *         AudioPopupWindow.get(this).create(object : AudioPopupWindow.IAudioPopupCallback {
- *             override fun onViewCreated(window: PopupWindow, imageView: ImageView, textView: TextView) {
- *                 binding.audioButton.setOnTouchListener { v, event ->
- *                     when (event.action) {
- *                         MotionEvent.ACTION_DOWN -> {
- *                             window.showAtLocation(binding.rootView, Gravity.CENTER, 0, 0)
- *                             // 开始录音
- *                         }
- * 
- *                         MotionEvent.ACTION_UP -> {
- *                             // 结束录音并保存为文件
- *                             window.dismiss()
- *                         }
- *                     }
- *                     true
- *                 }
- *             }
- *         })
+ * 录音弹框
  * */
-class AudioPopupWindow private constructor(private val context: Context) {
+class AudioPopupWindow private constructor(builder: Builder) {
 
-    companion object : BaseSingleton<Context, AudioPopupWindow>() {
-        override val creator: (Context) -> AudioPopupWindow
-            get() = ::AudioPopupWindow
+    private val context = builder.context
+    private val callback = builder.callback
+
+    class Builder {
+        lateinit var context: Context
+        lateinit var callback: OnAudioPopupCallback
+
+        fun setContext(context: Context): Builder {
+            this.context = context
+            return this
+        }
+
+        fun setOnAudioPopupCallback(callback: OnAudioPopupCallback): Builder {
+            this.callback = callback
+            return this
+        }
+
+        fun build(): AudioPopupWindow {
+            return AudioPopupWindow(this)
+        }
     }
 
-    fun create(callback: IAudioPopupCallback) {
+
+    fun create() {
         val view = View.inflate(context, R.layout.popu_microphone, null)
         val popWidth = (context.getScreenWidth() * 0.30).toInt()
         val popHeight = (context.getScreenHeight() * 0.15).toInt()
@@ -50,7 +48,7 @@ class AudioPopupWindow private constructor(private val context: Context) {
         callback.onViewCreated(window, recodeImageView, recodeTextView)
     }
 
-    interface IAudioPopupCallback {
+    interface OnAudioPopupCallback {
         fun onViewCreated(window: PopupWindow, imageView: ImageView, textView: TextView)
     }
 }
