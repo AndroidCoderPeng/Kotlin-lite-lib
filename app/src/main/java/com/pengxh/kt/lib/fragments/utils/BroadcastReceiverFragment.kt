@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import com.pengxh.kt.lite.utils.BroadcastManager
 class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBinding>() {
 
     private val kTag = "BroadcastReceiverFragment"
+    private val ACTION_AP_WIFI_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED"
     private val broadcastManager by lazy { BroadcastManager(requireContext()) }
 
     override fun initViewBinding(
@@ -56,7 +56,7 @@ class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBindi
                 override fun onReceive(context: Context?, intent: Intent?) {
                     val action = intent?.action
                     action?.apply {
-                        if (this == "android.net.wifi.WIFI_AP_STATE_CHANGED") {
+                        if (this == ACTION_AP_WIFI_CHANGED) {
                             //便携式热点的状态为：10---正在关闭；11---已关闭；12---正在开启；13---已开启
                             when (intent.getIntExtra("wifi_state", 0)) {
                                 13 -> {
@@ -75,7 +75,7 @@ class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBindi
                     }
                 }
             },
-            "android.net.wifi.WIFI_AP_STATE_CHANGED",
+            ACTION_AP_WIFI_CHANGED,
             Intent.ACTION_POWER_CONNECTED,
             Intent.ACTION_POWER_DISCONNECTED
         )
@@ -93,7 +93,7 @@ class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBindi
         super.onDestroy()
         broadcastManager.destroy(
             BluetoothAdapter.ACTION_STATE_CHANGED,
-            WifiManager.WIFI_STATE_CHANGED_ACTION,
+            ACTION_AP_WIFI_CHANGED,
             Intent.ACTION_POWER_CONNECTED,
             Intent.ACTION_POWER_DISCONNECTED
         )

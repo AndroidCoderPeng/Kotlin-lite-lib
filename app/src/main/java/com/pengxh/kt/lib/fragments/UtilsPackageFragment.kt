@@ -9,6 +9,7 @@ import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentUtilsPackageBinding
 import com.pengxh.kt.lib.fragments.utils.BleFragment
 import com.pengxh.kt.lib.fragments.utils.BroadcastReceiverFragment
+import com.pengxh.kt.lib.fragments.utils.FileDownloadManagerFragment
 import com.pengxh.kt.lib.fragments.utils.SocketFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
@@ -37,17 +38,17 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         fragmentPages.add(BleFragment())
         fragmentPages.add(SocketFragment())
         fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
+        fragmentPages.add(FileDownloadManagerFragment())
     }
 
     override fun initViewBinding(

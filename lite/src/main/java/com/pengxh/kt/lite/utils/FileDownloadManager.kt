@@ -6,14 +6,16 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 class FileDownloadManager : LifecycleOwner {
-    private val kTag = "FileDownloadManager"
     private val registry = LifecycleRegistry(this)
     private val httpClient by lazy { OkHttpClient() }
     private lateinit var url: String
@@ -34,7 +36,12 @@ class FileDownloadManager : LifecycleOwner {
      *  如：apk等
      * */
     fun setFileSuffix(suffix: String): FileDownloadManager {
-        this.suffix = suffix
+        this.suffix = if (suffix.contains(".")) {
+            //去掉前缀的点
+            suffix.drop(1)
+        } else {
+            suffix
+        }
         return this
     }
 
@@ -71,42 +78,47 @@ class FileDownloadManager : LifecycleOwner {
         if (newCall.isExecuted()) {
             newCall.cancel()
         }
-        val buffer = ByteArray(2048)
-        var len: Int
-        lifecycleScope.launch(Dispatchers.IO) {
-            //开始下载
-            val response = httpClient.newCall(request).execute()
-            response.body?.apply {
-                val inputStream = this.byteStream()
-                val total = this.contentLength()
-                withContext(Dispatchers.Main) {
-                    downloadListener.onDownloadStart(total)
-                }
-                val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
-                val fileOutputStream = FileOutputStream(file)
-                var current: Long = 0
-                while (inputStream.read(buffer).also { len = it } != -1) {
-                    fileOutputStream.write(buffer, 0, len)
-                    current += len.toLong()
-                    withContext(Dispatchers.Main) {
-                        downloadListener.onProgressChanged(current)
-                    }
-                }
-                fileOutputStream.flush()
-                //关闭流
-                fileOutputStream.close()
-                inputStream.close()
-                withContext(Dispatchers.Main) {
-                    downloadListener.onDownloadEnd(file)
+
+        //异步下载文件
+        newCall.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                lifecycleScope.launch(Dispatchers.Main) {
+                    downloadListener.onFailure(e)
                 }
             }
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.apply {
+                    val inputStream = this.byteStream()
+                    val fileSize = this.contentLength()
+
+                    val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
+                    val fileOutputStream = FileOutputStream(file)
+                    val buffer = ByteArray(2048)
+                    var read: Int
+                    var sum = 0L
+                    while (inputStream.read(buffer).also { read = it } != -1) {
+                        fileOutputStream.write(buffer, 0, read)
+                        sum += read.toLong()
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            val progress = (sum * 1.0 / fileSize * 100).toInt()
+                            downloadListener.onProgressChanged(progress)
+                        }
+                    }
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        downloadListener.onDownloadEnd(file)
+                    }
+                    fileOutputStream.flush()
+                    //关闭流
+                    fileOutputStream.close()
+                    inputStream.close()
+                }
+            }
+        })
     }
 
     interface OnFileDownloadListener {
-        fun onDownloadStart(totalBytes: Long)
-
-        fun onProgressChanged(currentBytes: Long)
+        fun onProgressChanged(progress: Int)
 
         fun onDownloadEnd(file: File)
 

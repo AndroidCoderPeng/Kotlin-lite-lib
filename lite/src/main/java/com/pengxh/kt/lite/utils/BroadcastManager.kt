@@ -50,11 +50,15 @@ class BroadcastManager(private val context: Context) {
      * @param actions action集合
      */
     fun destroy(vararg actions: String) {
-        for (action in actions) {
-            val receiver = receiverMap[action]
-            if (receiver != null) {
-                context.unregisterReceiver(receiver)
+        try {
+            for (action in actions) {
+                val receiver = receiverMap[action]
+                if (receiver != null) {
+                    context.unregisterReceiver(receiver)
+                }
             }
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
         }
     }
 }
