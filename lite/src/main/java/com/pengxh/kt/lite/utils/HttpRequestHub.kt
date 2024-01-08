@@ -14,34 +14,45 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class HttpRequestHub : LifecycleOwner {
+class HttpRequestHub(builder: Builder) : LifecycleOwner {
+
     private val kTag = "HttpRequestHub"
     private val registry = LifecycleRegistry(this)
-    private lateinit var url: String
-    private lateinit var httpRequestListener: OnHttpRequestListener
 
-    /**
-     * 设置网络请求接口地址
-     * */
-    fun setRequestTarget(url: String): HttpRequestHub {
-        this.url = url
-        return this
+    class Builder {
+        lateinit var url: String
+        lateinit var httpRequestListener: OnHttpRequestListener
+
+        /**
+         * 设置网络请求接口地址
+         * */
+        fun setRequestTarget(url: String): Builder {
+            this.url = url
+            return this
+        }
+
+        /**
+         * 设置网络请求回调监听
+         * */
+        fun setOnHttpRequestListener(httpRequestListener: OnHttpRequestListener): Builder {
+            this.httpRequestListener = httpRequestListener
+            return this
+        }
+
+        fun build(): HttpRequestHub {
+            return HttpRequestHub(this)
+        }
     }
 
-    /**
-     * 设置网络请求回调监听
-     * */
-    fun setOnHttpRequestListener(httpRequestListener: OnHttpRequestListener): HttpRequestHub {
-        this.httpRequestListener = httpRequestListener
-        return this
-    }
+    private val url = builder.url
+    private val listener = builder.httpRequestListener
 
     /**
      * 发起网络请求
      * */
     fun start() {
         if (url.isBlank()) {
-            httpRequestListener.onFailure(IllegalArgumentException("url is empty"))
+            listener.onFailure(IllegalArgumentException("url is empty"))
             return
         }
         //构建Request
@@ -63,12 +74,12 @@ class HttpRequestHub : LifecycleOwner {
                 val response = client.newCall(request).execute()
                 response.body?.apply {
                     withContext(Dispatchers.Main) {
-                        httpRequestListener.onSuccess(string())
+                        listener.onSuccess(string())
                     }
                 }
             } catch (e: IOException) {
                 withContext(Dispatchers.Main) {
-                    httpRequestListener.onFailure(e)
+                    listener.onFailure(e)
                 }
             }
         }

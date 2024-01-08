@@ -21,45 +21,57 @@ import kotlinx.coroutines.withContext
 import org.xml.sax.XMLReader
 import java.util.Locale
 
-class HtmlRenderEngine : LifecycleOwner {
-    private val kTag = "HtmlRenderEngine"
+class HtmlRenderEngine(builder: Builder) : LifecycleOwner {
+
     private val registry = LifecycleRegistry(this)
-    private lateinit var context: Context
-    private lateinit var html: String
-    private lateinit var textView: TextView
-    private lateinit var imageSourceListener: OnGetImageSourceListener
 
-    /**
-     * 设置上下文
-     * */
-    fun setContext(context: Context): HtmlRenderEngine {
-        this.context = context
-        return this
+    class Builder {
+        lateinit var context: Context
+        lateinit var html: String
+        lateinit var textView: TextView
+        lateinit var imageSourceListener: OnGetImageSourceListener
+
+        /**
+         * 设置上下文
+         * */
+        fun setContext(context: Context): Builder {
+            this.context = context
+            return this
+        }
+
+        /**
+         * 设置html格式的文本
+         * */
+        fun setHtmlContent(html: String): Builder {
+            this.html = html
+            return this
+        }
+
+        /**
+         * 设置显示html格式文本的View
+         * */
+        fun setTargetView(textView: TextView): Builder {
+            this.textView = textView
+            return this
+        }
+
+        /**
+         * 设置html里面图片地址回调监听
+         * */
+        fun setOnGetImageSourceListener(imageSourceListener: OnGetImageSourceListener): Builder {
+            this.imageSourceListener = imageSourceListener
+            return this
+        }
+
+        fun build(): HtmlRenderEngine {
+            return HtmlRenderEngine(this)
+        }
     }
 
-    /**
-     * 设置html格式的文本
-     * */
-    fun setHtmlContent(html: String): HtmlRenderEngine {
-        this.html = html
-        return this
-    }
-
-    /**
-     * 设置显示html格式文本的View
-     * */
-    fun setTargetView(textView: TextView): HtmlRenderEngine {
-        this.textView = textView
-        return this
-    }
-
-    /**
-     * 设置html里面图片地址回调监听
-     * */
-    fun setOnGetImageSourceListener(imageSourceListener: OnGetImageSourceListener): HtmlRenderEngine {
-        this.imageSourceListener = imageSourceListener
-        return this
-    }
+    private val context = builder.context
+    private val html = builder.html
+    private val textView = builder.textView
+    private val listener = builder.imageSourceListener
 
     fun load() {
         if (html.isBlank()) {
@@ -103,7 +115,7 @@ class HtmlRenderEngine : LifecycleOwner {
                                     val imgSource = images[0].source ?: return
                                     output.setSpan(object : ClickableSpan() {
                                         override fun onClick(widget: View) {
-                                            imageSourceListener.imageSource(imgSource)
+                                            listener.imageSource(imgSource)
                                         }
                                     }, len - 1, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                                 }
@@ -120,7 +132,7 @@ class HtmlRenderEngine : LifecycleOwner {
                                 val imgSource = images[0].source ?: return
                                 output.setSpan(object : ClickableSpan() {
                                     override fun onClick(widget: View) {
-                                        imageSourceListener.imageSource(imgSource)
+                                        listener.imageSource(imgSource)
                                     }
                                 }, len - 1, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                             }
