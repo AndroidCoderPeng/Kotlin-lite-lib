@@ -14,6 +14,9 @@ import com.pengxh.kt.lib.fragments.widget.DeleteEditTextFragment
 import com.pengxh.kt.lib.fragments.widget.DialogFragment
 import com.pengxh.kt.lib.fragments.widget.EasyPopupWindowFragment
 import com.pengxh.kt.lib.fragments.widget.KeyBoardViewFragment
+import com.pengxh.kt.lib.fragments.widget.NoScrollViewPagerFragment
+import com.pengxh.kt.lib.fragments.widget.SlideBarViewFragment
+import com.pengxh.kt.lib.fragments.widget.SteeringWheelViewFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>() {
@@ -41,9 +44,9 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         fragmentPages.add(DeleteEditTextFragment())
         fragmentPages.add(EasyPopupWindowFragment())
         fragmentPages.add(KeyBoardViewFragment())
-//        fragmentPages.add(HttpRequestFragment())
-//        fragmentPages.add(LoadingDialogFragment())
-//        fragmentPages.add(RetrofitFactoryFragment())
+        fragmentPages.add(NoScrollViewPagerFragment())
+        fragmentPages.add(SlideBarViewFragment())
+        fragmentPages.add(SteeringWheelViewFragment())
     }
 
     override fun initViewBinding(

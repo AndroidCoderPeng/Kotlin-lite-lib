@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentUtilsHttpRequestBinding
 import com.pengxh.kt.lib.model.NewsListModel
-import com.pengxh.kt.lib.utils.LocalConstant
+import com.pengxh.kt.lib.utils.LocaleConstant
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -35,7 +35,7 @@ class HttpRequestFragment : KotlinBaseFragment<FragmentUtilsHttpRequestBinding>(
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         HttpRequestHub.Builder()
-            .setRequestTarget(LocalConstant.TARGET_API)
+            .setRequestTarget(LocaleConstant.TARGET_API)
             .setOnHttpRequestListener(object : HttpRequestHub.OnHttpRequestListener {
                 override fun onSuccess(result: String) {
                     val element = JsonParser.parseString(result)

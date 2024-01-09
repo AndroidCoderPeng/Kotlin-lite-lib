@@ -1,4 +1,4 @@
-package com.pengxh.kt.lib.fragments.divider
+package com.pengxh.kt.lib.fragments.widget
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.databinding.FragmentRvStickDecorationBinding
+import com.pengxh.kt.lib.databinding.FragmentWidgetSlideBarViewBinding
 import com.pengxh.kt.lib.model.CityModel
 import com.pengxh.kt.lib.utils.LocaleConstant
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
@@ -16,13 +16,22 @@ import com.pengxh.kt.lite.divider.RecyclerStickDecoration
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.getHanYuPinyin
 import com.pengxh.kt.lite.extensions.show
+import com.pengxh.kt.lite.widget.SlideBarView
 import java.text.Collator
 import java.util.Collections
 import java.util.Locale
 
-class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecorationBinding>() {
+class SlideBarViewFragment : KotlinBaseFragment<FragmentWidgetSlideBarViewBinding>() {
 
+    private val kTag = "SlideBarActivity"
     private val stickDecoration by lazy { RecyclerStickDecoration() }
+
+    override fun initViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentWidgetSlideBarViewBinding {
+        return FragmentWidgetSlideBarViewBinding.inflate(inflater, container, false)
+    }
 
     /**
      * 将城市整理成分组数据
@@ -42,13 +51,6 @@ class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecora
         return cityBeans
     }
 
-    override fun initViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ): FragmentRvStickDecorationBinding {
-        return FragmentRvStickDecorationBinding.inflate(inflater, container, false)
-    }
-
     override fun setupTopBarLayout() {
 
     }
@@ -56,7 +58,7 @@ class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecora
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val cityBeans = sortCity()
         val cityAdapter = object : NormalRecyclerAdapter<CityModel>(
-            R.layout.item_stick_decoration_rv_l, cityBeans
+            R.layout.item_slide_bar_rv_l, cityBeans
         ) {
             override fun convertView(viewHolder: ViewHolder, position: Int, item: CityModel) {
                 viewHolder.setText(R.id.cityName, item.city)
@@ -71,11 +73,8 @@ class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecora
                 startSmoothScroll(scroller)
             }
         }
-        binding.recyclerView.layoutManager = layoutManager
-
-        /***吸顶***start************************************/
-        stickDecoration.setContext(requireContext())
-            .setTopGap(24.dp2px(requireContext()))
+        binding.cityRecyclerView.layoutManager = layoutManager
+        stickDecoration.setContext(requireContext()).setTopGap(24.dp2px(requireContext()))
             .setViewGroupListener(
                 object : RecyclerStickDecoration.ViewGroupListener {
                     override fun groupTag(position: Int): Long {
@@ -86,10 +85,11 @@ class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecora
                         return cityBeans[position].initial
                     }
                 }).build()
-        binding.recyclerView.addItemDecoration(stickDecoration)
-        /***吸顶***end**********************************/
-
-        binding.recyclerView.adapter = cityAdapter
+        binding.cityRecyclerView.addItemDecoration(stickDecoration)
+        binding.slideBarView.attachToRecyclerView(
+            binding.cityRecyclerView, LocaleConstant.CITIES.toMutableList()
+        )
+        binding.cityRecyclerView.adapter = cityAdapter
         cityAdapter.setOnItemClickedListener(object :
             NormalRecyclerAdapter.OnItemClickedListener<CityModel> {
             override fun onItemClicked(position: Int, t: CityModel) {
@@ -103,6 +103,15 @@ class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecora
     }
 
     override fun initEvent() {
-
+        binding.slideBarView.setOnLetterIndexChangeListener(object :
+            SlideBarView.OnLetterIndexChangeListener {
+            override fun onLetterIndexChange(letter: String) {
+                //根据滑动显示的字母索引到城市名字第一个汉字
+                val letterPosition = binding.slideBarView.getLetterPosition(letter)
+                if (letterPosition != -1) {
+                    binding.cityRecyclerView.smoothScrollToPosition(letterPosition)
+                }
+            }
+        })
     }
 }

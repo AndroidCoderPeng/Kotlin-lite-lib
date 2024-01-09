@@ -8,7 +8,7 @@ import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.pengxh.kt.lib.databinding.FragmentUtilsHtmlRenderBinding
 import com.pengxh.kt.lib.model.NewsListModel
-import com.pengxh.kt.lib.utils.LocalConstant
+import com.pengxh.kt.lib.utils.LocaleConstant
 import com.pengxh.kt.lib.view.BigImageActivity
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.navigatePageTo
@@ -34,7 +34,7 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         HttpRequestHub.Builder()
-            .setRequestTarget(LocalConstant.TARGET_API)
+            .setRequestTarget(LocaleConstant.TARGET_API)
             .setOnHttpRequestListener(object : HttpRequestHub.OnHttpRequestListener {
                 override fun onSuccess(result: String) {
                     val element = JsonParser.parseString(result)

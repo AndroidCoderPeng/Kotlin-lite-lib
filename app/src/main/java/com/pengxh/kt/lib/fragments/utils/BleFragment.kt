@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentUtilsBleBinding
-import com.pengxh.kt.lib.utils.LocalConstant
+import com.pengxh.kt.lib.utils.LocaleConstant
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.utils.LoadingDialogHub
@@ -117,9 +117,9 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
             LoadingDialogHub.show(requireActivity(), "正在连接...")
             bleManager.connectBleDevice(
                 device,
-                LocalConstant.SERVICE_UUID,
-                LocalConstant.READ_CHARACTERISTIC_UUID,
-                LocalConstant.WRITE_CHARACTERISTIC_UUID,
+                LocaleConstant.SERVICE_UUID,
+                LocaleConstant.READ_CHARACTERISTIC_UUID,
+                LocaleConstant.WRITE_CHARACTERISTIC_UUID,
                 10 * 1000,
                 bleConnectListener
             )
