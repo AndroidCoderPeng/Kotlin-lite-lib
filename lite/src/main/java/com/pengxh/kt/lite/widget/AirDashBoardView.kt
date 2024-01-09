@@ -47,7 +47,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
 
     //表盘圆弧背景色
     private val background: Int
-    private val ringWidth: Int
+    private val ringStroke: Int
     private val ringRectF: RectF
     private lateinit var ringPaint: Paint
 
@@ -73,7 +73,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
     private var sweepAngle = 0f
 
     //表盘中心文字
-    private var centerText: String
+    private var centerText = "未定义"
     private lateinit var currentValuePaint: TextPaint
     private lateinit var centerPaint: TextPaint
     private lateinit var forePaint: Paint
@@ -96,8 +96,8 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
             -ringRadius.toFloat(), -ringRadius.toFloat(), ringRadius.toFloat(), ringRadius.toFloat()
         )
         background = type.getColor(R.styleable.AirDashBoardView_air_ring_background, Color.LTGRAY)
-        ringWidth = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_ring_width, 5.dp2px(context)
+        ringStroke = type.getDimensionPixelOffset(
+            R.styleable.AirDashBoardView_air_ring_stroke, 5.dp2px(context)
         )
 
         thresholdTextSize = type.getDimensionPixelOffset(
@@ -108,7 +108,6 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
         currentValueTextSize = type.getDimensionPixelOffset(
             R.styleable.AirDashBoardView_air_current_valueSize, 24.dp2px(context)
         )
-        centerText = type.getString(R.styleable.AirDashBoardView_air_center_text).toString()
         centerTextSize = type.getDimensionPixelOffset(
             R.styleable.AirDashBoardView_air_center_textSize, 12.dp2px(context)
         )
@@ -136,7 +135,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
         ringPaint.color = background
         ringPaint.strokeCap = Paint.Cap.ROUND
         ringPaint.style = Paint.Style.STROKE
-        ringPaint.strokeWidth = ringWidth.toFloat().dp2px(context).toFloat()
+        ringPaint.strokeWidth = ringStroke.toFloat().dp2px(context).toFloat()
         ringPaint.isAntiAlias = true
         //设置背景光晕
         ringPaint.maskFilter = BlurMaskFilter(15f, BlurMaskFilter.Blur.SOLID)
@@ -160,7 +159,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
         forePaint = Paint()
         forePaint.strokeCap = Paint.Cap.ROUND
         forePaint.style = Paint.Style.STROKE
-        forePaint.strokeWidth = ringWidth.toFloat().dp2px(context).toFloat()
+        forePaint.strokeWidth = ringStroke.toFloat().dp2px(context).toFloat()
         forePaint.isAntiAlias = true
     }
 
