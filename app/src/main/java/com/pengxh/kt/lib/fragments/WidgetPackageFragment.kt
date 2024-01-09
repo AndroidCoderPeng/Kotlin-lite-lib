@@ -8,6 +8,7 @@ import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentWidgetPackageBinding
 import com.pengxh.kt.lib.fragments.widget.AudioFragment
+import com.pengxh.kt.lib.fragments.widget.DialogFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>() {
@@ -29,7 +30,7 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
 
     init {
         fragmentPages.add(AudioFragment())
-//        fragmentPages.add(SocketFragment())
+        fragmentPages.add(DialogFragment())
 //        fragmentPages.add(ActivityStackManagerFragment())
 //        fragmentPages.add(BroadcastReceiverFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
