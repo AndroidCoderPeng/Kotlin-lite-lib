@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.pengxh.kt.lite.widget.CircleProgressBar
+        android:id="@+id/circleProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cpb_backgroundColor="@color/mainBackground"
+        app:cpb_foregroundColor="@color/mainColor"
+        app:cpb_ring_radius="@dimen/dp_50"
+        app:cpb_ring_stroke="@dimen/dp_10"
+        app:cpb_text="@string/app_name" />
+</LinearLayout>

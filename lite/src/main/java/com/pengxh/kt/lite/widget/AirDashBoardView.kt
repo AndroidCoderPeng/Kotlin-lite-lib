@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Handler
+import android.os.Message
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
@@ -31,7 +33,8 @@ import kotlinx.coroutines.withContext
  *                 .setAirCurrentValueColor(Color.BLUE)
  *                 .setCurrentValue(255)
  */
-class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View(context, attrs),
+    Handler.Callback {
 
     //View中心X坐标
     private var centerX = 0f
@@ -56,7 +59,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
     private val thresholdColor: Int
     private lateinit var thresholdPaint: TextPaint
 
-    private val weakReferenceHandler: WeakReferenceHandler
+    private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
     private val currentValueTextSize: Int
     private val centerTextSize: Int
 
@@ -116,12 +119,6 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
 
         //初始化画笔
         initPaint()
-        weakReferenceHandler = WeakReferenceHandler { msg ->
-            if (msg.what == 2022061201) {
-                sweepAngle = msg.arg1.toFloat() * 270 / maxValue
-            }
-            true
-        }
     }
 
     private fun initPaint() {
@@ -388,13 +385,33 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
                 for (i in 0 until currentValue) {
-                    val message = weakReferenceHandler.obtainMessage()
-                    message.arg1 = i
-                    message.what = 2022061201
-                    weakReferenceHandler.handleMessage(message)
+                    weakReferenceHandler.post(updateProgressRunnable.setProgress(i))
                     delay(10)
                 }
             }
         }
+    }
+
+    private interface UpdateProgressRunnable : Runnable {
+        fun setProgress(progress: Int): UpdateProgressRunnable
+    }
+
+    private val updateProgressRunnable = object : UpdateProgressRunnable {
+
+        private var progress = 0
+
+        override fun setProgress(progress: Int): UpdateProgressRunnable {
+            this.progress = progress
+            return this
+        }
+
+        override fun run() {
+            sweepAngle = progress.toFloat() * 270 / maxValue
+            invalidate()
+        }
+    }
+
+    override fun handleMessage(msg: Message): Boolean {
+        return true
     }
 }

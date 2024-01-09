@@ -9,6 +9,7 @@ import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentWidgetPackageBinding
 import com.pengxh.kt.lib.fragments.widget.AirDashBoardViewFragment
 import com.pengxh.kt.lib.fragments.widget.AudioFragment
+import com.pengxh.kt.lib.fragments.widget.CircleProgressBarFragment
 import com.pengxh.kt.lib.fragments.widget.DialogFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
@@ -33,7 +34,7 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         fragmentPages.add(AudioFragment())
         fragmentPages.add(DialogFragment())
         fragmentPages.add(AirDashBoardViewFragment())
-//        fragmentPages.add(BroadcastReceiverFragment())
+        fragmentPages.add(CircleProgressBarFragment())
 //        fragmentPages.add(FileDownloadManagerFragment())
 //        fragmentPages.add(GalleryScaleHelperFragment())
 //        fragmentPages.add(HtmlRenderEngineFragment())

@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Handler
 import android.os.Message
 import android.text.TextPaint
 import android.text.TextUtils
@@ -23,13 +24,15 @@ import kotlinx.coroutines.withContext
 /**
  * 圆形进度条
  */
-class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : View(context, attrs),
+    Handler.Callback {
 
     private val ringRadius: Int
+    private var rectF: RectF
 
     //控件边长
     private val viewSideLength: Int
-    private val ringWidth: Int
+    private val ringStroke: Int
     private val viewRect: Rect
     private lateinit var guidePaint: Paint
 
@@ -47,7 +50,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
 
     //当前测量值转为弧度扫过的角度
     private var sweepAngle = 0f
-    private val weakReferenceHandler: WeakReferenceHandler
+    private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
 
     init {
         val type = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar)
@@ -55,8 +58,14 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         ringRadius = type.getDimensionPixelOffset(
             R.styleable.CircleProgressBar_cpb_ring_radius, 100.dp2px(context)
         )
-        ringWidth = type.getDimensionPixelOffset(
-            R.styleable.CircleProgressBar_cpb_ring_width, 10.dp2px(context)
+        rectF = RectF(
+            -ringRadius.toFloat(),
+            -ringRadius.toFloat(),
+            ringRadius.toFloat(),
+            ringRadius.toFloat()
+        )
+        ringStroke = type.getDimensionPixelOffset(
+            R.styleable.CircleProgressBar_cpb_ring_stroke, 10.dp2px(context)
         )
         //需要给外围刻度留位置
         viewSideLength = ringRadius + 30.dp2px(context)
@@ -74,27 +83,20 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         type.recycle()
         //初始化画笔
         initPaint()
-
-        weakReferenceHandler = WeakReferenceHandler { msg: Message ->
-            if (msg.what == 2022010101) {
-                sweepAngle = msg.arg1.toFloat() * 360 / 100
-            }
-            true
-        }
     }
 
     private fun initPaint() {
         guidePaint = Paint()
         guidePaint.color = Color.LTGRAY
         guidePaint.style = Paint.Style.STROKE
-        guidePaint.strokeWidth = 1f.dp2px(context).toFloat()
+        guidePaint.strokeWidth = 1f.dp2px(context)
         guidePaint.isAntiAlias = true
 
         //背景色画笔
         backgroundPaint = Paint()
         backgroundPaint.color = backgroundColor
         backgroundPaint.style = Paint.Style.STROKE
-        backgroundPaint.strokeWidth = ringWidth.toFloat()
+        backgroundPaint.strokeWidth = ringStroke.toFloat()
         backgroundPaint.strokeCap = Paint.Cap.ROUND //圆头
         backgroundPaint.isAntiAlias = true
 
@@ -102,7 +104,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         foregroundPaint = Paint()
         foregroundPaint.color = foregroundColor
         foregroundPaint.style = Paint.Style.STROKE
-        foregroundPaint.strokeWidth = ringWidth.toFloat()
+        foregroundPaint.strokeWidth = ringStroke.toFloat()
         foregroundPaint.strokeCap = Paint.Cap.ROUND //圆头
         foregroundPaint.isAntiAlias = true
 
@@ -197,7 +199,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         }
 
         //绘制前景进度
-        drawForegroundArc(canvas)
+        canvas.drawArc(rectF, -90f, sweepAngle, false, foregroundPaint)
     }
 
     /**
@@ -226,17 +228,6 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         )
     }
 
-    private fun drawForegroundArc(canvas: Canvas) {
-        val rectF = RectF(
-            -ringRadius.toFloat(),
-            -ringRadius.toFloat(),
-            ringRadius.toFloat(),
-            ringRadius.toFloat()
-        )
-        canvas.drawArc(rectF, -90f, sweepAngle, false, foregroundPaint)
-        invalidate()
-    }
-
     fun setCurrentValue(value: Int) {
         currentValue = when {
             value < 0 -> "0"
@@ -247,13 +238,33 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
                 for (i in 0 until value) {
-                    val message = weakReferenceHandler.obtainMessage()
-                    message.arg1 = i
-                    message.what = 2022010101
-                    weakReferenceHandler.handleMessage(message)
-                    delay(20)
+                    weakReferenceHandler.post(updateProgressRunnable.setProgress(i))
+                    delay(10)
                 }
             }
         }
+    }
+
+    private interface UpdateProgressRunnable : Runnable {
+        fun setProgress(progress: Int): UpdateProgressRunnable
+    }
+
+    private val updateProgressRunnable = object : UpdateProgressRunnable {
+
+        private var progress = 0
+
+        override fun setProgress(progress: Int): UpdateProgressRunnable {
+            this.progress = progress
+            return this
+        }
+
+        override fun run() {
+            sweepAngle = progress.toFloat() * 360 / 100
+            invalidate()
+        }
+    }
+
+    override fun handleMessage(msg: Message): Boolean {
+        return true
     }
 }
