@@ -12,6 +12,8 @@ import com.pengxh.kt.lib.fragments.widget.AudioFragment
 import com.pengxh.kt.lib.fragments.widget.CircleProgressBarFragment
 import com.pengxh.kt.lib.fragments.widget.DeleteEditTextFragment
 import com.pengxh.kt.lib.fragments.widget.DialogFragment
+import com.pengxh.kt.lib.fragments.widget.EasyPopupWindowFragment
+import com.pengxh.kt.lib.fragments.widget.KeyBoardViewFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>() {
@@ -37,14 +39,11 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         fragmentPages.add(AirDashBoardViewFragment())
         fragmentPages.add(CircleProgressBarFragment())
         fragmentPages.add(DeleteEditTextFragment())
-//        fragmentPages.add(GalleryScaleHelperFragment())
-//        fragmentPages.add(HtmlRenderEngineFragment())
+        fragmentPages.add(EasyPopupWindowFragment())
+        fragmentPages.add(KeyBoardViewFragment())
 //        fragmentPages.add(HttpRequestFragment())
 //        fragmentPages.add(LoadingDialogFragment())
 //        fragmentPages.add(RetrofitFactoryFragment())
-//        fragmentPages.add(SaveKeyValuesFragment())
-//        fragmentPages.add(WaterMarkerEngineFragment())
-//        fragmentPages.add(WeakReferenceHandlerFragment())
     }
 
     override fun initViewBinding(
