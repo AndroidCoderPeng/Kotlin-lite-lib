@@ -7,7 +7,7 @@
     app:cardCornerRadius="@dimen/lib_dp_5">
 
     <ListView
-        android:id="@+id/popupListView"
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@drawable/popup_list_divider"

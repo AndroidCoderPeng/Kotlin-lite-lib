@@ -12,12 +12,13 @@ import android.widget.TextView
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.getScreenWidth
 
+/**
+ * TODO 封装不尽人意，先就这样吧
+ * */
 class EasyPopupWindow constructor(context: Context) : PopupWindow() {
 
-    private var clickListener: OnPopupWindowClickListener? = null
-
     init {
-        width = ((context.getScreenWidth() * 0.35).toInt())
+        width = ((context.getScreenWidth() * 0.4).toInt())
         height = ViewGroup.LayoutParams.WRAP_CONTENT
         isOutsideTouchable = true
         isFocusable = true
@@ -28,47 +29,43 @@ class EasyPopupWindow constructor(context: Context) : PopupWindow() {
         )
     }
 
-    fun setPopupMenuItem(imageArray: IntArray, titleArray: Array<String>) {
-        try {
-            val popupListView = contentView.findViewById<ListView>(R.id.popupListView)
-            popupListView.adapter = object : BaseAdapter() {
-                private val inflater: LayoutInflater = LayoutInflater.from(contentView.context)
-                override fun getCount(): Int {
-                    return imageArray.size
-                }
-
-                override fun getItem(position: Int): Any {
-                    return imageArray[position]
-                }
-
-                override fun getItemId(position: Int): Long {
-                    return position.toLong()
-                }
-
-                override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                    val view: View
-                    val holder: PopupWindowHolder
-                    if (convertView == null) {
-                        view = inflater.inflate(R.layout.item_popup_menu, null)
-                        holder = PopupWindowHolder()
-                        holder.imageView = view.findViewById(R.id.imageView)
-                        holder.titleView = view.findViewById(R.id.titleView)
-                        view.tag = holder
-                    } else {
-                        view = convertView
-                        holder = view.tag as PopupWindowHolder
-                    }
-                    holder.imageView.setBackgroundResource(imageArray[position])
-                    holder.titleView.text = titleArray[position]
-                    return view
-                }
+    fun set(menuItems: ArrayList<MenuItem>, windowClickListener: OnPopupWindowClickListener) {
+        val listView = contentView.findViewById<ListView>(R.id.listView)
+        listView.adapter = object : BaseAdapter() {
+            private val inflater: LayoutInflater = LayoutInflater.from(contentView.context)
+            override fun getCount(): Int {
+                return menuItems.size
             }
-            popupListView.setOnItemClickListener { _, _, position, _ ->
-                clickListener?.onPopupItemClicked(position)
-                dismiss()
+
+            override fun getItem(position: Int): Any {
+                return menuItems[position]
             }
-        } catch (e: NullPointerException) {
-            e.printStackTrace()
+
+            override fun getItemId(position: Int): Long {
+                return position.toLong()
+            }
+
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                val view: View
+                val holder: PopupWindowHolder
+                if (convertView == null) {
+                    view = inflater.inflate(R.layout.item_popup_menu, null)
+                    holder = PopupWindowHolder()
+                    holder.imageView = view.findViewById(R.id.imageView)
+                    holder.titleView = view.findViewById(R.id.titleView)
+                    view.tag = holder
+                } else {
+                    view = convertView
+                    holder = view.tag as PopupWindowHolder
+                }
+                holder.imageView.setBackgroundResource(menuItems[position].icon)
+                holder.titleView.text = menuItems[position].name
+                return view
+            }
+        }
+        listView.setOnItemClickListener { _, _, position, _ ->
+            windowClickListener.onPopupItemClicked(position)
+            dismiss()
         }
     }
 
@@ -76,12 +73,13 @@ class EasyPopupWindow constructor(context: Context) : PopupWindow() {
         fun onPopupItemClicked(position: Int)
     }
 
-    fun setOnPopupWindowClickListener(windowClickListener: OnPopupWindowClickListener?) {
-        clickListener = windowClickListener
-    }
-
-    internal class PopupWindowHolder {
+    private class PopupWindowHolder {
         lateinit var imageView: ImageView
         lateinit var titleView: TextView
     }
+
+    /**
+     * 菜单数据模型
+     * */
+    data class MenuItem(val icon: Int, val name: String)
 }
