@@ -4,11 +4,11 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RetrofitService {
-    @GET("/jisuapi/get")
+    @GET("/news/get")
     suspend fun getNewsByPage(
-        @Query("appkey") appkey: String,
         @Query("channel") channel: String,
+        @Query("start") start: Int,
         @Query("num") num: Int,
-        @Query("start") start: Int
+        @Query("appkey") appkey: String,
     ): String
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 class RetrofitFactoryFragment : KotlinBaseFragment<FragmentUtilsRetrofitFactoryBinding>() {
 
     private val api by lazy {
-        val httpConfig = "https://way.jd.com"
+        val httpConfig = "https://api.jisuapi.com"
         RetrofitFactory.createRetrofit<RetrofitService>(httpConfig)
     }
 
@@ -41,7 +41,7 @@ class RetrofitFactoryFragment : KotlinBaseFragment<FragmentUtilsRetrofitFactoryB
     }
 
     private suspend fun getNewsByPage(channel: String, start: Int): String {
-        return api.getNewsByPage("e957ed7ad90436a57e604127d9d8fa32", channel, 10, start)
+        return api.getNewsByPage(channel, start, 10, "e957ed7ad90436a57e604127d9d8fa32")
     }
 
     override fun observeRequestState() {
