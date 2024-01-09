@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentUtilsHttpRequestBinding
 import com.pengxh.kt.lib.model.NewsListModel
+import com.pengxh.kt.lib.utils.LocalConstant
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -33,23 +35,26 @@ class HttpRequestFragment : KotlinBaseFragment<FragmentUtilsHttpRequestBinding>(
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         HttpRequestHub.Builder()
-            .setRequestTarget("https://way.jd.com/jisuapi/get?channel=头条&num=15&start=1&appkey=e957ed7ad90436a57e604127d9d8fa32")
+            .setRequestTarget(LocalConstant.TARGET_API)
             .setOnHttpRequestListener(object : HttpRequestHub.OnHttpRequestListener {
                 override fun onSuccess(result: String) {
-                    if (result.contains("请求超过次数限制")) {
-                        "请求超过次数限制".show(requireContext())
+                    val element = JsonParser.parseString(result)
+                    val jsonObject = element.asJsonObject
+                    if (jsonObject.get("status").asInt != 0) {
+                        jsonObject.get("msg").asString.show(requireContext())
                         return
                     }
+
                     val listModel = gson.fromJson<NewsListModel>(
                         result, object : TypeToken<NewsListModel>() {}.type
                     )
                     val listAdapter = object :
-                        NormalRecyclerAdapter<NewsListModel.ResultModel.ResultSubModel.ListModel>(
-                            R.layout.item_http_request_rv_l, listModel.result.result.list
+                        NormalRecyclerAdapter<NewsListModel.ResultModel.ListModel>(
+                            R.layout.item_http_request_rv_l, listModel.result.list
                         ) {
                         override fun convertView(
                             viewHolder: ViewHolder, position: Int,
-                            item: NewsListModel.ResultModel.ResultSubModel.ListModel
+                            item: NewsListModel.ResultModel.ListModel
                         ) {
                             viewHolder.setText(R.id.textView, item.title)
                         }

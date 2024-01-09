@@ -4,26 +4,16 @@ import java.util.List;
 
 public class NewsListModel {
 
-    private String code;
-    private Boolean charge;
+    private Integer status;
     private String msg;
     private ResultModel result;
-    private String requestId;
 
-    public String getCode() {
-        return code;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Boolean getCharge() {
-        return charge;
-    }
-
-    public void setCharge(Boolean charge) {
-        this.charge = charge;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getMsg() {
@@ -42,145 +32,107 @@ public class NewsListModel {
         this.result = result;
     }
 
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
-
     public static class ResultModel {
-        private Integer status;
-        private String msg;
-        private ResultModel.ResultSubModel result;
+        private String channel;
+        private Integer num;
+        private List<ListModel> list;
 
-        public Integer getStatus() {
-            return status;
+        public String getChannel() {
+            return channel;
         }
 
-        public void setStatus(Integer status) {
-            this.status = status;
+        public void setChannel(String channel) {
+            this.channel = channel;
         }
 
-        public String getMsg() {
-            return msg;
+        public Integer getNum() {
+            return num;
         }
 
-        public void setMsg(String msg) {
-            this.msg = msg;
+        public void setNum(Integer num) {
+            this.num = num;
         }
 
-        public ResultSubModel getResult() {
-            return result;
+        public List<ListModel> getList() {
+            return list;
         }
 
-        public void setResult(ResultSubModel result) {
-            this.result = result;
+        public void setList(List<ListModel> list) {
+            this.list = list;
         }
 
-        public static class ResultSubModel {
-            private String channel;
-            private Integer num;
-            private List<ResultModel.ResultSubModel.ListModel> list;
+        public static class ListModel {
+            private String title;
+            private String time;
+            private String src;
+            private String category;
+            private String pic;
+            private String url;
+            private String weburl;
+            private String content;
 
-            public String getChannel() {
-                return channel;
+            public String getTitle() {
+                return title;
             }
 
-            public void setChannel(String channel) {
-                this.channel = channel;
+            public void setTitle(String title) {
+                this.title = title;
             }
 
-            public Integer getNum() {
-                return num;
+            public String getTime() {
+                return time;
             }
 
-            public void setNum(Integer num) {
-                this.num = num;
+            public void setTime(String time) {
+                this.time = time;
             }
 
-            public List<ResultModel.ResultSubModel.ListModel> getList() {
-                return list;
+            public String getSrc() {
+                return src;
             }
 
-            public void setList(List<ResultModel.ResultSubModel.ListModel> list) {
-                this.list = list;
+            public void setSrc(String src) {
+                this.src = src;
             }
 
-            public static class ListModel {
-                private String title;
-                private String time;
-                private String src;
-                private String category;
-                private String pic;
-                private String url;
-                private String weburl;
-                private String content;
+            public String getCategory() {
+                return category;
+            }
 
-                public String getTitle() {
-                    return title;
-                }
+            public void setCategory(String category) {
+                this.category = category;
+            }
 
-                public void setTitle(String title) {
-                    this.title = title;
-                }
+            public String getPic() {
+                return pic;
+            }
 
-                public String getTime() {
-                    return time;
-                }
+            public void setPic(String pic) {
+                this.pic = pic;
+            }
 
-                public void setTime(String time) {
-                    this.time = time;
-                }
+            public String getUrl() {
+                return url;
+            }
 
-                public String getSrc() {
-                    return src;
-                }
+            public void setUrl(String url) {
+                this.url = url;
+            }
 
-                public void setSrc(String src) {
-                    this.src = src;
-                }
+            public String getWeburl() {
+                return weburl;
+            }
 
-                public String getCategory() {
-                    return category;
-                }
+            public void setWeburl(String weburl) {
+                this.weburl = weburl;
+            }
 
-                public void setCategory(String category) {
-                    this.category = category;
-                }
+            public String getContent() {
+                return content;
+            }
 
-                public String getPic() {
-                    return pic;
-                }
-
-                public void setPic(String pic) {
-                    this.pic = pic;
-                }
-
-                public String getUrl() {
-                    return url;
-                }
-
-                public void setUrl(String url) {
-                    this.url = url;
-                }
-
-                public String getWeburl() {
-                    return weburl;
-                }
-
-                public void setWeburl(String weburl) {
-                    this.weburl = weburl;
-                }
-
-                public String getContent() {
-                    return content;
-                }
-
-                public void setContent(String content) {
-                    this.content = content;
-                }
+            public void setContent(String content) {
+                this.content = content;
             }
         }
     }
