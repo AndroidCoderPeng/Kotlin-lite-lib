@@ -91,6 +91,6 @@ class AudioFragment : KotlinBaseFragment<FragmentWidgetAudioBinding>() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-//        binding.audioPlayView.stop()
+        binding.audioPlayView.stop()
     }
 }

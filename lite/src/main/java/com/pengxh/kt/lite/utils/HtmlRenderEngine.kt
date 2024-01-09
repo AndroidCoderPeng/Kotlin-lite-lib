@@ -15,6 +15,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.extensions.convertDrawable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -87,7 +89,13 @@ class HtmlRenderEngine(builder: Builder) : LifecycleOwner {
             }
             withContext(Dispatchers.IO) {
                 val imageGetter = Html.ImageGetter { source ->
-                    val drawable = Glide.with(context).load(source).submit().get()
+                    val drawable = try {
+                        Glide.with(context).load(source).submit().get()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        R.mipmap.load_image_error.convertDrawable(context)!!
+                    }
+
                     var width = drawable.intrinsicWidth
                     var height = drawable.intrinsicHeight
 

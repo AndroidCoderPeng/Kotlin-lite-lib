@@ -47,7 +47,7 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
                     val listModel = gson.fromJson<NewsListModel>(
                         result, object : TypeToken<NewsListModel>() {}.type
                     )
-                    renderHtmlText(listModel.result.list[0].content)
+                    renderHtmlText(listModel.result.list[2].content)
                 }
 
                 override fun onFailure(throwable: Throwable) {
