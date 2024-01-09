@@ -1,6 +1,5 @@
 package com.pengxh.kt.lite.utils
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -21,99 +20,105 @@ import java.io.FileOutputStream
 /**
  * 绘制水印
  */
-class WaterMarkerEngine : LifecycleOwner {
+class WaterMarkerEngine(builder: Builder) : LifecycleOwner {
 
     private val registry = LifecycleRegistry(this)
     private val textPaint by lazy { TextPaint() }
     private val textRect by lazy { Rect() }
 
-    private lateinit var context: Context
-    private lateinit var originalBitmap: Bitmap
-    private lateinit var marker: String
-    private var textColor = Color.WHITE
-    private var textSize = 16f
-    private var textPadding = 10f
-    private lateinit var addedListener: OnWaterMarkerAddedListener
-    private var position = WaterMarkPosition.RIGHT_BOTTOM
-    private lateinit var fileName: String
+    class Builder {
+        lateinit var originalBitmap: Bitmap
+        lateinit var marker: String
+        var textColor = Color.WHITE
+        var textSize = 16f
+        var textMargin = 10f
+        var position = WaterMarkPosition.RIGHT_BOTTOM
+        lateinit var fileName: String
+        lateinit var addedListener: OnWaterMarkerAddedListener
 
-    /**
-     * 设置上下文
-     * */
-    fun setContext(context: Context): WaterMarkerEngine {
-        this.context = context
-        return this
+        /**
+         * 设置原始Bitmap
+         * */
+        fun setOriginalBitmap(bitmap: Bitmap): Builder {
+            this.originalBitmap = bitmap
+            return this
+        }
+
+        /**
+         * 设置水印文字
+         * */
+        fun setTextMaker(marker: String): Builder {
+            this.marker = marker
+            return this
+        }
+
+        /**
+         * 设置水印文字颜色
+         * */
+        fun setTextColor(textColor: Int): Builder {
+            this.textColor = textColor
+            return this
+        }
+
+        /**
+         * 设置水印文字大小
+         * */
+        fun setTextSize(textSize: Float): Builder {
+            this.textSize = textSize
+            return this
+        }
+
+        /**
+         * 设置水印文字距离Bitmap内边距
+         * */
+        fun setTextMargin(textMargin: Float): Builder {
+            this.textMargin = textMargin
+            return this
+        }
+
+        /**
+         * 设置水印文字位置
+         * */
+        fun setMarkerPosition(@WaterMarkPosition position: Int): Builder {
+            this.position = position
+            return this
+        }
+
+        /**
+         * 设置水印图片保存路径
+         * */
+        fun setMarkedSavePath(fileName: String): Builder {
+            this.fileName = fileName
+            return this
+        }
+
+        /**
+         * 设置水印图片回调监听
+         * */
+        fun setOnWaterMarkerAddedListener(addedListener: OnWaterMarkerAddedListener): Builder {
+            this.addedListener = addedListener
+            return this
+        }
+
+        fun build(): WaterMarkerEngine {
+            return WaterMarkerEngine(this)
+        }
     }
 
-    /**
-     * 设置原始Bitmap
-     * */
-    fun setOriginalBitmap(bitmap: Bitmap): WaterMarkerEngine {
-        this.originalBitmap = bitmap
-        return this
-    }
-
-    /**
-     * 设置水印文字
-     * */
-    fun setTextMaker(marker: String): WaterMarkerEngine {
-        this.marker = marker
-        return this
-    }
-
-    /**
-     * 设置水印文字颜色
-     * */
-    fun setTextColor(textColor: Int): WaterMarkerEngine {
-        this.textColor = textColor
-        return this
-    }
-
-    /**
-     * 设置水印文字大小
-     * */
-    fun setTextSize(textSize: Float): WaterMarkerEngine {
-        this.textSize = textSize
-        return this
-    }
-
-    /**
-     * 设置水印文字位置
-     * */
-    fun setMarkerPosition(@WaterMarkPosition position: Int): WaterMarkerEngine {
-        this.position = position
-        return this
-    }
-
-    /**
-     * 设置水印文字距离Bitmap内边距
-     * */
-    fun setTextPadding(textPadding: Float): WaterMarkerEngine {
-        this.textPadding = textPadding
-        return this
-    }
-
-    /**
-     * 设置水印图片保存路径
-     * */
-    fun setMarkedSavePath(fileName: String): WaterMarkerEngine {
-        this.fileName = fileName
-        return this
-    }
-
-    /**
-     * 设置水印图片回调监听
-     * */
-    fun setOnWaterMarkerAddedListener(addedListener: OnWaterMarkerAddedListener): WaterMarkerEngine {
-        this.addedListener = addedListener
-        return this
-    }
+    private val originalBitmap = builder.originalBitmap
+    private val marker = builder.marker
+    private val textColor = builder.textColor
+    private val textSize = builder.textSize
+    private val textMargin = builder.textMargin
+    private val position = builder.position
+    private val fileName = builder.fileName
+    private val listener = builder.addedListener
 
     /**
      * 开始添加水印
      * */
     fun start() {
-        addedListener.onStart()
+        listener.onStart()
         //初始化画笔
         textPaint.color = textColor
         textPaint.typeface = Typeface.DEFAULT_BOLD
@@ -132,23 +137,23 @@ class WaterMarkerEngine : LifecycleOwner {
 
             when (position) {
                 WaterMarkPosition.LEFT_TOP -> {
-                    canvas.drawText(marker, textPadding, textPadding, textPaint)
+                    canvas.drawText(marker, textMargin, textMargin, textPaint)
                 }
 
                 WaterMarkPosition.RIGHT_TOP -> {
                     canvas.drawText(
-                        marker, bitmapWidth - textRect.width() - textPadding, textPadding, textPaint
+                        marker, bitmapWidth - textRect.width() - textMargin, textMargin, textPaint
                     )
                 }
 
                 WaterMarkPosition.LEFT_BOTTOM -> {
-                    canvas.drawText(marker, textPadding, bitmapHeight - textPadding, textPaint)
+                    canvas.drawText(marker, textMargin, bitmapHeight - textMargin, textPaint)
                 }
 
                 WaterMarkPosition.RIGHT_BOTTOM -> {
                     canvas.drawText(
                         marker,
-                        bitmapWidth - textRect.width() - textPadding, bitmapHeight - textPadding,
+                        bitmapWidth - textRect.width() - textMargin, bitmapHeight - textMargin,
                         textPaint
                     )
                 }
@@ -172,9 +177,8 @@ class WaterMarkerEngine : LifecycleOwner {
             copyBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fileOutputStream)
             fileOutputStream.flush()
             fileOutputStream.close()
-
             withContext(Dispatchers.Main) {
-                addedListener.onMarkAdded(file)
+                listener.onMarkAdded(file)
             }
         }
     }

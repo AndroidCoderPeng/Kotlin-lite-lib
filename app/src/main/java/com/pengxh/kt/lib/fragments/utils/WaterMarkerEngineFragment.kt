@@ -29,7 +29,6 @@ import java.io.File
 class WaterMarkerEngineFragment : KotlinBaseFragment<FragmentUtilsWaterMarkerBinding>() {
 
     private var mediaRealPath: String? = null
-    private val markerEngine by lazy { WaterMarkerEngine() }
     private lateinit var compressImageDir: File
 
     override fun initViewBinding(
@@ -114,13 +113,13 @@ class WaterMarkerEngineFragment : KotlinBaseFragment<FragmentUtilsWaterMarkerBin
 
 
             val bitmap = BitmapFactory.decodeFile(mediaRealPath)
-            markerEngine.setContext(requireContext())
+            WaterMarkerEngine.Builder()
                 .setOriginalBitmap(bitmap)
                 .setTextMaker(System.currentTimeMillis().timestampToCompleteDate())
                 .setTextColor(Color.RED)
-                .setTextSize(80f.sp2px(requireContext()))
+                .setTextSize(50f.sp2px(requireContext()))
                 .setMarkerPosition(position)
-                .setTextPadding(30f.dp2px(requireContext()))
+                .setTextMargin(30f.dp2px(requireContext()))
                 .setMarkedSavePath("${compressImageDir}/${System.currentTimeMillis()}.png")
                 .setOnWaterMarkerAddedListener(object :
                     WaterMarkerEngine.OnWaterMarkerAddedListener {
@@ -135,7 +134,7 @@ class WaterMarkerEngineFragment : KotlinBaseFragment<FragmentUtilsWaterMarkerBin
 
                         LoadingDialogHub.dismiss()
                     }
-                }).start()
+                }).build().start()
         }
     }
 }

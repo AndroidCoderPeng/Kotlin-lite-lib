@@ -19,7 +19,7 @@
         android:id="@+id/downloadPathView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/titleViewHeight"
-        android:paddingHorizontal="@dimen/dp_10"
+        android:paddingHorizontal="@dimen/dp_5"
         android:singleLine="true"
         android:text="http://60.208.121.150:5001/static/apk/1.1.4.apk"
         android:textColor="@color/black"

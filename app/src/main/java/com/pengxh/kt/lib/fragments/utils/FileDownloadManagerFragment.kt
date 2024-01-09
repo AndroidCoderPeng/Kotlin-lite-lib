@@ -12,7 +12,6 @@ import java.io.File
 class FileDownloadManagerFragment : KotlinBaseFragment<FragmentUtilsFileDownloadBinding>() {
 
     private val kTag = "FileDownloadManagerFragment"
-    private val fileDownloadManager by lazy { FileDownloadManager() }
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -40,7 +39,8 @@ class FileDownloadManagerFragment : KotlinBaseFragment<FragmentUtilsFileDownload
                 return@setOnClickListener
             }
 
-            fileDownloadManager.setDownloadFileSource(text.toString())
+            FileDownloadManager.Builder()
+                .setDownloadFileSource(text.toString())
                 .setFileSuffix(".apk")
                 .setFileSaveDirectory(requireContext().createDownloadFileDir())
                 .setOnFileDownloadListener(object : FileDownloadManager.OnFileDownloadListener {
@@ -57,7 +57,7 @@ class FileDownloadManagerFragment : KotlinBaseFragment<FragmentUtilsFileDownload
                     override fun onFailure(throwable: Throwable) {
                         binding.startDownloadButton.isEnabled = true
                     }
-                }).start()
+                }).build().start()
         }
     }
 }

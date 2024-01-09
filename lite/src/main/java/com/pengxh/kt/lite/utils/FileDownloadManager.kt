@@ -15,58 +15,71 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class FileDownloadManager : LifecycleOwner {
+class FileDownloadManager(builder: Builder) : LifecycleOwner {
+
     private val registry = LifecycleRegistry(this)
     private val httpClient by lazy { OkHttpClient() }
-    private lateinit var url: String
-    private lateinit var suffix: String
-    private lateinit var directory: File
-    private lateinit var downloadListener: OnFileDownloadListener
 
-    /**
-     * 文件下载地址
-     * */
-    fun setDownloadFileSource(url: String): FileDownloadManager {
-        this.url = url
-        return this
-    }
+    class Builder {
+        lateinit var url: String
+        lateinit var suffix: String
+        lateinit var directory: File
+        lateinit var downloadListener: OnFileDownloadListener
 
-    /**
-     * 文件后缀
-     *  如：apk等
-     * */
-    fun setFileSuffix(suffix: String): FileDownloadManager {
-        this.suffix = if (suffix.contains(".")) {
-            //去掉前缀的点
-            suffix.drop(1)
-        } else {
-            suffix
+        /**
+         * 文件下载地址
+         * */
+        fun setDownloadFileSource(url: String): Builder {
+            this.url = url
+            return this
         }
-        return this
+
+        /**
+         * 文件后缀
+         *  如：apk等
+         * */
+        fun setFileSuffix(suffix: String): Builder {
+            this.suffix = if (suffix.contains(".")) {
+                //去掉前缀的点
+                suffix.drop(1)
+            } else {
+                suffix
+            }
+            return this
+        }
+
+        /**
+         * 文件保存的地址
+         * */
+        fun setFileSaveDirectory(directory: File): Builder {
+            this.directory = directory
+            return this
+        }
+
+        /**
+         * 设置文件下载回调监听
+         * */
+        fun setOnFileDownloadListener(downloadListener: OnFileDownloadListener): Builder {
+            this.downloadListener = downloadListener
+            return this
+        }
+
+        fun build(): FileDownloadManager {
+            return FileDownloadManager(this)
+        }
     }
 
-    /**
-     * 文件保存的地址
-     * */
-    fun setFileSaveDirectory(directory: File): FileDownloadManager {
-        this.directory = directory
-        return this
-    }
-
-    /**
-     * 设置文件下载回调监听
-     * */
-    fun setOnFileDownloadListener(downloadListener: OnFileDownloadListener): FileDownloadManager {
-        this.downloadListener = downloadListener
-        return this
-    }
+    private val url = builder.url
+    private val suffix = builder.suffix
+    private val directory = builder.directory
+    private val listener = builder.downloadListener
 
     /**
      * 开始下载
      * */
     fun start() {
         if (url.isBlank()) {
-            downloadListener.onFailure(IllegalArgumentException("url is empty"))
+            listener.onFailure(IllegalArgumentException("url is empty"))
             return
         }
 
@@ -83,7 +96,7 @@ class FileDownloadManager : LifecycleOwner {
         newCall.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    downloadListener.onFailure(e)
+                    listener.onFailure(e)
                 }
             }
 
@@ -102,11 +115,11 @@ class FileDownloadManager : LifecycleOwner {
                         sum += read.toLong()
                         lifecycleScope.launch(Dispatchers.Main) {
                             val progress = (sum * 1.0 / fileSize * 100).toInt()
-                            downloadListener.onProgressChanged(progress)
+                            listener.onProgressChanged(progress)
                         }
                     }
                     lifecycleScope.launch(Dispatchers.Main) {
-                        downloadListener.onDownloadEnd(file)
+                        listener.onDownloadEnd(file)
                     }
                     fileOutputStream.flush()
                     //关闭流

@@ -16,8 +16,6 @@ import com.pengxh.kt.lite.utils.HttpRequestHub
 
 class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBinding>() {
 
-    private val renderEngine by lazy { HtmlRenderEngine() }
-    private val httpRequestHub by lazy { HttpRequestHub() }
     private val gson by lazy { Gson() }
 
     override fun initViewBinding(
@@ -32,7 +30,8 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        httpRequestHub.setRequestTarget("https://way.jd.com/jisuapi/get?channel=头条&num=10&start=1&appkey=e957ed7ad90436a57e604127d9d8fa32")
+        HttpRequestHub.Builder()
+            .setRequestTarget("https://way.jd.com/jisuapi/get?channel=头条&num=10&start=1&appkey=e957ed7ad90436a57e604127d9d8fa32")
             .setOnHttpRequestListener(object : HttpRequestHub.OnHttpRequestListener {
                 override fun onSuccess(result: String) {
                     if (result.contains("请求超过次数限制")) {
@@ -48,11 +47,12 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
                 override fun onFailure(throwable: Throwable) {
 
                 }
-            }).start()
+            }).build().start()
     }
 
     private fun renderHtmlText(content: String) {
-        renderEngine.setContext(requireContext())
+        HtmlRenderEngine.Builder()
+            .setContext(requireContext())
             .setHtmlContent(content)
             .setTargetView(binding.htmlTextView)
             .setOnGetImageSourceListener(object : HtmlRenderEngine.OnGetImageSourceListener {
@@ -61,7 +61,7 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
                     urls.add(url)
                     requireContext().navigatePageTo<BigImageActivity>(0, urls)
                 }
-            }).load()
+            }).build().load()
     }
 
     override fun observeRequestState() {
