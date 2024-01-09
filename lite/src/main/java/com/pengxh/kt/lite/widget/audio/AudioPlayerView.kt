@@ -15,21 +15,23 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
+/**
+ * TODO 暂时先放一放，计划重写
+ * */
 class AudioPlayerView(context: Context, attrs: AttributeSet) : AppCompatTextView(context, attrs),
     Handler.Callback, View.OnClickListener {
 
     private val kTag = "AudioPlayerView"
+    private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
     private lateinit var audioSource: File
     private var mediaPlayer: MediaPlayer? = null
     private var hasPrepared = false
     private var index = 0
-    private var weakReferenceHandler: WeakReferenceHandler
     private var animationRunnable: Runnable
 
     init {
         setOnClickListener(this)
 
-        weakReferenceHandler = WeakReferenceHandler(this)
         animationRunnable = object : Runnable {
             override fun run() {
                 weakReferenceHandler.postDelayed(this, 200)

@@ -44,7 +44,7 @@ class AudioPopupWindow private constructor(builder: Builder) {
         val window = PopupWindow(view, popWidth, popHeight, true)
         window.animationStyle = R.style.PopupAnimation
         val recodeImageView = view.findViewById<ImageView>(R.id.recodeImageView)
-        val recodeTextView: TextView = view.findViewById(R.id.recodeTextView)
+        val recodeTextView = view.findViewById<TextView>(R.id.recodeTextView)
         callback.onViewCreated(window, recodeImageView, recodeTextView)
     }
 
