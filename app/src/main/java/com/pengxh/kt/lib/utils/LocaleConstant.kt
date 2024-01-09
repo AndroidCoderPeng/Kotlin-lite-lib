@@ -62,5 +62,5 @@ object LocaleConstant {
 
     //API测试接口地址
     const val TARGET_API =
-        "https://api.jisuapi.com/news/get?channel=头条&start=0&num=15&appkey=e957ed7ad90436a57e604127d9d8fa32"
+        "https://api.jisuapi.com/news/get?channel=头条&start=0&num=15&appkey=32736cbe845d7a70"
 }

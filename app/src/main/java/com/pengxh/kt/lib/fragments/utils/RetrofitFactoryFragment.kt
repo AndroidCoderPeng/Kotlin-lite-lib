@@ -41,7 +41,7 @@ class RetrofitFactoryFragment : KotlinBaseFragment<FragmentUtilsRetrofitFactoryB
     }
 
     private suspend fun getNewsByPage(channel: String, start: Int): String {
-        return api.getNewsByPage(channel, start, 10, "e957ed7ad90436a57e604127d9d8fa32")
+        return api.getNewsByPage(channel, start, 10, "32736cbe845d7a70")
     }
 
     override fun observeRequestState() {

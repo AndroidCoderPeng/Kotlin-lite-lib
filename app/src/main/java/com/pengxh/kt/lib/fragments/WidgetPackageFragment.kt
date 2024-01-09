@@ -29,7 +29,7 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         "圆形进度条",
         "带删除的输入框",
         "PopupWindow",
-        "输入法键盘",
+        "数字键盘",
         "NoScrollViewPager",
         "联系人侧边栏",
         "方向控制盘"
