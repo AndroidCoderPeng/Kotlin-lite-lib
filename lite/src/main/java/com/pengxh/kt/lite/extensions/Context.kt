@@ -229,10 +229,15 @@ fun Context.createLogFile(): File {
     return logFile
 }
 
+/**
+ * 音频编解码：AMR_WB
+ *
+ * 音频文件格式：.amr
+ * */
 fun Context.createAudioFile(): File {
     val audioDir = File(this.getExternalFilesDir(Environment.DIRECTORY_MUSIC), "")
     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(Date())
-    val audioFile = File(audioDir.toString() + File.separator + "AUD_" + timeStamp + ".m4a")
+    val audioFile = File(audioDir.toString() + File.separator + "AUD_" + timeStamp + ".amr")
     if (!audioFile.exists()) {
         try {
             audioFile.createNewFile()

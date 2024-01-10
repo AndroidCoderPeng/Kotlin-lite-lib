@@ -8,6 +8,17 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 
 /**
+ * 小于10首位补〇
+ * */
+fun Int.appendZero(): String {
+    return if (this < 10) {
+        "0$this"
+    } else {
+        this.toString()
+    }
+}
+
+/**
  * 获取xml颜色值
  */
 fun Int.convertColor(context: Context): Int {

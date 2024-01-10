@@ -38,8 +38,8 @@ class AudioRecorder constructor(private val context: Context) : Handler.Callback
         }
         mediaRecorder?.apply {
             setAudioSource(MediaRecorder.AudioSource.MIC) // 设置麦克风
-            setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setOutputFormat(MediaRecorder.OutputFormat.AMR_WB)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB)
             setOutputFile(audioFile.absolutePath)
             setMaxDuration(Constant.MAX_LENGTH)
             prepare()
@@ -47,7 +47,7 @@ class AudioRecorder constructor(private val context: Context) : Handler.Callback
     }
 
     /**
-     * 开始录音 使用m4a格式
+     * 开始录音 使用amr格式
      *
      * @return
      */
