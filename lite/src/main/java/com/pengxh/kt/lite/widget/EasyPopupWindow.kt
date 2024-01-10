@@ -12,9 +12,6 @@ import android.widget.TextView
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.getScreenWidth
 
-/**
- * TODO 封装不尽人意，先就这样吧
- * */
 class EasyPopupWindow constructor(context: Context) : PopupWindow() {
 
     init {
@@ -33,6 +30,7 @@ class EasyPopupWindow constructor(context: Context) : PopupWindow() {
         val listView = contentView.findViewById<ListView>(R.id.listView)
         listView.adapter = object : BaseAdapter() {
             private val inflater: LayoutInflater = LayoutInflater.from(contentView.context)
+
             override fun getCount(): Int {
                 return menuItems.size
             }
