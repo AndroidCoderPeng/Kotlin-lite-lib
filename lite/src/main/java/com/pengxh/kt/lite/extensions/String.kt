@@ -18,7 +18,6 @@ import java.io.IOException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.regex.Pattern
 import kotlin.math.abs
 
 /**
@@ -150,11 +149,8 @@ fun String.formatToYearMonthDay(): String {
  * 判断输入的是否是数字
  */
 fun String.isNumber(): Boolean {
-    var isDigit = false
-    for (element in this) {
-        isDigit = Character.isDigit(element)
-    }
-    return isDigit
+    val regex = Regex("[-+]?\\d+(\\.\\d+)?")
+    return this.matches(regex)
 }
 
 /**
@@ -178,8 +174,8 @@ fun String.isLetterAndDigit(): Boolean {
  */
 fun String.isChinese(): Boolean {
     if (this.isNotEmpty()) {
-        val pattern = Pattern.compile("[\\u4e00-\\u9fa5]+")
-        return pattern.matcher(this).matches()
+        val regex = Regex("[\\u4e00-\\u9fa5]+")
+        return this.matches(regex)
     }
     return false
 }
@@ -191,8 +187,8 @@ fun String.isPhoneNumber(): Boolean {
     } else {
         val regExp =
             "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}\$"
-        val pattern = Pattern.compile(regExp)
-        pattern.matcher(this).matches()
+        val regex = Regex(regExp)
+        this.matches(regex)
     }
 }
 
@@ -204,8 +200,8 @@ fun String.isEmail(): Boolean {
         false
     } else {
         val regExp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$"
-        val pattern = Pattern.compile(regExp)
-        pattern.matcher(this).matches()
+        val regex = Regex(regExp)
+        this.matches(regex)
     }
 }
 
