@@ -7,17 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Button
 import androidx.fragment.app.DialogFragment
-import com.pengxh.kt.lite.R
+import com.pengxh.kt.lite.databinding.DialogGlobeAlertBinding
+import com.pengxh.kt.lite.extensions.bindView
 import com.pengxh.kt.lite.extensions.getScreenWidth
 
 
 class GlobeAlertDialog(private val listener: OnDialogButtonClickListener) : DialogFragment() {
 
+    private val binding by bindView<DialogGlobeAlertBinding>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val window = dialog?.window
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window?.decorView?.setBackgroundColor(Color.TRANSPARENT)
@@ -26,16 +28,14 @@ class GlobeAlertDialog(private val listener: OnDialogButtonClickListener) : Dial
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         window?.attributes = params
 
-        val view = inflater.inflate(R.layout.dialog_globe_alert, container, false)
-
-        view.findViewById<Button>(R.id.dialogCancelButton).setOnClickListener {
+        binding.dialogCancelButton.setOnClickListener {
             listener.onCancelClick()
         }
 
-        view.findViewById<Button>(R.id.dialogConfirmButton).setOnClickListener {
+        binding.dialogConfirmButton.setOnClickListener {
             listener.onConfirmClick()
         }
-        return view
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

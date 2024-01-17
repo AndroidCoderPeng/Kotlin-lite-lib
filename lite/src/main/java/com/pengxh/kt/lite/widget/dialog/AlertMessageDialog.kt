@@ -62,7 +62,6 @@ class AlertMessageDialog private constructor(builder: Builder) : Dialog(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.initDialogLayoutParams(0.8f)
-        setContentView(R.layout.dialog_message)
         setCanceledOnTouchOutside(false)
         initView()
     }

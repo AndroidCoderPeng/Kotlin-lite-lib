@@ -71,7 +71,6 @@ class AlertInputDialog private constructor(builder: Builder) : Dialog(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.initDialogLayoutParams(0.8f)
-        setContentView(R.layout.dialog_input)
         setCanceledOnTouchOutside(false)
         initView()
     }
@@ -94,7 +93,7 @@ class AlertInputDialog private constructor(builder: Builder) : Dialog(
             binding.dialogConfirmButton.text = positiveBtn
         }
         binding.dialogConfirmButton.setOnClickListener(View.OnClickListener {
-            val inputValue: String = binding.dialogInputView.text.toString().trim()
+            val inputValue = binding.dialogInputView.text.toString().trim()
             if (inputValue.isBlank()) {
                 "输入错误，请检查！".show(ctx)
                 return@OnClickListener

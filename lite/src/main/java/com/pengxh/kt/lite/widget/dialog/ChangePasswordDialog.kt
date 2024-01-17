@@ -3,7 +3,6 @@ package com.pengxh.kt.lite.widget.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.databinding.DialogChangePwdBinding
@@ -49,15 +48,15 @@ class ChangePasswordDialog private constructor(builder: Builder) : Dialog(
             val oldPwd = binding.oldPwdView.text.toString()
             val newPwd = binding.newPwdView.text.toString()
             val confirmPwd = binding.confirmPwdView.text.toString()
-            if (TextUtils.isEmpty(oldPwd)) {
+            if (oldPwd.isBlank()) {
                 "请输入原密码".show(ctx)
                 return@OnClickListener
             }
-            if (TextUtils.isEmpty(newPwd)) {
+            if (newPwd.isBlank()) {
                 "请输入新密码".show(ctx)
                 return@OnClickListener
             }
-            if (TextUtils.isEmpty(confirmPwd)) {
+            if (confirmPwd.isBlank()) {
                 "请再次确认密码".show(ctx)
                 return@OnClickListener
             }
