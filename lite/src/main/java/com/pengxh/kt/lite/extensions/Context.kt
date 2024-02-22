@@ -248,6 +248,15 @@ fun Context.createAudioFile(): File {
     return audioFile
 }
 
+fun Context.createVideoFileDir(): File {
+    val videoDir = File(this.getExternalFilesDir(Environment.DIRECTORY_MOVIES), "")
+    if (!videoDir.exists()) {
+        videoDir.mkdir()
+    }
+    return videoDir
+}
+
+
 fun Context.createDownloadFileDir(): File {
     val downloadDir = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "")
     if (!downloadDir.exists()) {
