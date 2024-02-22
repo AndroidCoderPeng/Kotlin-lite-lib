@@ -87,7 +87,7 @@ fun Bitmap.createRoundDrawable(context: Context, borderStroke: Float, color: Int
     val borderPaint = Paint()
     borderPaint.style = Paint.Style.STROKE
     borderPaint.isAntiAlias = true
-    borderPaint.strokeWidth = borderStroke.dp2px(context).toFloat()
+    borderPaint.strokeWidth = borderStroke.dp2px(context)
     borderPaint.color = color
 
     //添加边框

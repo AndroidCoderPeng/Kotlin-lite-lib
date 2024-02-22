@@ -20,6 +20,7 @@ import com.pengxh.kt.lite.extensions.createCompressImageDir
 import com.pengxh.kt.lite.extensions.createDownloadFileDir
 import com.pengxh.kt.lite.extensions.createImageFileDir
 import com.pengxh.kt.lite.extensions.createLogFile
+import com.pengxh.kt.lite.extensions.createVideoFileDir
 import com.pengxh.kt.lite.extensions.getScreenDensity
 import com.pengxh.kt.lite.extensions.getScreenHeight
 import com.pengxh.kt.lite.extensions.getScreenWidth
@@ -144,6 +145,10 @@ class ContextExtensionFragment : KotlinBaseFragment<FragmentExtensionContextBind
 
         binding.createAudioFileButton.setOnClickListener {
             showMessageAlertDialog(requireContext().createAudioFile().absolutePath)
+        }
+
+        binding.createVideoFileButton.setOnClickListener {
+            showMessageAlertDialog(requireContext().createVideoFileDir().absolutePath)
         }
 
         binding.createDownloadDirButton.setOnClickListener {
