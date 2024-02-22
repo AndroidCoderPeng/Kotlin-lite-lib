@@ -2,7 +2,6 @@ package com.pengxh.kt.lite.extensions
 
 import android.content.Context
 import android.graphics.Color
-import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
 import com.pengxh.kt.lite.R
@@ -228,7 +227,6 @@ fun String.show(context: Context) {
     textView.setPadding(
         20.dp2px(context), 10.dp2px(context), 20.dp2px(context), 10.dp2px(context)
     )
-    toast.setGravity(Gravity.BOTTOM, 0, 90.dp2px(context))
     toast.view = textView
     toast.duration = Toast.LENGTH_SHORT
     toast.show()

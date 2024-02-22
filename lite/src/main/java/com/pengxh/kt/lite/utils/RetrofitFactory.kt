@@ -25,17 +25,17 @@ object RetrofitFactory {
             }
         })
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        val builder = OkHttpClient.Builder()
+        val httpClientBuilder = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
             .connectTimeout(timeout, TimeUnit.SECONDS)
             .readTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
-        val httpClient = builder.addInterceptor(interceptor).build()
         return Retrofit.Builder()
             .baseUrl(httpConfig)
             .addConverterFactory(ScalarsConverterFactory.create())          //字符串转换器
             .addConverterFactory(GsonConverterFactory.create())             //Gson转换器
             .addCallAdapterFactory(CoroutineCallAdapterFactory.invoke())    //协程请求适配器
-            .client(httpClient) //log拦截器
+            .client(httpClientBuilder.build()) //log拦截器
             .build().create(T::class.java)
     }
 }
