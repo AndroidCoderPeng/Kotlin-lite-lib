@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference
 
 class WeakReferenceHandler(callback: Callback) : Handler(Looper.getMainLooper()) {
 
-    private var weakReference: WeakReference<Callback> = WeakReference<Callback>(callback)
+    private var weakReference = WeakReference(callback)
 
     override fun handleMessage(msg: Message) {
         super.handleMessage(msg)

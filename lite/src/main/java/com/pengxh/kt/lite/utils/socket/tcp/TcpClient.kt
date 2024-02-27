@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 
 class TcpClient constructor(private val messageCallback: OnTcpMessageCallback) : LifecycleOwner {
 
-    private val kTag = "SocketClient"
+    private val kTag = "TcpClient"
     private var host = ""
     private var port = 0
     private var isConnected = false
