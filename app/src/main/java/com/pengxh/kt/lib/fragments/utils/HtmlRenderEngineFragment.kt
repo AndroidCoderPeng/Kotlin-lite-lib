@@ -34,6 +34,7 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         HttpRequestHub.Builder()
+            .setAuthentication()
             .setRequestTarget(LocaleConstant.TARGET_API)
             .setOnHttpRequestListener(object : HttpRequestHub.OnHttpRequestListener {
                 override fun onSuccess(result: String) {

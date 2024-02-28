@@ -20,8 +20,19 @@ class HttpRequestHub(builder: Builder) : LifecycleOwner {
     private val registry = LifecycleRegistry(this)
 
     class Builder {
+        lateinit var key: String
+        lateinit var value: String
         lateinit var url: String
         lateinit var httpRequestListener: OnHttpRequestListener
+
+        /**
+         * 设置网络请求鉴权
+         */
+        fun setAuthentication(key: String = "token", value: String = ""): Builder {
+            this.key = key
+            this.value = value
+            return this
+        }
 
         /**
          * 设置网络请求接口地址
@@ -44,6 +55,8 @@ class HttpRequestHub(builder: Builder) : LifecycleOwner {
         }
     }
 
+    private val key = builder.key
+    private val value = builder.value
     private val url = builder.url
     private val listener = builder.httpRequestListener
 
@@ -56,7 +69,7 @@ class HttpRequestHub(builder: Builder) : LifecycleOwner {
             return
         }
         //构建Request
-        val request = Request.Builder().url(url).get().build()
+        val request = Request.Builder().addHeader(key, value).url(url).get().build()
         lifecycleScope.launch(Dispatchers.IO) {
             val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
                 override fun log(message: String) {
