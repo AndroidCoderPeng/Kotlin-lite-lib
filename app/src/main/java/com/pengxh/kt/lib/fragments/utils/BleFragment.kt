@@ -1,6 +1,7 @@
 package com.pengxh.kt.lib.fragments.utils
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.graphics.Color
 import android.os.Bundle
@@ -13,9 +14,8 @@ import com.pengxh.kt.lib.utils.LocaleConstant
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.utils.LoadingDialogHub
-import com.pengxh.kt.lite.utils.ble.BLEManager
-import com.pengxh.kt.lite.utils.ble.BluetoothDevice
-import com.pengxh.kt.lite.utils.ble.OnBleConnectListener
+import com.pengxh.kt.lite.utils.ble.BleDeviceManager
+import com.pengxh.kt.lite.utils.ble.OnDeviceConnectListener
 import com.pengxh.kt.lite.utils.ble.OnDeviceDiscoveredListener
 import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
 
@@ -23,8 +23,8 @@ import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
 class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
 
     private val kTag = "BleFragment"
-    private val bleManager by lazy { BLEManager(requireContext()) }
-    private val bluetoothDevices: MutableList<BluetoothDevice> = ArrayList()
+    private val bleDeviceManager by lazy { BleDeviceManager(requireContext()) }
+    private val bluetoothDevices = ArrayList<BluetoothDevice>()
     private var isConnected = false
 
     override fun initViewBinding(
@@ -40,7 +40,7 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
 
     override fun onResume() {
         super.onResume()
-        if (bleManager.isBluetoothEnabled()) {
+        if (bleDeviceManager.isBluetoothEnabled()) {
             binding.openButton.isEnabled = false
             binding.bleStateView.setBackgroundColor(Color.GREEN)
         } else {
@@ -51,7 +51,7 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         binding.openButton.setOnClickListener {
-            bleManager.openBluetooth(false)
+            bleDeviceManager.openBluetooth()
         }
     }
 
@@ -61,12 +61,12 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
 
     override fun initEvent() {
         binding.scanButton.setOnClickListener {
-            if (bleManager.isDiscovering() || isConnected) {
-                bleManager.stopDiscoverDevice()
+            if (bleDeviceManager.isDiscovering() || isConnected) {
+                bleDeviceManager.stopDiscoverDevice()
             }
 
             LoadingDialogHub.show(requireActivity(), "设备搜索中...")
-            bleManager.startScanDevice(object : OnDeviceDiscoveredListener {
+            bleDeviceManager.startScanDevice(object : OnDeviceDiscoveredListener {
                 override fun onDeviceFound(device: BluetoothDevice) {
                     if (bluetoothDevices.isEmpty()) {
                         bluetoothDevices.add(device)
@@ -74,7 +74,7 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
                         //0表示未添加到list的新设备，1表示已经扫描并添加到list的设备
                         var judge = 0
                         for (temp in bluetoothDevices) {
-                            if (temp.device.address == device.device.address) {
+                            if (temp.address == device.address) {
                                 judge = 1
                                 break
                             }
@@ -85,12 +85,12 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
                     }
                 }
 
-                override fun onDiscoveryTimeout() {
+                override fun onDeviceDiscoveryEnd() {
                     LoadingDialogHub.dismiss()
                     //显示搜索到设备列表
                     val bleArray = ArrayList<String>()
                     bluetoothDevices.forEach {
-                        bleArray.add(it.device.name)
+                        bleArray.add(it.name)
                     }
 
                     BottomActionSheet.Builder()
@@ -100,35 +100,31 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
                         .setOnActionSheetListener(object : BottomActionSheet.OnActionSheetListener {
                             override fun onActionItemClick(position: Int) {
                                 //连接点击的设备
-                                startConnectDevice(bluetoothDevices[position].device)
+                                startConnectDevice(bluetoothDevices[position])
                             }
-                        })
-                        .build()
-                        .show()
+                        }).build().show()
                 }
 
-            }, 15 * 1000)
+            }, 10 * 1000)
         }
     }
 
-    private fun startConnectDevice(device: android.bluetooth.BluetoothDevice) {
+    private fun startConnectDevice(device: BluetoothDevice) {
         // 当前蓝牙设备
         if (!isConnected) {
             LoadingDialogHub.show(requireActivity(), "正在连接...")
-            bleManager.connectBleDevice(
+            bleDeviceManager.connectBleDevice(
                 device,
-                LocaleConstant.SERVICE_UUID,
-                LocaleConstant.READ_CHARACTERISTIC_UUID,
-                LocaleConstant.WRITE_CHARACTERISTIC_UUID,
+                LocaleConstant.SERVICE_UUID, LocaleConstant.WRITE_CHARACTERISTIC_UUID,
                 10 * 1000,
                 bleConnectListener
             )
         } else {
-            bleManager.disConnectDevice()
+            bleDeviceManager.disConnectDevice()
         }
     }
 
-    private val bleConnectListener = object : OnBleConnectListener {
+    private val bleConnectListener = object : OnDeviceConnectListener {
         override fun onConnecting(bluetoothGatt: BluetoothGatt?) {
             Log.d(kTag, "onConnecting => ")
         }
@@ -138,7 +134,7 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
         }
 
         override fun onConnectFailure(
-            bluetoothGatt: BluetoothGatt?, exception: String?, status: Int
+            bluetoothGatt: BluetoothGatt?, exception: String, status: Int
         ) {
             Log.d(kTag, "onConnectFailure => ")
             isConnected = false
@@ -153,14 +149,14 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
             isConnected = false
         }
 
-        override fun onServiceDiscoverySucceed(bluetoothGatt: BluetoothGatt?, status: Int) {
+        override fun onServiceDiscoverySuccess(bluetoothGatt: BluetoothGatt?, status: Int) {
             LoadingDialogHub.dismiss()
             isConnected = true
             //可以发送指令
-            bleManager.sendCommand(byteArrayOf())
+            bleDeviceManager.sendCommand(byteArrayOf())
         }
 
-        override fun onServiceDiscoveryFailed(bluetoothGatt: BluetoothGatt?, msg: String?) {
+        override fun onServiceDiscoveryFailed(bluetoothGatt: BluetoothGatt?, msg: String) {
             Log.d(kTag, "onServiceDiscoveryFailed => ")
             isConnected = false
         }
@@ -170,7 +166,7 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
             Log.d(kTag, "onReceiveMessage => ${value.contentToString()}")
         }
 
-        override fun onReceiveError(errorMsg: String?) {
+        override fun onReceiveError(errorMsg: String) {
             Log.d(kTag, "onReceiveError => $errorMsg")
         }
 
@@ -178,11 +174,7 @@ class BleFragment : KotlinBaseFragment<FragmentUtilsBleBinding>() {
             Log.d(kTag, "onWriteSuccess => ${msg.contentToString()}")
         }
 
-        override fun onWriteFailure(
-            bluetoothGatt: BluetoothGatt?,
-            msg: ByteArray?,
-            errorMsg: String?
-        ) {
+        override fun onWriteFailed(bluetoothGatt: BluetoothGatt?, errorMsg: String) {
             Log.d(kTag, "onWriteFailure => $errorMsg")
         }
 
