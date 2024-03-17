@@ -1,7 +1,11 @@
 package com.pengxh.kt.lite.extensions
 
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
+import android.widget.TextView
 import android.widget.Toast
+import com.pengxh.kt.lite.R
 import net.sourceforge.pinyin4j.PinyinHelper
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
@@ -215,5 +219,21 @@ fun String.writeToFile(file: File) {
 }
 
 fun String.show(context: Context) {
-    Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
+    } else {
+        val toast = Toast(context)
+        val textView = TextView(context)
+        textView.setBackgroundResource(R.drawable.toast_bg_layout)
+        textView.setTextColor(Color.WHITE)
+        textView.textSize = 16f
+        textView.text = this
+        textView.setPadding(
+            20.dp2px(context), 10.dp2px(context), 20.dp2px(context), 10.dp2px(context)
+        )
+        toast.view = textView
+        toast.duration = Toast.LENGTH_SHORT
+        toast.show()
+        Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
+    }
 }
