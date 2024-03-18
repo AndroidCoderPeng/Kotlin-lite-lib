@@ -54,9 +54,7 @@ class TcpClient constructor(private val messageCallback: OnTcpMessageCallback) :
              * */
             connect()
         } else {
-            eventLoopGroup.shutdownGracefully()
-            isConnected = false
-            retryTimes = 0
+            release()
         }
     }
 
@@ -139,6 +137,12 @@ class TcpClient constructor(private val messageCallback: OnTcpMessageCallback) :
                 }
             }
         })
+    }
+
+    fun release() {
+        eventLoopGroup.shutdownGracefully()
+        isConnected = false
+        retryTimes = 0
     }
 
     private val registry = LifecycleRegistry(this)
