@@ -40,4 +40,17 @@
         <attr name="ctrl_borderStroke" format="dimension" />
         <attr name="ctrl_backgroundColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="TitleBarView">
+        <!--标题栏左右两边图片属性-->
+        <attr name="tbv_left_image" format="reference" />
+        <attr name="tbv_show_left_image" format="boolean" />
+        <attr name="tbv_right_image" format="reference" />
+        <attr name="tbv_show_right_image" format="boolean" />
+
+        <!--标题栏中间文字属性-->
+        <attr name="tbv_text" format="string" />
+        <attr name="tbv_text_size" format="dimension" />
+        <attr name="tbv_text_color" format="color" />
+    </declare-styleable>
 </resources>

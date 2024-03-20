@@ -17,6 +17,7 @@ import com.pengxh.kt.lib.fragments.widget.KeyBoardViewFragment
 import com.pengxh.kt.lib.fragments.widget.NoScrollViewPagerFragment
 import com.pengxh.kt.lib.fragments.widget.SlideBarViewFragment
 import com.pengxh.kt.lib.fragments.widget.SteeringWheelViewFragment
+import com.pengxh.kt.lib.fragments.widget.TitleBarViewFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>() {
@@ -32,7 +33,8 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         "数字键盘",
         "NoScrollViewPager",
         "联系人侧边栏",
-        "方向控制盘"
+        "方向控制盘",
+        "顶部标题栏"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
@@ -47,6 +49,7 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         fragmentPages.add(NoScrollViewPagerFragment())
         fragmentPages.add(SlideBarViewFragment())
         fragmentPages.add(SteeringWheelViewFragment())
+        fragmentPages.add(TitleBarViewFragment())
     }
 
     override fun initViewBinding(
