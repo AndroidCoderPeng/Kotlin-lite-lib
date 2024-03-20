@@ -16,5 +16,5 @@
         app:cpb_foregroundColor="@color/mainColor"
         app:cpb_ring_radius="@dimen/dp_50"
         app:cpb_ring_stroke="@dimen/dp_10"
-        app:cpb_text="@string/app_name" />
+        app:cpb_text="百分比" />
 </LinearLayout>

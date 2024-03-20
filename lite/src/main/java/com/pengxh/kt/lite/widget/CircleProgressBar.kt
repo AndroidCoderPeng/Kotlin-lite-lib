@@ -9,11 +9,11 @@ import android.graphics.RectF
 import android.os.Handler
 import android.os.Message
 import android.text.TextPaint
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
+import com.pengxh.kt.lite.extensions.sp2px
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +45,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
     private lateinit var foregroundPaint: Paint
     private lateinit var textPaint: TextPaint
 
-    //当前污染物测量值
+    //当前值
     private var currentValue: String = ""
 
     //当前测量值转为弧度扫过的角度
@@ -113,7 +113,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         textPaint.isAntiAlias = true
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.color = Color.LTGRAY
-        textPaint.textSize = 14f
+        textPaint.textSize = 14f.sp2px(context)
     }
 
     //计算出中心位置，便于定位
@@ -165,36 +165,24 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         val fontMetrics = textPaint.fontMetrics
         val top = fontMetrics.top
         val bottom = fontMetrics.bottom
-        if (TextUtils.isEmpty(currentValue)) {
+        if (currentValue.isBlank()) {
             canvas.drawText(
-                "未定义！",
-                0f,
-                (top + bottom) / 2,
-                textPaint
+                "###", 0f, (top + bottom) / 2, textPaint
             )
         } else {
             canvas.drawText(
-                currentValue,
-                0f,
-                (top + bottom) / 2,
-                textPaint
+                currentValue, 0f, (top + bottom) / 2, textPaint
             )
         }
 
         //绘制下面Tip文字
-        if (TextUtils.isEmpty(text)) {
+        if (text.isBlank()) {
             canvas.drawText(
-                "未定义！",
-                0f,
-                -(top + bottom) * 1.5f,
-                textPaint
+                "###", 0f, -(top + bottom) * 1.5f, textPaint
             )
         } else {
             canvas.drawText(
-                text,
-                0f,
-                -(top + bottom) * 1.5f,
-                textPaint
+                text, 0f, -(top + bottom) * 1.5f, textPaint
             )
         }
 
