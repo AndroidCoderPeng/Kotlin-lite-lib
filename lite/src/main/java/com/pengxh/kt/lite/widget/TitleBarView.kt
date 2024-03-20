@@ -23,7 +23,9 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
     RelativeLayout(context, attrs) {
 
     private val decimalFormat = DecimalFormat("#")
-    private val size = 45.dp2px(context)
+    private val titleHeight = 45.dp2px(context)
+    private val iconSize = 25.dp2px(context)
+    private val textMargin = 10.dp2px(context)
     private var textView: TextView
 
     init {
@@ -45,7 +47,7 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
         if (onlyShowTitle) {
             //文字
             val titleParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            titleParams.height = size
+            titleParams.height = titleHeight
             textView = TextView(context)
             textView.text = title
             textView.isSingleLine = true
@@ -59,15 +61,11 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
         } else {
             //左边图标
             if (isShowLeft) {
-                val leftImageParams = LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT
-                )
+                val leftImageParams = LayoutParams(iconSize, iconSize)
                 val leftImageView = ImageView(context)
                 leftImageView.setImageResource(leftImageRes)
-                leftImageView.setPadding(
-                    10.dp2px(context), 10.dp2px(context), 10.dp2px(context), 10.dp2px(context)
-                )
                 leftImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                leftImageParams.leftMargin = textMargin
                 leftImageParams.addRule(CENTER_VERTICAL, TRUE)
                 addView(leftImageView, leftImageParams)
                 leftImageView.setOnClickListener {
@@ -77,7 +75,7 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
 
             //文字
             val titleParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            titleParams.height = size
+            titleParams.height = titleHeight
             textView = TextView(context)
             textView.text = title
             textView.isSingleLine = true
@@ -85,8 +83,8 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
             textView.textSize = titleSize.sp2px()
             textView.gravity = Gravity.CENTER
             textView.setTextColor(titleColor)
-            titleParams.leftMargin = size
-            titleParams.rightMargin = size
+            titleParams.leftMargin = textMargin
+            titleParams.rightMargin = textMargin
             titleParams.addRule(CENTER_IN_PARENT, TRUE)
             titleParams.addRule(ALIGN_PARENT_LEFT)
             titleParams.addRule(ALIGN_PARENT_RIGHT)
@@ -95,15 +93,11 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
 
             //右边图标
             if (isShowRight) {
-                val rightImageParams = LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT
-                )
+                val rightImageParams = LayoutParams(iconSize, iconSize)
                 val rightImageView = ImageView(context)
                 rightImageView.setImageResource(rightImageRes)
-                rightImageView.setPadding(
-                    10.dp2px(context), 10.dp2px(context), 10.dp2px(context), 10.dp2px(context)
-                )
                 rightImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                rightImageParams.rightMargin = textMargin
                 rightImageParams.addRule(CENTER_VERTICAL, TRUE)
                 rightImageParams.addRule(ALIGN_PARENT_END, TRUE)
                 addView(rightImageView, rightImageParams)
@@ -126,7 +120,7 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val widthSpecSize = MeasureSpec.getSize(widthMeasureSpec)
-        setMeasuredDimension(widthSpecSize, size)
+        setMeasuredDimension(widthSpecSize, titleHeight)
     }
 
     override fun onDraw(canvas: Canvas) {
