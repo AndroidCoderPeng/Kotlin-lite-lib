@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/mainColor"
         app:tbv_left_image="@drawable/ic_title_left"
+        app:tbv_only_show_title="false"
         app:tbv_right_image="@drawable/ic_title_right"
         app:tbv_show_left_image="true"
         app:tbv_show_right_image="true"

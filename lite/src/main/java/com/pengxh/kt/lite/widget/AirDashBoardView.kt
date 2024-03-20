@@ -125,14 +125,14 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
         guidePaint = Paint()
         guidePaint.color = Color.LTGRAY
         guidePaint.style = Paint.Style.STROKE
-        guidePaint.strokeWidth = 1f.dp2px(context).toFloat()
+        guidePaint.strokeWidth = 1f.dp2px(context)
         guidePaint.isAntiAlias = true
 
         ringPaint = Paint()
         ringPaint.color = background
         ringPaint.strokeCap = Paint.Cap.ROUND
         ringPaint.style = Paint.Style.STROKE
-        ringPaint.strokeWidth = ringStroke.toFloat().dp2px(context).toFloat()
+        ringPaint.strokeWidth = ringStroke.toFloat().dp2px(context)
         ringPaint.isAntiAlias = true
         //设置背景光晕
         ringPaint.maskFilter = BlurMaskFilter(15f, BlurMaskFilter.Blur.SOLID)
@@ -156,7 +156,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
         forePaint = Paint()
         forePaint.strokeCap = Paint.Cap.ROUND
         forePaint.style = Paint.Style.STROKE
-        forePaint.strokeWidth = ringStroke.toFloat().dp2px(context).toFloat()
+        forePaint.strokeWidth = ringStroke.toFloat().dp2px(context)
         forePaint.isAntiAlias = true
     }
 

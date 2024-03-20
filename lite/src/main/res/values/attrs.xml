@@ -52,5 +52,6 @@
         <attr name="tbv_text" format="string" />
         <attr name="tbv_text_size" format="dimension" />
         <attr name="tbv_text_color" format="color" />
+        <attr name="tbv_only_show_title" format="boolean" />
     </declare-styleable>
 </resources>
