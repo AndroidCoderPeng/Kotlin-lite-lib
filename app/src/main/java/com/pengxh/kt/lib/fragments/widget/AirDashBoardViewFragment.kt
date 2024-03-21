@@ -1,6 +1,5 @@
 package com.pengxh.kt.lib.fragments.widget
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,13 +19,7 @@ class AirDashBoardViewFragment : KotlinBaseFragment<FragmentWidgetAirDashBoardVi
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        binding.airDashBoardView
-            .setMaxValue(500)
-            .setCenterText("优")
-            .setAirRingForeground(Color.GREEN)
-            .setAirCenterTextColor(Color.RED)
-            .setAirCurrentValueColor(Color.BLUE)
-            .setCurrentValue(255)
+        binding.airDashBoardView.setCenterText("差").setCurrentValue(455)
     }
 
     override fun observeRequestState() {

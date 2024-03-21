@@ -7,34 +7,21 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
-import android.os.Handler
-import android.os.Message
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
-import androidx.annotation.ColorInt
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.utils.WeakReferenceHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.pengxh.kt.lite.extensions.sp2px
 
 /**
  * 空气污染指数表盘，仿HUAWEI天气
  *
  *      binding.airDashBoardView
- *                 .setMaxValue(500)
  *                 .setCenterText("优")
- *                 .setAirRingForeground(Color.GREEN)
- *                 .setAirCenterTextColor(Color.RED)
- *                 .setAirCurrentValueColor(Color.BLUE)
  *                 .setCurrentValue(255)
  */
-class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View(context, attrs),
-    Handler.Callback {
+class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     //View中心X坐标
     private var centerX = 0f
@@ -48,19 +35,17 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
     private val ringRadius: Int
     private lateinit var guidePaint: Paint
 
-    //表盘圆弧背景色
+    //表盘圆弧色
     private val background: Int
+    private val foreground: Int
     private val ringStroke: Int
     private val ringRectF: RectF
     private lateinit var ringPaint: Paint
 
     //阈值
-    private val thresholdTextSize: Int
-    private val thresholdColor: Int
     private lateinit var thresholdPaint: TextPaint
 
-    private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
-    private val currentValueTextSize: Int
+    private val centerTextColor: Int
     private val centerTextSize: Int
 
     //当前污染物测量值
@@ -76,8 +61,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
     private var sweepAngle = 0f
 
     //表盘中心文字
-    private var centerText = "未定义"
-    private lateinit var currentValuePaint: TextPaint
+    private var centerText = "###"
     private lateinit var centerPaint: TextPaint
     private lateinit var forePaint: Paint
 
@@ -88,33 +72,27 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
          * getDimensionPixelSize()返回的是实际数值的四舍五入
          * getDimensionPixelOffset返回的是实际数值去掉后面的小数点
          */
-        ringRadius = type.getDimensionPixelOffset(
+        ringRadius = type.getDimensionPixelSize(
             R.styleable.AirDashBoardView_air_ring_radius, 100.dp2px(context)
         )
-        //需要给外围刻度留位置
-        viewSideLength = ringRadius + 30.dp2px(context)
+        viewSideLength = ringRadius + 15.dp2px(context)
         //辅助框
         viewRect = Rect(-viewSideLength, -viewSideLength, viewSideLength, viewSideLength)
         ringRectF = RectF(
             -ringRadius.toFloat(), -ringRadius.toFloat(), ringRadius.toFloat(), ringRadius.toFloat()
         )
         background = type.getColor(R.styleable.AirDashBoardView_air_ring_background, Color.LTGRAY)
-        ringStroke = type.getDimensionPixelOffset(
+        foreground = type.getColor(R.styleable.AirDashBoardView_air_ring_foreground, Color.BLUE)
+        ringStroke = type.getDimensionPixelSize(
             R.styleable.AirDashBoardView_air_ring_stroke, 5.dp2px(context)
         )
 
-        thresholdTextSize = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_valueSize, 12.dp2px(context)
+        centerTextSize = type.getDimensionPixelSize(
+            R.styleable.AirDashBoardView_air_center_text_size, 20.sp2px(context)
         )
-        thresholdColor = type.getColor(R.styleable.AirDashBoardView_air_valueColor, Color.LTGRAY)
-
-        currentValueTextSize = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_current_valueSize, 24.dp2px(context)
+        centerTextColor = type.getColor(
+            R.styleable.AirDashBoardView_air_center_text_color, Color.BLUE
         )
-        centerTextSize = type.getDimensionPixelOffset(
-            R.styleable.AirDashBoardView_air_center_textSize, 12.dp2px(context)
-        )
-
         type.recycle()
 
         //初始化画笔
@@ -132,32 +110,29 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
         ringPaint.color = background
         ringPaint.strokeCap = Paint.Cap.ROUND
         ringPaint.style = Paint.Style.STROKE
-        ringPaint.strokeWidth = ringStroke.toFloat().dp2px(context)
+        ringPaint.strokeWidth = ringStroke.toFloat()
         ringPaint.isAntiAlias = true
-        //设置背景光晕
-        ringPaint.maskFilter = BlurMaskFilter(15f, BlurMaskFilter.Blur.SOLID)
 
         thresholdPaint = TextPaint()
-        thresholdPaint.color = thresholdColor
+        thresholdPaint.color = Color.DKGRAY
         thresholdPaint.isAntiAlias = true
         thresholdPaint.textAlign = Paint.Align.CENTER
-        thresholdPaint.textSize = thresholdTextSize.toFloat()
-
-        currentValuePaint = TextPaint()
-        currentValuePaint.isAntiAlias = true
-        currentValuePaint.textAlign = Paint.Align.CENTER
-        currentValuePaint.textSize = currentValueTextSize.toFloat()
+        thresholdPaint.textSize = 16f.dp2px(context)
 
         centerPaint = TextPaint()
+        centerPaint.color = centerTextColor
         centerPaint.isAntiAlias = true
         centerPaint.textAlign = Paint.Align.CENTER
         centerPaint.textSize = centerTextSize.toFloat()
 
         forePaint = Paint()
+        forePaint.color = foreground
         forePaint.strokeCap = Paint.Cap.ROUND
         forePaint.style = Paint.Style.STROKE
-        forePaint.strokeWidth = ringStroke.toFloat().dp2px(context)
+        forePaint.strokeWidth = ringStroke.toFloat()
         forePaint.isAntiAlias = true
+        //设置背景光晕
+        forePaint.maskFilter = BlurMaskFilter(15f, BlurMaskFilter.Blur.SOLID)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -198,8 +173,8 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
          * 画布移到中心位置，方便绘制一系列图形
          */
         canvas.translate(centerX, centerY)
-
 //        drawGuides(canvas)
+
         /**
          * 从左往右画，顺时针，左边是180度
          */
@@ -296,79 +271,43 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
     }
 
     private fun drawMinValue(canvas: Canvas) {
-        val fontMetrics = thresholdPaint.fontMetrics
-        val top = fontMetrics.top
-        val bottom = fontMetrics.bottom
         canvas.drawText(
             minValue.toString(),
             -viewSideLength / 2f,
-            viewSideLength / 2f - (top + bottom) * 2.5f,
+            viewSideLength / 2f + viewSideLength / 3f,
             thresholdPaint
         )
     }
 
     private fun drawMaxValue(canvas: Canvas) {
-        val fontMetrics = thresholdPaint.fontMetrics
-        val top = fontMetrics.top
-        val bottom = fontMetrics.bottom
         canvas.drawText(
             maxValue.toString(),
             viewSideLength / 2f,
-            viewSideLength / 2f - (top + bottom) * 2.5f,
+            viewSideLength / 2f + viewSideLength / 3f,
             thresholdPaint
         )
     }
 
     private fun drawCurrentValue(canvas: Canvas) {
-        val fontMetrics = currentValuePaint.fontMetrics
-        val top = fontMetrics.top
-        val bottom = fontMetrics.bottom
         canvas.drawText(
             currentValue.toString(),
             0f,
-            -(top + bottom) / 2f,
-            currentValuePaint
-        )
-    }
-
-    private fun drawCenterText(canvas: Canvas) {
-        val fontMetrics = centerPaint.fontMetrics
-        val top = fontMetrics.top
-        val bottom = fontMetrics.bottom
-        canvas.drawText(
-            centerText,
-            0f,
-            (top + bottom) * 2,
+            viewSideLength / 2f - viewSideLength / 3f,
             centerPaint
         )
     }
 
-    fun setMaxValue(maxValue: Int): AirDashBoardView {
-        this.maxValue = maxValue
-        invalidate()
-        return this
+    private fun drawCenterText(canvas: Canvas) {
+        canvas.drawText(
+            centerText,
+            0f,
+            -viewSideLength / 12f,
+            centerPaint
+        )
     }
 
     fun setCenterText(centerText: String): AirDashBoardView {
         this.centerText = centerText
-        invalidate()
-        return this
-    }
-
-    fun setAirRingForeground(@ColorInt color: Int): AirDashBoardView {
-        forePaint.color = color
-        invalidate()
-        return this
-    }
-
-    fun setAirCenterTextColor(@ColorInt color: Int): AirDashBoardView {
-        centerPaint.color = color
-        invalidate()
-        return this
-    }
-
-    fun setAirCurrentValueColor(@ColorInt color: Int): AirDashBoardView {
-        currentValuePaint.color = color
         invalidate()
         return this
     }
@@ -382,36 +321,18 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
             value
         }
 
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
-                for (i in 0 until currentValue) {
-                    weakReferenceHandler.post(updateProgressRunnable.setProgress(i))
-                    delay(10)
+        val i = intArrayOf(0)
+        post(object : Runnable {
+            override fun run() {
+                i[0]++
+                sweepAngle = i[0].toFloat() * 270 / maxValue
+                invalidate()
+                if (i[0] <= value) {
+                    postDelayed(this, 5)
+                } else {
+                    removeCallbacks(this)
                 }
             }
-        }
-    }
-
-    private interface UpdateProgressRunnable : Runnable {
-        fun setProgress(progress: Int): UpdateProgressRunnable
-    }
-
-    private val updateProgressRunnable = object : UpdateProgressRunnable {
-
-        private var progress = 0
-
-        override fun setProgress(progress: Int): UpdateProgressRunnable {
-            this.progress = progress
-            return this
-        }
-
-        override fun run() {
-            sweepAngle = progress.toFloat() * 270 / maxValue
-            invalidate()
-        }
-    }
-
-    override fun handleMessage(msg: Message): Boolean {
-        return true
+        })
     }
 }
