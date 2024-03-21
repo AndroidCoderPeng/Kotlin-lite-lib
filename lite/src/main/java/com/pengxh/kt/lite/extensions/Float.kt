@@ -1,8 +1,11 @@
 package com.pengxh.kt.lite.extensions
 
 import android.content.Context
+import android.util.TypedValue
 import java.math.RoundingMode
 import java.text.DecimalFormat
+
+private val decimalFormat = DecimalFormat("#")
 
 /**
  * px转dp
@@ -22,8 +25,10 @@ fun Float.dp2px(context: Context): Float {
  * sp转px
  */
 fun Float.sp2px(context: Context): Float {
-    val decimalFormat = DecimalFormat("#")
+    val floatValue = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP, this, context.resources.displayMetrics
+    )
     decimalFormat.roundingMode = RoundingMode.CEILING
-    val result = decimalFormat.format(this / context.getScreenDensity())
+    val result = decimalFormat.format(floatValue)
     return result.toFloat()
 }
