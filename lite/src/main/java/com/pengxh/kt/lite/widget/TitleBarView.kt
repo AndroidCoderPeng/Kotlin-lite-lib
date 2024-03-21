@@ -11,7 +11,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.extensions.sp2px
+import com.pengxh.kt.lite.extensions.getScreenDensity
 
 
 /**
@@ -47,7 +47,8 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
             textView.text = title
             textView.isSingleLine = true
             textView.ellipsize = TextUtils.TruncateAt.END
-            textView.textSize = titleSize.sp2px(context)
+            //textSize会将值默认为sp，不除以像素密度则会将sp再此转为px，相当于原本字体大小进行了两次转换px
+            textView.textSize = titleSize / context.getScreenDensity()
             textView.gravity = Gravity.CENTER
             textView.setTextColor(titleColor)
             titleParams.addRule(CENTER_IN_PARENT, TRUE)
@@ -78,7 +79,8 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
             textView.text = title
             textView.isSingleLine = true
             textView.ellipsize = TextUtils.TruncateAt.END
-            textView.textSize = titleSize.sp2px(context)
+            //textSize会将值默认为sp，不除以像素密度则会将sp再此转为px，相当于原本字体大小进行了两次转换px
+            textView.textSize = titleSize / context.getScreenDensity()
             textView.gravity = Gravity.CENTER
             textView.setTextColor(titleColor)
             titleParams.leftMargin = textMargin
