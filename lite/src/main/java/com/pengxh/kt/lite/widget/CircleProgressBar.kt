@@ -13,7 +13,6 @@ import android.util.AttributeSet
 import android.view.View
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.extensions.sp2px
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +37,11 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
 
     private val backgroundColor: Int
     private val foregroundColor: Int
+    private val textColor: Int
     private var text: String = ""
+    private var textSize = 18f
+    private var hideText = false
+
     private var centerX = 0f
     private var centerY = 0f
     private lateinit var backgroundPaint: Paint
@@ -54,8 +57,7 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
 
     init {
         val type = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar)
-
-        ringRadius = type.getDimensionPixelOffset(
+        ringRadius = type.getDimensionPixelSize(
             R.styleable.CircleProgressBar_cpb_ring_radius, 100.dp2px(context)
         )
         rectF = RectF(
@@ -64,22 +66,19 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
             ringRadius.toFloat(),
             ringRadius.toFloat()
         )
-        ringStroke = type.getDimensionPixelOffset(
+        ringStroke = type.getDimensionPixelSize(
             R.styleable.CircleProgressBar_cpb_ring_stroke, 10.dp2px(context)
         )
-        //需要给外围刻度留位置
-        viewSideLength = ringRadius + 30.dp2px(context)
+        viewSideLength = ringRadius + 10.dp2px(context)
         //辅助框
         viewRect = Rect(-viewSideLength, -viewSideLength, viewSideLength, viewSideLength)
 
-        backgroundColor = type.getColor(
-            R.styleable.CircleProgressBar_cpb_backgroundColor, Color.LTGRAY
-        )
-        foregroundColor = type.getColor(
-            R.styleable.CircleProgressBar_cpb_foregroundColor, Color.BLUE
-        )
+        backgroundColor = type.getColor(R.styleable.CircleProgressBar_cpb_background, Color.LTGRAY)
+        foregroundColor = type.getColor(R.styleable.CircleProgressBar_cpb_foreground, Color.BLUE)
         text = type.getString(R.styleable.CircleProgressBar_cpb_text).toString()
-
+        textColor = type.getColor(R.styleable.CircleProgressBar_cpb_text_color, Color.DKGRAY)
+        textSize = type.getDimension(R.styleable.CircleProgressBar_cpb_text_size, 18f)
+        hideText = type.getBoolean(R.styleable.CircleProgressBar_cpb_hide_text, false)
         type.recycle()
         //初始化画笔
         initPaint()
@@ -112,8 +111,8 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         textPaint = TextPaint()
         textPaint.isAntiAlias = true
         textPaint.textAlign = Paint.Align.CENTER
-        textPaint.color = Color.LTGRAY
-        textPaint.textSize = 14f.sp2px(context)
+        textPaint.color = textColor
+        textPaint.textSize = textSize
     }
 
     //计算出中心位置，便于定位
@@ -161,29 +160,23 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
         //绘制进度条背景
         canvas.drawCircle(0f, 0f, ringRadius.toFloat(), backgroundPaint)
 
-        //绘制上面百分比
-        val fontMetrics = textPaint.fontMetrics
-        val top = fontMetrics.top
-        val bottom = fontMetrics.bottom
-        if (currentValue.isBlank()) {
-            canvas.drawText(
-                "###", 0f, (top + bottom) / 2, textPaint
-            )
-        } else {
-            canvas.drawText(
-                currentValue, 0f, (top + bottom) / 2, textPaint
-            )
-        }
+        if (!hideText) {
+            //绘制上面百分比
+            val fontMetrics = textPaint.fontMetrics
+            val top = fontMetrics.top
+            val bottom = fontMetrics.bottom
+            if (currentValue.isBlank()) {
+                canvas.drawText("###", 0f, (top + bottom) / 2, textPaint)
+            } else {
+                canvas.drawText(currentValue, 0f, (top + bottom) / 2, textPaint)
+            }
 
-        //绘制下面Tip文字
-        if (text.isBlank()) {
-            canvas.drawText(
-                "###", 0f, -(top + bottom) * 1.5f, textPaint
-            )
-        } else {
-            canvas.drawText(
-                text, 0f, -(top + bottom) * 1.5f, textPaint
-            )
+            //绘制下面Tip文字
+            if (text.isBlank()) {
+                canvas.drawText("###", 0f, -(top + bottom) * 1.5f, textPaint)
+            } else {
+                canvas.drawText(text, 0f, -(top + bottom) * 1.5f, textPaint)
+            }
         }
 
         //绘制前景进度
