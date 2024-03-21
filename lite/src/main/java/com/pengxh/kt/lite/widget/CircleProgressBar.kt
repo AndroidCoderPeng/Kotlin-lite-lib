@@ -6,25 +6,16 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
-import android.os.Handler
-import android.os.Message
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.utils.WeakReferenceHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * 圆形进度条
  */
-class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : View(context, attrs),
-    Handler.Callback {
+class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private val ringRadius: Int
     private var rectF: RectF
@@ -53,7 +44,6 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
 
     //当前测量值转为弧度扫过的角度
     private var sweepAngle = 0f
-    private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
 
     init {
         val type = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressBar)
@@ -216,36 +206,18 @@ class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : Vie
             else -> "$value%"
         }
 
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO) {
-                for (i in 0 until value) {
-                    weakReferenceHandler.post(updateProgressRunnable.setProgress(i))
-                    delay(10)
+        val i = intArrayOf(0)
+        post(object : Runnable {
+            override fun run() {
+                i[0]++
+                sweepAngle = i[0].toFloat() * 360 / 100
+                invalidate()
+                if (i[0] <= value) {
+                    postDelayed(this, 10)
+                } else {
+                    removeCallbacks(this)
                 }
             }
-        }
-    }
-
-    private interface UpdateProgressRunnable : Runnable {
-        fun setProgress(progress: Int): UpdateProgressRunnable
-    }
-
-    private val updateProgressRunnable = object : UpdateProgressRunnable {
-
-        private var progress = 0
-
-        override fun setProgress(progress: Int): UpdateProgressRunnable {
-            this.progress = progress
-            return this
-        }
-
-        override fun run() {
-            sweepAngle = progress.toFloat() * 360 / 100
-            invalidate()
-        }
-    }
-
-    override fun handleMessage(msg: Message): Boolean {
-        return true
+        })
     }
 }
