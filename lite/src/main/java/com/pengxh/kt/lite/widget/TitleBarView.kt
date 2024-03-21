@@ -24,8 +24,6 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
 
     private val decimalFormat = DecimalFormat("#")
     private val titleHeight = 45.dp2px(context)
-    private val iconSize = 25.dp2px(context)
-    private val textMargin = 10.dp2px(context)
     private var textView: TextView
 
     init {
@@ -59,6 +57,9 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
             textView.layoutParams = titleParams
             addView(textView)
         } else {
+            val iconSize = 25.dp2px(context)
+            val textMargin = 10.dp2px(context)
+
             //左边图标
             if (isShowLeft) {
                 val leftImageParams = LayoutParams(iconSize, iconSize)
