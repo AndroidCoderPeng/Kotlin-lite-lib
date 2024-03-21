@@ -11,9 +11,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.extensions.getScreenDensity
-import java.math.RoundingMode
-import java.text.DecimalFormat
+import com.pengxh.kt.lite.extensions.sp2px
 
 
 /**
@@ -22,7 +20,6 @@ import java.text.DecimalFormat
 class TitleBarView constructor(context: Context, attrs: AttributeSet) :
     RelativeLayout(context, attrs) {
 
-    private val decimalFormat = DecimalFormat("#")
     private val titleHeight = 45.dp2px(context)
     private var textView: TextView
 
@@ -50,7 +47,7 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
             textView.text = title
             textView.isSingleLine = true
             textView.ellipsize = TextUtils.TruncateAt.END
-            textView.textSize = titleSize.sp2px()
+            textView.textSize = titleSize.sp2px(context)
             textView.gravity = Gravity.CENTER
             textView.setTextColor(titleColor)
             titleParams.addRule(CENTER_IN_PARENT, TRUE)
@@ -81,7 +78,7 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
             textView.text = title
             textView.isSingleLine = true
             textView.ellipsize = TextUtils.TruncateAt.END
-            textView.textSize = titleSize.sp2px()
+            textView.textSize = titleSize.sp2px(context)
             textView.gravity = Gravity.CENTER
             textView.setTextColor(titleColor)
             titleParams.leftMargin = textMargin
@@ -107,12 +104,6 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
                 }
             }
         }
-    }
-
-    private fun Float.sp2px(): Float {
-        decimalFormat.roundingMode = RoundingMode.CEILING
-        val result = decimalFormat.format(this / context.getScreenDensity())
-        return result.toFloat()
     }
 
     /**
