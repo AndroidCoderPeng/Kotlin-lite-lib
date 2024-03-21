@@ -32,7 +32,6 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
     //控件边长
     private val viewSideLength: Int
     private val viewRect: Rect
-    private val ringRadius: Int
     private lateinit var guidePaint: Paint
 
     //表盘圆弧色
@@ -50,9 +49,6 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
 
     //当前污染物测量值
     private var currentValue = 0
-
-    //污染物最小值
-    private var minValue = 0
 
     //污染物最大值
     private var maxValue = 500
@@ -72,7 +68,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
          * getDimensionPixelSize()返回的是实际数值的四舍五入
          * getDimensionPixelOffset返回的是实际数值去掉后面的小数点
          */
-        ringRadius = type.getDimensionPixelSize(
+        val ringRadius = type.getDimensionPixelSize(
             R.styleable.AirDashBoardView_air_ring_radius, 100.dp2px(context)
         )
         viewSideLength = ringRadius + 15.dp2px(context)
@@ -272,7 +268,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
 
     private fun drawMinValue(canvas: Canvas) {
         canvas.drawText(
-            minValue.toString(),
+            "0",
             -viewSideLength / 2f,
             viewSideLength / 2f + viewSideLength / 3f,
             thresholdPaint
