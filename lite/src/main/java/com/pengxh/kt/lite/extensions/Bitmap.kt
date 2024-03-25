@@ -43,6 +43,12 @@ fun Bitmap.rotateImage(angle: Int): Bitmap {
 
 /**
  * 获取图片base64编码
+ *
+ * 如果是上传到服务器，编码格式为：Base64.NO_WRAP
+ *
+ * 如果是本地使用，编码格式为：Base64.DEFAULT
+ *
+ * 默认：Base64.NO_WRAP
  */
 fun Bitmap.toBase64(): String {
     try {
@@ -51,7 +57,7 @@ fun Bitmap.toBase64(): String {
         val bitmapBytes = outputStream.toByteArray()
         outputStream.flush()
         outputStream.close()
-        return Base64.encodeToString(bitmapBytes, Base64.DEFAULT)
+        return Base64.encodeToString(bitmapBytes, Base64.NO_WRAP)
     } catch (e: IOException) {
         e.printStackTrace()
     }

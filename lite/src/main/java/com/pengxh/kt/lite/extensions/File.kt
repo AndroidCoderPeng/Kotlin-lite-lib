@@ -28,7 +28,13 @@ fun File.read(): String {
 }
 
 /**
- * 获取图片base64编码
+ * 获取图片文件base64编码
+ *
+ * 如果是上传到服务器，编码格式为：Base64.NO_WRAP
+ *
+ * 如果是本地使用，编码格式为：Base64.DEFAULT
+ *
+ * 默认：Base64.NO_WRAP
  */
 fun File.toBase64(): String {
     try {
@@ -42,7 +48,7 @@ fun File.toBase64(): String {
         val imgBytes = byteArrayOutputStream.toByteArray()
         fileInputStream.close()
         byteArrayOutputStream.close()
-        return Base64.encodeToString(imgBytes, Base64.DEFAULT)
+        return Base64.encodeToString(imgBytes, Base64.NO_WRAP)
     } catch (e: Exception) {
         e.printStackTrace()
     }
