@@ -38,8 +38,7 @@ fun Image.toBitmap(format: Int): Bitmap? {
         yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 100, out)
 
         val imageBytes = out.toByteArray()
-        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-        return bitmap.rotateImage(-90)
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
     }
     return null
 }
