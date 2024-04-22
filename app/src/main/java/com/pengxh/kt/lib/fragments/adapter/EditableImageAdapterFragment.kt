@@ -12,10 +12,14 @@ import com.pengxh.kt.lib.databinding.FragmentAdapterEditableImageBinding
 import com.pengxh.kt.lib.utils.GlideLoadEngine
 import com.pengxh.kt.lite.adapter.EditableImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
+import com.pengxh.kt.lite.divider.RecyclerViewItemOffsets
+import com.pengxh.kt.lite.extensions.dp2px
+import com.pengxh.kt.lite.extensions.getScreenWidth
 
 class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableImageBinding>() {
 
     private lateinit var editableImageAdapter: EditableImageAdapter
+    private val marginOffset by lazy { 1.dp2px(requireContext()) }
     private val recyclerViewImages = ArrayList<String>()
 
     override fun initViewBinding(
@@ -30,7 +34,12 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        editableImageAdapter = EditableImageAdapter(requireContext(), 9, 1)
+        editableImageAdapter =
+            EditableImageAdapter(requireContext(), requireContext().getScreenWidth(), 9, 3, 1)
+        binding.recyclerView.addItemDecoration(
+            RecyclerViewItemOffsets(marginOffset, marginOffset, marginOffset, marginOffset)
+        )
+        binding.recyclerView.adapter = editableImageAdapter
     }
 
     override fun observeRequestState() {
@@ -38,7 +47,6 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
     }
 
     override fun initEvent() {
-        binding.recyclerView.adapter = editableImageAdapter
         editableImageAdapter.setOnItemClickListener(object :
             EditableImageAdapter.OnItemClickListener {
             override fun onAddImageClick() {

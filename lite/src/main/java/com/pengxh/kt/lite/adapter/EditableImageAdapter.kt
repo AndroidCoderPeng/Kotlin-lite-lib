@@ -9,21 +9,23 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.extensions.getScreenWidth
 
 
 /**
  * 数量可编辑图片适配器
  *
- * @param imageCountLimit 最多显示几张图片，每行3张图片
- * @param spacing 上下左右外边距，无需在 [androidx.recyclerview.widget.RecyclerView] 设置边距
+ * @param context 使用适配的上下文
+ * @param viewWidth RecyclerView实际宽度，一般情况下就是屏幕宽度，但是如果有其他控件和它在同一行，需要计算实际宽度，不然无法正确显示RecyclerView item的布局
+ * @param imageCountLimit 最多显示的图片数目
+ * @param spanCount 每行显示的图片数目
  * */
 class EditableImageAdapter(
-    private val context: Context, private val imageCountLimit: Int, private val spacing: Int
+    private val context: Context,
+    private val viewWidth: Int,
+    private val imageCountLimit: Int,
+    private val spanCount: Int
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-    private val screenWidth by lazy { context.getScreenWidth() }
     private var images: MutableList<String> = ArrayList()
 
     fun setupImage(images: MutableList<String>) {
@@ -49,7 +51,10 @@ class EditableImageAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imageView = holder.getView<ImageView>(R.id.imageView)
-        configImageParams(imageView, holder.bindingAdapterPosition)
+        val imageSize = viewWidth / spanCount
+        val params = LinearLayout.LayoutParams(imageSize, imageSize)
+        imageView.layoutParams = params
+
         if (position == itemCount - 1 && images.size < imageCountLimit) {
             imageView.setImageResource(R.drawable.ic_add_pic)
             imageView.setOnClickListener { //添加图片
@@ -66,25 +71,6 @@ class EditableImageAdapter(
                 true
             }
         }
-    }
-
-    private fun configImageParams(imageView: ImageView, position: Int) {
-        val temp = spacing.dp2px(context)
-        val imageSize = (screenWidth - temp * 3) / 3
-
-        val params = LinearLayout.LayoutParams(imageSize, imageSize)
-        when (position) {
-            0 -> params.setMargins(temp, temp, temp shr 1, temp shr 1)
-            1 -> params.setMargins(temp shr 1, temp, temp shr 1, temp shr 1)
-            2 -> params.setMargins(temp shr 1, temp, temp, temp shr 1)
-            3 -> params.setMargins(temp, temp shr 1, temp shr 1, temp shr 1)
-            4 -> params.setMargins(temp shr 1, temp shr 1, temp shr 1, temp shr 1)
-            5 -> params.setMargins(temp shr 1, temp shr 1, temp, temp shr 1)
-            6 -> params.setMargins(temp, temp shr 1, temp shr 1, temp)
-            7 -> params.setMargins(temp shr 1, temp shr 1, temp shr 1, temp)
-            8 -> params.setMargins(temp shr 1, temp shr 1, temp, temp)
-        }
-        imageView.layoutParams = params
     }
 
     override fun getItemCount(): Int = if (images.size >= imageCountLimit) {
