@@ -26,20 +26,19 @@ class EditableImageAdapter(
     private val spanCount: Int
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-    private var images: MutableList<String> = ArrayList()
+    private var adapterItems = ArrayList<String>()
 
-    fun setupImage(images: MutableList<String>) {
-        this.images = images
-        notifyItemRangeChanged(0, images.size)
+    fun notifyImageItemRangeInserted(images: ArrayList<String>) {
+        val previousSize = adapterItems.size
+        adapterItems.clear()
+        notifyItemRangeRemoved(0, previousSize)
+        adapterItems.addAll(images)
+        notifyItemRangeInserted(0, adapterItems.size)
     }
 
-    fun deleteImage(position: Int) {
-        if (images.isNotEmpty()) {
-            images.removeAt(position)
-            /**
-             * 发生变化的item数目
-             * */
-            notifyItemRangeRemoved(position, 1)
+    fun notifyImageItemRemoved(images: ArrayList<String>) {
+        if (adapterItems.isNotEmpty()) {
+            notifyImageItemRangeInserted(images)
         }
     }
 
@@ -55,13 +54,13 @@ class EditableImageAdapter(
         val params = LinearLayout.LayoutParams(imageSize, imageSize)
         imageView.layoutParams = params
 
-        if (position == itemCount - 1 && images.size < imageCountLimit) {
+        if (position == itemCount - 1 && adapterItems.size < imageCountLimit) {
             imageView.setImageResource(R.drawable.ic_add_pic)
             imageView.setOnClickListener { //添加图片
                 itemClickListener?.onAddImageClick()
             }
         } else {
-            Glide.with(context).load(images[position]).into(imageView)
+            Glide.with(context).load(adapterItems[position]).into(imageView)
             imageView.setOnClickListener { // 点击操作，查看大图
                 itemClickListener?.onItemClick(holder.bindingAdapterPosition)
             }
@@ -73,10 +72,10 @@ class EditableImageAdapter(
         }
     }
 
-    override fun getItemCount(): Int = if (images.size >= imageCountLimit) {
+    override fun getItemCount(): Int = if (adapterItems.size >= imageCountLimit) {
         imageCountLimit
     } else {
-        images.size + 1
+        adapterItems.size + 1
     }
 
     private var itemClickListener: OnItemClickListener? = null
