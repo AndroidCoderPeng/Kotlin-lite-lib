@@ -15,32 +15,18 @@ import com.pengxh.kt.lite.R
  * 数量可编辑图片适配器
  *
  * @param context 使用适配的上下文
+ * @param images RecyclerView内数据
  * @param viewWidth RecyclerView实际宽度，一般情况下就是屏幕宽度，但是如果有其他控件和它在同一行，需要计算实际宽度，不然无法正确显示RecyclerView item的布局
  * @param imageCountLimit 最多显示的图片数目
  * @param spanCount 每行显示的图片数目
  * */
 class EditableImageAdapter(
     private val context: Context,
+    private val images: ArrayList<String>,
     private val viewWidth: Int,
     private val imageCountLimit: Int,
     private val spanCount: Int
 ) : RecyclerView.Adapter<ViewHolder>() {
-
-    private var adapterItems = ArrayList<String>()
-
-    fun notifyImageItemRangeInserted(images: ArrayList<String>) {
-        val previousSize = adapterItems.size
-        adapterItems.clear()
-        notifyItemRangeRemoved(0, previousSize)
-        adapterItems.addAll(images)
-        notifyItemRangeInserted(0, adapterItems.size)
-    }
-
-    fun notifyImageItemRemoved(images: ArrayList<String>) {
-        if (adapterItems.isNotEmpty()) {
-            notifyImageItemRangeInserted(images)
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -54,13 +40,13 @@ class EditableImageAdapter(
         val params = LinearLayout.LayoutParams(imageSize, imageSize)
         imageView.layoutParams = params
 
-        if (position == itemCount - 1 && adapterItems.size < imageCountLimit) {
+        if (position == itemCount - 1 && images.size < imageCountLimit) {
             imageView.setImageResource(R.drawable.ic_add_pic)
             imageView.setOnClickListener { //添加图片
                 itemClickListener?.onAddImageClick()
             }
         } else {
-            Glide.with(context).load(adapterItems[position]).into(imageView)
+            Glide.with(context).load(images[position]).into(imageView)
             imageView.setOnClickListener { // 点击操作，查看大图
                 itemClickListener?.onItemClick(holder.bindingAdapterPosition)
             }
@@ -72,10 +58,10 @@ class EditableImageAdapter(
         }
     }
 
-    override fun getItemCount(): Int = if (adapterItems.size >= imageCountLimit) {
+    override fun getItemCount(): Int = if (images.size >= imageCountLimit) {
         imageCountLimit
     } else {
-        adapterItems.size + 1
+        images.size + 1
     }
 
     private var itemClickListener: OnItemClickListener? = null

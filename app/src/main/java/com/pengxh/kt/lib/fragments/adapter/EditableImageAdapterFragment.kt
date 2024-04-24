@@ -48,7 +48,7 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val viewWidth = requireContext().getScreenWidth() - 100.dp2px(requireContext())
-        imageAdapter = EditableImageAdapter(requireContext(), viewWidth, 9, 3)
+        imageAdapter = EditableImageAdapter(requireContext(), recyclerViewImages, viewWidth, 9, 3)
         binding.recyclerView.addItemDecoration(
             RecyclerViewItemOffsets(marginOffset, marginOffset, marginOffset, marginOffset)
         )
@@ -72,7 +72,7 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
             override fun onItemLongClick(view: View?, position: Int) {
                 selectedImages.removeAt(position)
                 recyclerViewImages.removeAt(position)
-                imageAdapter.notifyImageItemRemoved(recyclerViewImages)
+                imageAdapter.notifyDataSetChanged()
             }
         })
     }
@@ -84,10 +84,10 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
             .setSelectedData(selectedImages)
             .forResult(object : OnResultCallbackListener<LocalMedia> {
                 override fun onResult(result: ArrayList<LocalMedia>) {
-                    //重置已选的图片
+                    //因为设置了selectedImages，每次选择数据都会发生变化，所以需要清空之前的缓存
                     selectedImages.clear()
-                    //因为result会带着之前的数据，所以需要清空之前已经add的数据
                     recyclerViewImages.clear()
+
                     //数据链处理已选的图片
                     lifecycleScope.launch {
                         flow {
@@ -132,7 +132,7 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
             val file = msg.obj as File
 
             recyclerViewImages.add(file.absolutePath)
-            imageAdapter.notifyImageItemRangeInserted(recyclerViewImages)
+            imageAdapter.notifyDataSetChanged()
         }
         return true
     }
