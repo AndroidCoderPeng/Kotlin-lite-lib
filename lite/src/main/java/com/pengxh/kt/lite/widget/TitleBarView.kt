@@ -131,6 +131,13 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
         invalidate()
     }
 
+    /**
+     * 获取当前显示标题文字
+     * */
+    fun getTitle(): String {
+        return textView.text.toString()
+    }
+
     private var listener: OnClickListener? = null
 
     fun setOnClickListener(listener: OnClickListener?) {

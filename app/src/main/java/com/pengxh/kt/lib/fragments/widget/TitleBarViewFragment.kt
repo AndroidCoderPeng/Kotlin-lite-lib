@@ -23,7 +23,7 @@ class TitleBarViewFragment : KotlinBaseFragment<FragmentWidgetTitleBarViewBindin
             }
 
             override fun onRightClick() {
-                "onRightClick".show(requireContext())
+                binding.titleView.getTitle().show(requireContext())
             }
         })
     }
