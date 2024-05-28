@@ -30,23 +30,6 @@ object Constant {
     const val HTTP_TIMEOUT = 15L
 
     /**
-     * 连接超时时间10s
-     */
-    const val MAX_CONNECT_TIME = 10000L
-    const val BLUETOOTH_STATE_CHANGED = "android.bluetooth.adapter.action.STATE_CHANGED"
-    const val BLUETOOTH_ON = 20
-    const val BLUETOOTH_OFF = 21
-    const val CONNECT_SUCCESS = 22
-    const val CONNECT_FAILURE = 23
-    const val DISCONNECT_SUCCESS = 24
-    const val SEND_SUCCESS = 25
-    const val SEND_FAILURE = 26
-    const val RECEIVE_SUCCESS = 27
-    const val RECEIVE_FAILURE = 28
-    const val DISCOVERY_DEVICE = 29
-    const val DISCOVERY_OUT_TIME = 30
-
-    /**
      * 录音动画图标
      * */
     val AUDIO_DRAWABLES = intArrayOf(

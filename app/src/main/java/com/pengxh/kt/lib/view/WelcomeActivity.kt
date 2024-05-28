@@ -20,10 +20,6 @@ class WelcomeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CAMERA,
-            Manifest.permission.BLUETOOTH,
-            Manifest.permission.BLUETOOTH_SCAN,
-            Manifest.permission.BLUETOOTH_ADMIN,
-            Manifest.permission.BLUETOOTH_CONNECT,
             Manifest.permission.RECORD_AUDIO
         )
     } else {
@@ -35,8 +31,6 @@ class WelcomeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.CAMERA,
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
                 Manifest.permission.RECORD_AUDIO
             )
         } else {
@@ -46,8 +40,6 @@ class WelcomeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.CAMERA,
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
                 Manifest.permission.RECORD_AUDIO
             )
         }

@@ -8,7 +8,6 @@ import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentUtilsPackageBinding
 import com.pengxh.kt.lib.fragments.utils.ActivityStackManagerFragment
-import com.pengxh.kt.lib.fragments.utils.BleFragment
 import com.pengxh.kt.lib.fragments.utils.BroadcastReceiverFragment
 import com.pengxh.kt.lib.fragments.utils.FileDownloadManagerFragment
 import com.pengxh.kt.lib.fragments.utils.GalleryScaleHelperFragment
@@ -26,7 +25,6 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
 
     private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
-        "低功耗蓝牙",
         "Socket",
         "Activity栈管理",
         "广播接受者管理器",
@@ -43,7 +41,6 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
-        fragmentPages.add(BleFragment())
         fragmentPages.add(SocketFragment())
         fragmentPages.add(ActivityStackManagerFragment())
         fragmentPages.add(BroadcastReceiverFragment())
