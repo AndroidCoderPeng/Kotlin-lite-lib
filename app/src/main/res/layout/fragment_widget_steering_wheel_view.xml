@@ -13,8 +13,5 @@
         android:layout_height="match_parent"
         android:background="@color/mainBackground"
         android:gravity="center"
-        app:ctrl_backgroundColor="@color/white"
-        app:ctrl_borderColor="#64BFEB"
-        app:ctrl_borderStroke="@dimen/dp_5"
-        app:ctrl_diameter="@dimen/dp_200" />
+        app:ctrl_diameter="250dp" />
 </LinearLayout>
