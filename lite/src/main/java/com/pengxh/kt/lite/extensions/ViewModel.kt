@@ -14,18 +14,16 @@ import kotlinx.coroutines.launch
  */
 fun ViewModel.launch(
     block: suspend CoroutineScope.() -> Unit,
-    onError: (e: Throwable) -> Unit = {},
+    onError: (Throwable) -> Unit = {},
     onComplete: () -> Unit = {}
 ) {
     viewModelScope.launch(
         CoroutineExceptionHandler { _, throwable ->
-            run {
-                onError(throwable)
-            }
+            onError(throwable)
         }
     ) {
         try {
-            block.invoke(this)
+            block()
         } finally {
             onComplete()
         }
