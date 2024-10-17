@@ -145,7 +145,7 @@ fun String.formatToYearMonthDay(): String {
  * 判断输入的是否是数字
  */
 fun String.isNumber(): Boolean {
-    val regex = Regex("[-+]?\\d+(\\.\\d+)?")
+    val regex = Regex("([-+])?\\d+(\\.\\d+)?")
     return this.matches(regex)
 }
 
@@ -181,8 +181,7 @@ fun String.isPhoneNumber(): Boolean {
     return if (this.length != 11) {
         false
     } else {
-        val regExp =
-            "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}\$"
+        val regExp = "^1[3-9]\\d{9}\$"
         val regex = Regex(regExp)
         this.matches(regex)
     }
@@ -195,7 +194,7 @@ fun String.isEmail(): Boolean {
     return if (this.isBlank()) {
         false
     } else {
-        val regExp = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$"
+        val regExp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$"
         val regex = Regex(regExp)
         this.matches(regex)
     }
