@@ -3,27 +3,25 @@ package com.pengxh.kt.lite.widget
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import android.text.TextUtils
 import android.util.AttributeSet
-import android.view.Gravity
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.widget.LinearLayout
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.dp2px
-import com.pengxh.kt.lite.extensions.getScreenDensity
+import com.pengxh.kt.lite.databinding.WidgetViewTitleBarBinding
 
 
 /**
  * 界面顶部标题栏
  * */
-class TitleBarView constructor(context: Context, attrs: AttributeSet) :
-    RelativeLayout(context, attrs) {
+class TitleBarView constructor(context: Context, attrs: AttributeSet? = null) :
+    LinearLayout(context, attrs) {
 
-    private val titleHeight = 45.dp2px(context)
-    private var textView: TextView
+    private val kTag = "TitleBarView"
+    private var binding: WidgetViewTitleBarBinding
 
     init {
+        binding = WidgetViewTitleBarBinding.inflate(LayoutInflater.from(context), this, true)
+
         val type = context.obtainStyledAttributes(attrs, R.styleable.TitleBarView)
         val leftImageRes = type.getResourceId(
             R.styleable.TitleBarView_tbv_left_image, R.drawable.ic_title_left
@@ -35,86 +33,33 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
         val isShowRight = type.getBoolean(R.styleable.TitleBarView_tbv_show_right_image, false)
         val title = type.getText(R.styleable.TitleBarView_tbv_text)
         val titleColor = type.getColor(R.styleable.TitleBarView_tbv_text_color, Color.WHITE)
-        val titleSize = type.getDimension(R.styleable.TitleBarView_tbv_text_size, 18f)
-        val onlyShowTitle = type.getBoolean(R.styleable.TitleBarView_tbv_only_show_title, false)
+        val isSmallerTitle = type.getBoolean(R.styleable.TitleBarView_tbv_smaller_title, false)
         type.recycle()
 
-        if (onlyShowTitle) {
-            //文字
-            val titleParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            titleParams.height = titleHeight
-            textView = TextView(context)
-            textView.text = title
-            textView.isSingleLine = true
-            textView.ellipsize = TextUtils.TruncateAt.END
-            //textSize会将值默认为sp，不除以像素密度则会将sp再此转为px，相当于原本字体大小进行了两次转换px
-            textView.textSize = titleSize / context.getScreenDensity()
-            textView.gravity = Gravity.CENTER
-            textView.setTextColor(titleColor)
-            titleParams.addRule(CENTER_IN_PARENT, TRUE)
-            textView.layoutParams = titleParams
-            addView(textView)
-        } else {
-            val iconSize = 25.dp2px(context)
-            val textMargin = 10.dp2px(context)
-
-            //左边图标
-            if (isShowLeft) {
-                val leftImageParams = LayoutParams(iconSize, iconSize)
-                val leftImageView = ImageView(context)
-                leftImageView.setImageResource(leftImageRes)
-                leftImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                leftImageParams.leftMargin = textMargin
-                leftImageParams.addRule(CENTER_VERTICAL, TRUE)
-                addView(leftImageView, leftImageParams)
-                leftImageView.setOnClickListener {
-                    listener?.onLeftClick()
-                }
-            }
-
-            //文字
-            val titleParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            titleParams.height = titleHeight
-            textView = TextView(context)
-            textView.text = title
-            textView.isSingleLine = true
-            textView.ellipsize = TextUtils.TruncateAt.END
-            //textSize会将值默认为sp，不除以像素密度则会将sp再此转为px，相当于原本字体大小进行了两次转换px
-            textView.textSize = titleSize / context.getScreenDensity()
-            textView.gravity = Gravity.CENTER
-            textView.setTextColor(titleColor)
-            titleParams.leftMargin = textMargin
-            titleParams.rightMargin = textMargin
-            titleParams.addRule(CENTER_IN_PARENT, TRUE)
-            titleParams.addRule(ALIGN_PARENT_LEFT)
-            titleParams.addRule(ALIGN_PARENT_RIGHT)
-            textView.layoutParams = titleParams
-            addView(textView)
-
-            //右边图标
-            if (isShowRight) {
-                val rightImageParams = LayoutParams(iconSize, iconSize)
-                val rightImageView = ImageView(context)
-                rightImageView.setImageResource(rightImageRes)
-                rightImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                rightImageParams.rightMargin = textMargin
-                rightImageParams.addRule(CENTER_VERTICAL, TRUE)
-                rightImageParams.addRule(ALIGN_PARENT_END, TRUE)
-                addView(rightImageView, rightImageParams)
-                rightImageView.setOnClickListener {
-                    listener?.onRightClick()
-                }
+        //左边图标
+        if (isShowLeft) {
+            binding.leftButton.setImageResource(leftImageRes)
+            binding.leftButton.setOnClickListener {
+                listener?.onLeftClick()
             }
         }
-    }
 
-    /**
-     * 设置View高度
-     * */
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val widthSpecSize = MeasureSpec.getSize(widthMeasureSpec)
-        setMeasuredDimension(widthSpecSize, titleHeight)
+        //文字
+        binding.titleView.text = title
+        binding.titleView.textSize = if (isSmallerTitle) {
+            16f
+        } else {
+            18f
+        }
+        binding.titleView.setTextColor(titleColor)
+
+        //右边图标
+        if (isShowRight) {
+            binding.rightButton.setImageResource(rightImageRes)
+            binding.rightButton.setOnClickListener {
+                listener?.onRightClick()
+            }
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -127,7 +72,7 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
      * 动态设置标题
      * */
     fun setTitle(title: String) {
-        textView.text = title
+        binding.titleView.text = title
         invalidate()
     }
 
@@ -135,7 +80,7 @@ class TitleBarView constructor(context: Context, attrs: AttributeSet) :
      * 获取当前显示标题文字
      * */
     fun getTitle(): String {
-        return textView.text.toString()
+        return binding.titleView.text.toString()
     }
 
     private var listener: OnClickListener? = null

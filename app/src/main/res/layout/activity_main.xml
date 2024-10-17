@@ -6,14 +6,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <com.pengxh.kt.lite.widget.TitleBarView
+        android:id="@+id/titleView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/titleViewHeight"
+        android:layout_height="wrap_content"
         android:background="@color/mainColor"
-        android:gravity="center"
-        android:text="Kotlin-lite-lib用法示例"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_18" />
+        app:tbv_left_image="@drawable/ic_title_left"
+        app:tbv_right_image="@drawable/ic_title_right"
+        app:tbv_show_left_image="false"
+        app:tbv_show_right_image="false"
+        app:tbv_smaller_title="false"
+        app:tbv_text="Kotlin-lite-lib用法示例"
+        app:tbv_text_color="@color/white" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
