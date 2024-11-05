@@ -57,46 +57,42 @@ class TcpClient(
             .option(
                 ChannelOption.RCVBUF_ALLOCATOR, AdaptiveRecvByteBufAllocator(5000, 5000, 8000)
             )
+            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
             .handler(SimpleChannelInitializer())
         connect()
     }
 
     private inner class SimpleChannelInitializer : ChannelInitializer<SocketChannel>() {
-        override fun initChannel(ch: SocketChannel?) {
-            ch?.apply {
-                pipeline()
-                    .addLast(ByteArrayDecoder())
-                    .addLast(ByteArrayEncoder())
-                    .addLast(IdleStateHandler(60, 10, 0))
-                    .addLast(object : SimpleChannelInboundHandler<ByteArray>() {
-                        override fun channelActive(ctx: ChannelHandlerContext) {
-                            val address = ctx.channel().remoteAddress() as InetSocketAddress
-                            Log.d(kTag, "${address.address.hostAddress} 已连接")
-                            listener.onConnected()
-                        }
+        override fun initChannel(ch: SocketChannel) {
+            val channelPipeline = ch.pipeline()
+            channelPipeline
+                .addLast(ByteArrayDecoder())
+                .addLast(ByteArrayEncoder())
+                .addLast(IdleStateHandler(0, 0, 60, TimeUnit.SECONDS))//如果连接没有接收或发送数据超过60秒钟就发送一次心跳
+                .addLast(object : SimpleChannelInboundHandler<ByteArray>() {
+                    override fun channelActive(ctx: ChannelHandlerContext) {
+                        val address = ctx.channel().remoteAddress() as InetSocketAddress
+                        Log.d(kTag, "${address.address.hostAddress} 已连接")
+                        listener.onConnected()
+                    }
 
-                        override fun channelInactive(ctx: ChannelHandlerContext) {
-                            val address = ctx.channel().remoteAddress() as InetSocketAddress
-                            Log.d(kTag, "${address.address.hostAddress} 已断开")
-                            listener.onDisconnected()
-                            reconnect()
-                        }
+                    override fun channelInactive(ctx: ChannelHandlerContext) {
+                        val address = ctx.channel().remoteAddress() as InetSocketAddress
+                        Log.d(kTag, "${address.address.hostAddress} 已断开")
+                        listener.onDisconnected()
+                        reconnect()
+                    }
 
-                        override fun channelRead0(
-                            ctx: ChannelHandlerContext, msg: ByteArray?
-                        ) {
-                            listener.onMessageReceived(msg)
-                        }
+                    override fun channelRead0(ctx: ChannelHandlerContext, msg: ByteArray?) {
+                        listener.onMessageReceived(msg)
+                    }
 
-                        override fun exceptionCaught(
-                            ctx: ChannelHandlerContext, cause: Throwable
-                        ) {
-                            Log.d(kTag, "exceptionCaught: ${cause.message}")
-                            listener.onConnectFailed()
-                            ctx.close()
-                        }
-                    })
-            }
+                    override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+                        Log.d(kTag, "exceptionCaught: ${cause.message}")
+                        listener.onConnectFailed()
+                        ctx.close()
+                    }
+                })
         }
     }
 

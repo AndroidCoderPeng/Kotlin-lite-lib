@@ -21,6 +21,7 @@ import io.netty.util.CharsetUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
+import java.util.concurrent.TimeUnit
 
 class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
 
@@ -41,7 +42,7 @@ class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
         override fun initChannel(dc: DatagramChannel) {
             val channelPipeline = dc.pipeline()
             channelPipeline
-                .addLast(IdleStateHandler(60, 10, 0))
+                .addLast(IdleStateHandler(0, 0, 60, TimeUnit.SECONDS))//如果连接没有接收或发送数据超过60秒钟就发送一次心跳
                 .addLast(object : SimpleChannelInboundHandler<DatagramPacket>() {
                     override fun channelRead0(ctx: ChannelHandlerContext?, msg: DatagramPacket) {
                         val byteBuf = msg.content()
