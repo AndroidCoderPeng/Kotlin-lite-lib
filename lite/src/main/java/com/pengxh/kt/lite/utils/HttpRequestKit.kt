@@ -14,7 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class HttpRequestHub(builder: Builder) : LifecycleOwner {
+class HttpRequestKit(builder: Builder) : LifecycleOwner {
 
     private val kTag = "HttpRequestHub"
     private val registry = LifecycleRegistry(this)
@@ -50,8 +50,8 @@ class HttpRequestHub(builder: Builder) : LifecycleOwner {
             return this
         }
 
-        fun build(): HttpRequestHub {
-            return HttpRequestHub(this)
+        fun build(): HttpRequestKit {
+            return HttpRequestKit(this)
         }
     }
 

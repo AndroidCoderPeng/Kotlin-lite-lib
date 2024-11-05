@@ -16,7 +16,7 @@ import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.divider.RecyclerViewItemDivider
 import com.pengxh.kt.lite.extensions.show
-import com.pengxh.kt.lite.utils.HttpRequestHub
+import com.pengxh.kt.lite.utils.HttpRequestKit
 
 class HttpRequestFragment : KotlinBaseFragment<FragmentUtilsHttpRequestBinding>() {
 
@@ -34,10 +34,10 @@ class HttpRequestFragment : KotlinBaseFragment<FragmentUtilsHttpRequestBinding>(
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        HttpRequestHub.Builder()
+        HttpRequestKit.Builder()
             .setAuthentication()
             .setRequestTarget(LocaleConstant.TARGET_API)
-            .setOnHttpRequestListener(object : HttpRequestHub.OnHttpRequestListener {
+            .setOnHttpRequestListener(object : HttpRequestKit.OnHttpRequestListener {
                 override fun onSuccess(result: String) {
                     val element = JsonParser.parseString(result)
                     val jsonObject = element.asJsonObject

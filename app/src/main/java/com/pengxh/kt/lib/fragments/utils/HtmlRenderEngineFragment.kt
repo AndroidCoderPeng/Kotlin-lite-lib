@@ -14,7 +14,7 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.navigatePageTo
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.utils.HtmlRenderEngine
-import com.pengxh.kt.lite.utils.HttpRequestHub
+import com.pengxh.kt.lite.utils.HttpRequestKit
 
 
 class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBinding>() {
@@ -33,10 +33,10 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        HttpRequestHub.Builder()
+        HttpRequestKit.Builder()
             .setAuthentication()
             .setRequestTarget(LocaleConstant.TARGET_API)
-            .setOnHttpRequestListener(object : HttpRequestHub.OnHttpRequestListener {
+            .setOnHttpRequestListener(object : HttpRequestKit.OnHttpRequestListener {
                 override fun onSuccess(result: String) {
                     val element = JsonParser.parseString(result)
                     val jsonObject = element.asJsonObject
