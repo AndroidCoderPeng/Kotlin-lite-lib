@@ -40,7 +40,7 @@ class TcpClient(
 
     private val kTag = "TcpClient"
     private val reconnectDelay = 5L
-    private var bootstrap: Bootstrap = Bootstrap()
+    private var bootStrap: Bootstrap = Bootstrap()
     private var loopGroup: EventLoopGroup = NioEventLoopGroup()
     private var channel: Channel? = null
     private var isRunning = false
@@ -50,7 +50,7 @@ class TcpClient(
         if (isRunning) {
             return
         }
-        bootstrap.group(loopGroup)
+        bootStrap.group(loopGroup)
             .channel(NioSocketChannel::class.java)
             .option(ChannelOption.TCP_NODELAY, true) //无阻塞
             .option(ChannelOption.SO_KEEPALIVE, true) //长连接
@@ -102,7 +102,7 @@ class TcpClient(
         }
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val channelFuture = bootstrap.connect(host, port)
+                val channelFuture = bootStrap.connect(host, port)
                     .addListener(object : ChannelFutureListener {
                         override fun operationComplete(channelFuture: ChannelFuture) {
                             if (channelFuture.isSuccess) {

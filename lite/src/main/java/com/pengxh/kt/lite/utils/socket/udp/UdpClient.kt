@@ -26,12 +26,12 @@ import java.util.concurrent.TimeUnit
 class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
 
     private val bootStrap by lazy { Bootstrap() }
-    private val eventLoopGroup by lazy { NioEventLoopGroup() }
+    private val loopGroup by lazy { NioEventLoopGroup() }
     private lateinit var socketAddress: InetSocketAddress
     private var channel: Channel? = null
 
     init {
-        bootStrap.group(eventLoopGroup)
+        bootStrap.group(loopGroup)
         bootStrap.channel(NioDatagramChannel::class.java)
             .option(ChannelOption.SO_RCVBUF, 1024)
             .option(ChannelOption.SO_SNDBUF, 1024)
@@ -93,7 +93,7 @@ class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
     }
 
     fun release() {
-        eventLoopGroup.shutdownGracefully()
+        loopGroup.shutdownGracefully()
     }
 
     private val registry = LifecycleRegistry(this)
