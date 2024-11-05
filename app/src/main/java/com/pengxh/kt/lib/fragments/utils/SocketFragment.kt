@@ -12,13 +12,13 @@ import com.pengxh.kt.lib.model.MessageModel
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.timestampToTime
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
-import com.pengxh.kt.lite.utils.socket.tcp.OnTcpConnectStateCallback
+import com.pengxh.kt.lite.utils.socket.tcp.OnTcpConnectStateListener
 import com.pengxh.kt.lite.utils.socket.tcp.TcpClient
-import com.pengxh.kt.lite.utils.socket.udp.OnUdpMessageCallback
+import com.pengxh.kt.lite.utils.socket.udp.OnUdpMessageListener
 import com.pengxh.kt.lite.utils.socket.udp.UdpClient
 
-class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpConnectStateCallback,
-    OnUdpMessageCallback, Handler.Callback {
+class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpConnectStateListener,
+    OnUdpMessageListener, Handler.Callback {
 
     private val kTag = "SocketFragment"
     private val udpClient by lazy { UdpClient(this) }

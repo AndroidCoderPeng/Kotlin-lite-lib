@@ -1,6 +1,6 @@
 package com.pengxh.kt.lite.utils.socket.udp
 
-interface OnUdpMessageCallback {
+interface OnUdpMessageListener {
     /**
      * 当接收到系统消息
      */

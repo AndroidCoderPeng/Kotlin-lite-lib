@@ -1,6 +1,6 @@
 package com.pengxh.kt.lite.utils.socket.tcp
 
-interface OnTcpConnectStateCallback {
+interface OnTcpConnectStateListener {
     fun onConnected()
     fun onDisconnected()
     fun onConnectFailed()

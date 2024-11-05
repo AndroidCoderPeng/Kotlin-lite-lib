@@ -26,10 +26,10 @@ import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
 
-class TcpClient constructor(
+class TcpClient(
     private val host: String,
     private val port: Int,
-    private val listener: OnTcpConnectStateCallback
+    private val listener: OnTcpConnectStateListener
 ) : LifecycleOwner {
 
     private val registry = LifecycleRegistry(this)

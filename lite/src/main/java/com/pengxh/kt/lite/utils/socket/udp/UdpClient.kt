@@ -8,8 +8,10 @@ import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.channel.Channel
+import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelOption
+import io.netty.channel.SimpleChannelInboundHandler
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.DatagramChannel
 import io.netty.channel.socket.DatagramPacket
@@ -20,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
 
-class UdpClient(private val messageCallback: OnUdpMessageCallback) : LifecycleOwner {
+class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
 
     private val bootStrap by lazy { Bootstrap() }
     private val eventLoopGroup by lazy { NioEventLoopGroup() }
@@ -32,14 +34,23 @@ class UdpClient(private val messageCallback: OnUdpMessageCallback) : LifecycleOw
         bootStrap.channel(NioDatagramChannel::class.java)
             .option(ChannelOption.SO_RCVBUF, 1024)
             .option(ChannelOption.SO_SNDBUF, 1024)
-            .handler(object : ChannelInitializer<DatagramChannel>() {
-                override fun initChannel(datagramChannel: DatagramChannel) {
-                    val channelPipeline = datagramChannel.pipeline()
-                    channelPipeline.addLast(
-                        IdleStateHandler(15, 15, 0)
-                    ).addLast(UdpChannelInboundHandler(messageCallback))
-                }
-            })
+            .handler(SimpleChannelInitializer())
+    }
+
+    private inner class SimpleChannelInitializer : ChannelInitializer<DatagramChannel>() {
+        override fun initChannel(dc: DatagramChannel) {
+            val channelPipeline = dc.pipeline()
+            channelPipeline
+                .addLast(IdleStateHandler(60, 10, 0))
+                .addLast(object : SimpleChannelInboundHandler<DatagramPacket>() {
+                    override fun channelRead0(ctx: ChannelHandlerContext?, msg: DatagramPacket) {
+                        val byteBuf = msg.content()
+                        val byteArray = ByteArray(byteBuf.readableBytes())
+                        byteBuf.readBytes(byteArray)
+                        listener.onReceivedUdpMessage(byteArray)
+                    }
+                })
+        }
     }
 
     fun bind(remote: String, port: Int) {
