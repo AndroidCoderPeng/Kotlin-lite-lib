@@ -46,6 +46,13 @@ class TcpClient(
     private var isRunning = false
     private var retryTimes = 0
 
+    /**
+     * TcpClient 是否正在运行
+     * */
+    fun isRunning(): Boolean {
+        return isRunning
+    }
+
     fun start() {
         if (isRunning) {
             return
