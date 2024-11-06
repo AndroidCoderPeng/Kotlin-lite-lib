@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.pengxh.kt.lib.databinding.FragmentExtensionByteArrayBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.extensions.toASCII
+import com.pengxh.kt.lite.extensions.toAsciiCode
 
 class ByteArrayExtensionFragment : KotlinBaseFragment<FragmentExtensionByteArrayBinding>() {
 
@@ -32,7 +32,7 @@ class ByteArrayExtensionFragment : KotlinBaseFragment<FragmentExtensionByteArray
 
     override fun initEvent() {
         binding.parseButton.setOnClickListener {
-            val hex = byteArrayOf(51, 51, 50, 48, 48, 48, 48, 49, 48, 48, 48, 50, 13, 10).toASCII()
+            val hex = byteArrayOf(51, 51, 50, 48, 48, 48, 48, 49, 48, 48, 48, 50, 13, 10).toAsciiCode()
             binding.hexStringView.text = hex
         }
     }

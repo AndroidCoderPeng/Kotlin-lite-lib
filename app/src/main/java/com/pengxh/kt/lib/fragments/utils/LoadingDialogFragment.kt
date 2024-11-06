@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.pengxh.kt.lib.databinding.FragmentUtilsLoadingDialogHubBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.utils.LoadingDialogHub
+import com.pengxh.kt.lite.utils.LoadingDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,17 +34,17 @@ class LoadingDialogFragment : KotlinBaseFragment<FragmentUtilsLoadingDialogHubBi
     override fun initEvent() {
         binding.showButton.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Main) {
-                LoadingDialogHub.show(requireActivity(), "不带标题的加载框")
+                LoadingDialog.show(requireActivity(), "不带标题的加载框")
                 delay(3000)
-                LoadingDialogHub.dismiss()
+                LoadingDialog.dismiss()
             }
         }
 
         binding.showWithTitleButton.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Main) {
-                LoadingDialogHub.show(requireActivity(), "标题", "带标题的加载框")
+                LoadingDialog.show(requireActivity(), "标题", "带标题的加载框")
                 delay(3000)
-                LoadingDialogHub.dismiss()
+                LoadingDialog.dismiss()
             }
         }
     }

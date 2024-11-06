@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.view.WindowManager
 
-object LoadingDialogHub {
+object LoadingDialog {
     private lateinit var loadingDialog: ProgressDialog
 
     fun show(activity: Activity, message: String) {

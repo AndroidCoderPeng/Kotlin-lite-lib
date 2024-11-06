@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 class HttpRequestKit(builder: Builder) : LifecycleOwner {
 
-    private val kTag = "HttpRequestHub"
+    private val kTag = "HttpRequestKit"
     private val registry = LifecycleRegistry(this)
 
     class Builder {

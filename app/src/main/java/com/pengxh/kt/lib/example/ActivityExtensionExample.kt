@@ -15,9 +15,9 @@ class ActivityExtensionExample : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding.backButton.setOnClickListener { finish() }
 
-        val args = intent.getStringArrayListExtra(Constant.INTENT_PARAM)
+        val args = intent.getStringArrayListExtra(Constant.INTENT_PARAM_KEY)
         if (args == null) {
-            val extra = intent.getStringExtra(Constant.INTENT_PARAM)
+            val extra = intent.getStringExtra(Constant.INTENT_PARAM_KEY)
             binding.textView.text = extra
         } else {
             val builder = StringBuilder()

@@ -8,7 +8,7 @@ import com.pengxh.kt.lib.databinding.FragmentUtilsRetrofitFactoryBinding
 import com.pengxh.kt.lib.vm.HttpRequestViewModel
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.utils.LoadState
-import com.pengxh.kt.lite.utils.LoadingDialogHub
+import com.pengxh.kt.lite.utils.LoadingDialog
 
 class RetrofitFactoryFragment : KotlinBaseFragment<FragmentUtilsRetrofitFactoryBinding>() {
 
@@ -38,15 +38,15 @@ class RetrofitFactoryFragment : KotlinBaseFragment<FragmentUtilsRetrofitFactoryB
         httpRequestViewModel.loadState.observe(this) {
             when (it) {
                 LoadState.Loading -> {
-                    LoadingDialogHub.show(requireActivity(), "数据请求中，请稍后...")
+                    LoadingDialog.show(requireActivity(), "数据请求中，请稍后...")
                 }
 
                 LoadState.Success -> {
-                    LoadingDialogHub.dismiss()
+                    LoadingDialog.dismiss()
                 }
 
                 else -> {
-                    LoadingDialogHub.dismiss()
+                    LoadingDialog.dismiss()
                 }
             }
         }

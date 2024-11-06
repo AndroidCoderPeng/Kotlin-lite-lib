@@ -16,12 +16,12 @@ object Constant {
     /**
      * 查看大图Intent Data Key
      */
-    const val BIG_IMAGE_INTENT_DATA_KEY = "ImageData"
+    const val BIG_IMAGE_INTENT_DATA_KEY = "ImageDataKey"
 
     /**
      * 页面跳转Intent Data Key
      */
-    const val INTENT_PARAM = "intentParam"
+    const val INTENT_PARAM_KEY = "IntentParamKey"
 
     /**
      * 最大录音时长5分钟

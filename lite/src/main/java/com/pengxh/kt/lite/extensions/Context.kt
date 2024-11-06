@@ -54,13 +54,13 @@ inline fun <reified T> Context.navigatePageTo() {
 
 inline fun <reified T> Context.navigatePageTo(value: String) {
     val intent = Intent(this, T::class.java)
-    intent.putExtra(Constant.INTENT_PARAM, value)
+    intent.putExtra(Constant.INTENT_PARAM_KEY, value)
     startActivity(intent)
 }
 
 inline fun <reified T> Context.navigatePageTo(values: ArrayList<String>) {
     val intent = Intent(this, T::class.java)
-    intent.putStringArrayListExtra(Constant.INTENT_PARAM, values)
+    intent.putStringArrayListExtra(Constant.INTENT_PARAM_KEY, values)
     startActivity(intent)
 }
 
