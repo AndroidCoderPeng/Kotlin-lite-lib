@@ -16,12 +16,18 @@ import com.pengxh.kt.lite.utils.socket.tcp.OnTcpConnectStateListener
 import com.pengxh.kt.lite.utils.socket.tcp.TcpClient
 import com.pengxh.kt.lite.utils.socket.udp.OnUdpMessageListener
 import com.pengxh.kt.lite.utils.socket.udp.UdpClient
+import com.pengxh.kt.lite.utils.socket.web.OnWebSocketListener
+import com.pengxh.kt.lite.utils.socket.web.WebSocketClient
+import okhttp3.Response
+import okhttp3.WebSocket
+import okio.ByteString
 
 class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpConnectStateListener,
-    OnUdpMessageListener, Handler.Callback {
+    OnUdpMessageListener, OnWebSocketListener, Handler.Callback {
 
     private val kTag = "SocketFragment"
     private val udpClient by lazy { UdpClient(this) }
+    private val webSocketClient by lazy { WebSocketClient(this) }
     private val tcpMessageArray: MutableList<MessageModel> = ArrayList()
     private val udpMessageArray: MutableList<MessageModel> = ArrayList()
     private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
@@ -81,10 +87,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
 
             type = 0
             tcpMessageArray.add(
-                MessageModel(
-                    System.currentTimeMillis().timestampToTime(),
-                    message.toString()
-                )
+                MessageModel(System.currentTimeMillis().timestampToTime(), message.toString())
             )
             tcpClient?.sendMessage(message.toString().toByteArray())
             weakReferenceHandler.sendEmptyMessage(0)
@@ -98,25 +101,31 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
 
             type = 1
             udpMessageArray.add(
-                MessageModel(
-                    System.currentTimeMillis().timestampToTime(),
-                    message.toString()
-                )
+                MessageModel(System.currentTimeMillis().timestampToTime(), message.toString())
             )
             udpClient.sendMessage(message.toString())
             weakReferenceHandler.sendEmptyMessage(1)
+        }
+
+        binding.connectWebsocketButton.setOnClickListener {
+            if (webSocketClient.isRunning()) {
+                webSocketClient.stop()
+            } else {
+                val url = binding.websocketInputView.text
+                if (url.isNullOrBlank()) {
+                    return@setOnClickListener
+                }
+                webSocketClient.start("$url/" + System.currentTimeMillis())
+            }
         }
     }
 
     /**
      * 处理接收消息
      * */
-    override fun onMessageReceived(data: ByteArray?) {
+    override fun onMessageReceived(bytes: ByteArray?) {
         tcpMessageArray.add(
-            MessageModel(
-                System.currentTimeMillis().timestampToTime(),
-                data.contentToString()
-            )
+            MessageModel(System.currentTimeMillis().timestampToTime(), bytes.contentToString())
         )
         weakReferenceHandler.sendEmptyMessage(0)
     }
@@ -154,6 +163,36 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
             udpAdapter.notifyDataSetChanged()
         }
         return true
+    }
+
+    override fun onOpen(webSocket: WebSocket, response: Response) {
+        requireActivity().runOnUiThread {
+            binding.connectWebsocketButton.text = "断开"
+        }
+    }
+
+    override fun onMessageResponse(webSocket: WebSocket, message: String) {
+
+    }
+
+    override fun onMessageResponse(webSocket: WebSocket, bytes: ByteString) {
+
+    }
+
+    override fun onServerDisconnected(webSocket: WebSocket, code: Int, reason: String) {
+        requireActivity().runOnUiThread {
+            binding.connectWebsocketButton.text = "连接"
+        }
+    }
+
+    override fun onClientDisconnected(webSocket: WebSocket, code: Int, reason: String) {
+        requireActivity().runOnUiThread {
+            binding.connectWebsocketButton.text = "连接"
+        }
+    }
+
+    override fun onFailure(webSocket: WebSocket) {
+
     }
 
     override fun onDestroyView() {
