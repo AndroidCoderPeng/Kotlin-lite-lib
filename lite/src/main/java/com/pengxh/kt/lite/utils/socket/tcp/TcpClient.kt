@@ -26,11 +26,7 @@ import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
 
-class TcpClient(
-    private val host: String,
-    private val port: Int,
-    private val listener: OnTcpConnectStateListener
-) : LifecycleOwner {
+class TcpClient(private val listener: OnTcpConnectStateListener) : LifecycleOwner {
 
     private val registry = LifecycleRegistry(this)
 
@@ -42,21 +38,13 @@ class TcpClient(
     private val reconnectDelay = 5L
     private var bootStrap: Bootstrap = Bootstrap()
     private var loopGroup: EventLoopGroup = NioEventLoopGroup()
+    private lateinit var host: String
+    private var port: Int = 0
     private var channel: Channel? = null
     private var isRunning = false
     private var retryTimes = 0
 
-    /**
-     * TcpClient 是否正在运行
-     * */
-    fun isRunning(): Boolean {
-        return isRunning
-    }
-
-    fun start() {
-        if (isRunning) {
-            return
-        }
+    init {
         bootStrap.group(loopGroup)
             .channel(NioSocketChannel::class.java)
             .option(ChannelOption.TCP_NODELAY, true) //无阻塞
@@ -66,6 +54,21 @@ class TcpClient(
             )
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
             .handler(SimpleChannelInitializer())
+    }
+
+    /**
+     * TcpClient 是否正在运行
+     * */
+    fun isRunning(): Boolean {
+        return isRunning
+    }
+
+    fun start(host: String, port: Int) {
+        this.host = host
+        this.port = port
+        if (isRunning) {
+            return
+        }
         connect()
     }
 
@@ -103,6 +106,7 @@ class TcpClient(
         }
     }
 
+    @Synchronized
     private fun connect() {
         if (channel != null && channel!!.isActive) {
             return
@@ -136,7 +140,6 @@ class TcpClient(
     fun stop() {
         isRunning = false
         channel?.close()
-        loopGroup.shutdownGracefully()
     }
 
     fun sendMessage(bytes: ByteArray) {

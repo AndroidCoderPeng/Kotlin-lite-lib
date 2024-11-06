@@ -3,7 +3,6 @@ package com.pengxh.kt.lib.fragments.utils
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.pengxh.kt.lib.adapter.MessageRecyclerAdapter
@@ -27,13 +26,13 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
 
     private val kTag = "SocketFragment"
     private val udpClient by lazy { UdpClient(this) }
+    private val tcpClient by lazy { TcpClient(this) }
     private val webSocketClient by lazy { WebSocketClient(this) }
     private val tcpMessageArray: MutableList<MessageModel> = ArrayList()
     private val udpMessageArray: MutableList<MessageModel> = ArrayList()
     private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
     private lateinit var tcpAdapter: MessageRecyclerAdapter
     private lateinit var udpAdapter: MessageRecyclerAdapter
-    private var tcpClient: TcpClient? = null
     private var type = 0
 
     override fun initViewBinding(
@@ -68,15 +67,18 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
     }
 
     override fun initEvent() {
-        binding.connectTcpButton.setOnClickListener {
+        binding.socketButton.setOnClickListener {
             val text = binding.tcpIpInputView.text
             if (text.isNullOrBlank()) {
                 return@setOnClickListener
             }
             val address = text.toString()
             val strings = address.split(":")
-            tcpClient = TcpClient(strings[0], strings[1].toInt(), this)
-            tcpClient?.start()
+            if (tcpClient.isRunning()) {
+                tcpClient.stop()
+            } else {
+                tcpClient.start(strings[0], strings[1].toInt())
+            }
         }
 
         binding.sendTcpButton.setOnClickListener {
@@ -89,7 +91,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
             tcpMessageArray.add(
                 MessageModel(System.currentTimeMillis().timestampToTime(), message.toString())
             )
-            tcpClient?.sendMessage(message.toString().toByteArray())
+            tcpClient.sendMessage(message.toString().toByteArray())
             weakReferenceHandler.sendEmptyMessage(0)
         }
 
@@ -131,17 +133,15 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
     }
 
     override fun onConnected() {
-        Log.d(kTag, "onConnectStatusChanged => 连接成功")
-        binding.connectTcpButton.text = "断开"
+        requireActivity().runOnUiThread { binding.socketButton.text = "断开" }
     }
 
     override fun onDisconnected() {
-        Log.d(kTag, "onConnectStatusChanged => 连接关闭")
-        binding.connectTcpButton.text = "连接"
+        requireActivity().runOnUiThread { binding.socketButton.text = "连接" }
     }
 
     override fun onConnectFailed() {
-        Log.d(kTag, "onConnectStatusChanged => 连接断开，正在重连")
+        requireActivity().runOnUiThread { binding.socketButton.text = "连接" }
     }
 
     override fun onReceivedUdpMessage(data: ByteArray) {
