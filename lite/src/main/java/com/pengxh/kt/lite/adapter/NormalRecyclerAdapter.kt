@@ -1,9 +1,9 @@
 package com.pengxh.kt.lite.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -31,16 +31,40 @@ abstract class NormalRecyclerAdapter<T>(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setRefreshData(dataRows: MutableList<T>) {
-        this.dataRows.clear()
-        this.dataRows.addAll(dataRows)
-        notifyDataSetChanged()
+    /**
+     * 刷新列表，局部刷新
+     * */
+    fun refresh(newRows: MutableList<T>) {
+        val diffCallback = object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = dataRows.size
+            override fun getNewListSize(): Int = newRows.size
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return dataRows[oldItemPosition] === newRows[newItemPosition]
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return dataRows[oldItemPosition] == newRows[newItemPosition]
+            }
+        }
+
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        dataRows.clear()
+        dataRows.addAll(newRows)
+
+        diffResult.dispatchUpdatesTo(this)
     }
 
-    fun setLoadMoreData(dataRows: MutableList<T>) {
-        this.dataRows.addAll(dataRows)
-        notifyItemRangeInserted(this.dataRows.size, dataRows.size)
+    /**
+     * 加载更多
+     * */
+    fun loadMore(newRows: MutableList<T>) {
+        if (newRows.isEmpty()) {
+            return
+        }
+        val startPosition = this.dataRows.size
+        this.dataRows.addAll(newRows)
+        notifyItemRangeInserted(startPosition, newRows.size)
     }
 
     abstract fun convertView(viewHolder: ViewHolder, position: Int, item: T)
@@ -48,7 +72,7 @@ abstract class NormalRecyclerAdapter<T>(
     private var itemClickedListener: OnItemClickedListener<T>? = null
 
     interface OnItemClickedListener<T> {
-        fun onItemClicked(position: Int, t: T)
+        fun onItemClicked(position: Int, item: T)
     }
 
     fun setOnItemClickedListener(listener: OnItemClickedListener<T>?) {

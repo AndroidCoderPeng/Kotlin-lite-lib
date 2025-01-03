@@ -55,7 +55,7 @@ abstract class SingleChoiceAdapter<T>(
     }
 
     /**
-     * 加载更多，局部加载
+     * 加载更多
      * */
     fun loadMore(newRows: MutableList<T>) {
         val startPosition = dataRows.size
