@@ -1,6 +1,6 @@
 package com.pengxh.kt.lite.adapter
 
-import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -20,11 +20,12 @@ abstract class SingleChoiceAdapter<T>(
     private var selectedPosition = -1
 
     fun setSelectedPosition(position: Int) {
-        selectedPosition = position
+        if (position in 0 until dataRows.size) {
+            selectedPosition = position
+        } else {
+            Log.d(kTag, "Invalid position: $position")
+        }
     }
-
-    //临时记录上次选择的位置
-    private var temp = -1
 
     override fun getItemCount(): Int = dataRows.size
 
@@ -35,31 +36,31 @@ abstract class SingleChoiceAdapter<T>(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        convertView(holder, position, dataRows[position])
+        if (position in 0 until dataRows.size) {
+            convertView(holder, position, dataRows[position])
 
-        holder.itemView.isSelected = holder.layoutPosition == selectedPosition
-        holder.itemView.setOnClickListener {
-            holder.itemView.isSelected = true
-            temp = selectedPosition
-            //设置新的位置
-            selectedPosition = holder.layoutPosition
-            //更新旧位置
-            notifyItemChanged(temp)
-
-            itemCheckedListener?.onItemChecked(position, dataRows[position])
+            holder.itemView.isSelected = holder.layoutPosition == selectedPosition
+            holder.itemView.setOnClickListener {
+                if (holder.layoutPosition != selectedPosition) {
+                    val oldPosition = selectedPosition
+                    selectedPosition = holder.layoutPosition
+                    holder.itemView.isSelected = true
+                    notifyItemChanged(oldPosition)
+                    itemCheckedListener?.onItemChecked(selectedPosition, dataRows[selectedPosition])
+                }
+            }
+        } else {
+            Log.d(kTag, "Invalid position: $position")
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setRefreshData(dataRows: MutableList<T>) {
-        this.dataRows.clear()
-        this.dataRows.addAll(dataRows)
-        notifyDataSetChanged()
-    }
-
-    fun setLoadMoreData(dataRows: MutableList<T>) {
-        this.dataRows.addAll(dataRows)
-        notifyItemRangeInserted(this.dataRows.size, dataRows.size)
+    /**
+     * 加载更多，局部加载
+     * */
+    fun loadMore(newRows: MutableList<T>) {
+        val startPosition = dataRows.size
+        dataRows.addAll(newRows)
+        notifyItemRangeInserted(startPosition, newRows.size)
     }
 
     abstract fun convertView(viewHolder: ViewHolder, position: Int, item: T)
