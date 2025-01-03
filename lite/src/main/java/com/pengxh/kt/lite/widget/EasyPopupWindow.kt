@@ -28,9 +28,8 @@ class EasyPopupWindow constructor(context: Context) : PopupWindow() {
 
     fun set(menuItems: ArrayList<MenuItem>, windowClickListener: OnPopupWindowClickListener) {
         val listView = contentView.findViewById<ListView>(R.id.listView)
+        val inflater = LayoutInflater.from(contentView.context)
         listView.adapter = object : BaseAdapter() {
-            private val inflater: LayoutInflater = LayoutInflater.from(contentView.context)
-
             override fun getCount(): Int {
                 return menuItems.size
             }

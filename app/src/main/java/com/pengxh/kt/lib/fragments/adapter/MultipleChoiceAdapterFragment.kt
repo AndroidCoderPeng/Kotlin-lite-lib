@@ -49,7 +49,7 @@ class MultipleChoiceAdapterFragment : KotlinBaseFragment<FragmentAdapterMultiple
         binding.recyclerView.adapter = selectedAdapter
         selectedAdapter.setOnItemCheckedListener(object :
             MultipleChoiceAdapter.OnItemCheckedListener<String> {
-            override fun onItemChecked(position: Int, items: ArrayList<String>) {
+            override fun onItemChecked(items: List<String>) {
                 Log.d(kTag, "onItemChecked => ${items.toJson()}")
             }
         })
