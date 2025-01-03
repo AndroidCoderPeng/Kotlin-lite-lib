@@ -5,7 +5,7 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.os.Handler
 import android.os.Message
-import com.pengxh.kt.lite.utils.Constant
+import com.pengxh.kt.lite.utils.LiteKitConstant
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import java.io.File
 import kotlin.math.log10
@@ -41,7 +41,7 @@ class AudioRecorder constructor(private val context: Context) : Handler.Callback
             setOutputFormat(MediaRecorder.OutputFormat.AMR_WB)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB)
             setOutputFile(audioFile.absolutePath)
-            setMaxDuration(Constant.MAX_LENGTH)
+            setMaxDuration(LiteKitConstant.MAX_LENGTH)
             prepare()
         }
     }

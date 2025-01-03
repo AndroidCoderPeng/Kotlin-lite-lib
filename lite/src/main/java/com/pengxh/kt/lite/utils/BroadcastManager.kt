@@ -40,7 +40,7 @@ class BroadcastManager(private val context: Context) {
     fun sendBroadcast(action: String, msg: String) {
         val intent = Intent()
         intent.action = action
-        intent.putExtra(Constant.BROADCAST_MESSAGE_KEY, msg)
+        intent.putExtra(LiteKitConstant.BROADCAST_MESSAGE_KEY, msg)
         context.sendBroadcast(intent)
     }
 

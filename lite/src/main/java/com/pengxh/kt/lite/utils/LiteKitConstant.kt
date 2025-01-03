@@ -2,7 +2,7 @@ package com.pengxh.kt.lite.utils
 
 import com.pengxh.kt.lite.R
 
-object Constant {
+object LiteKitConstant {
     /**
      * 广播接收者消息Key
      */

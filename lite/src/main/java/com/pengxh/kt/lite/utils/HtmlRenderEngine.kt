@@ -10,22 +10,18 @@ import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
 import android.view.View
 import android.widget.TextView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.convertDrawable
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.xml.sax.XMLReader
 import java.util.Locale
 
-class HtmlRenderEngine(builder: Builder) : LifecycleOwner {
-
-    private val registry = LifecycleRegistry(this)
+class HtmlRenderEngine(builder: Builder) {
 
     class Builder {
         lateinit var context: Context
@@ -66,6 +62,9 @@ class HtmlRenderEngine(builder: Builder) : LifecycleOwner {
         }
 
         fun build(): HtmlRenderEngine {
+            if (!::context.isInitialized || !::html.isInitialized || !::textView.isInitialized || !::imageSourceListener.isInitialized) {
+                throw IllegalStateException("All properties must be initialized before building.")
+            }
             return HtmlRenderEngine(this)
         }
     }
@@ -76,10 +75,10 @@ class HtmlRenderEngine(builder: Builder) : LifecycleOwner {
     private val listener = builder.imageSourceListener
 
     fun load() {
-        if (html.isBlank()) {
-            return
-        }
-        lifecycleScope.launch(Dispatchers.Main) {
+        val job = SupervisorJob()
+        val scope = CoroutineScope(Dispatchers.Main + job)
+
+        scope.launch(Dispatchers.Main) {
             textView.movementMethod = LinkMovementMethod.getInstance()
             //默认不处理图片先这样简单设置
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -151,14 +150,11 @@ class HtmlRenderEngine(builder: Builder) : LifecycleOwner {
                     textView.text = htmlText
                 }
             }
+            job.cancel()
         }
     }
 
     interface OnGetImageSourceListener {
         fun imageSource(url: String)
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        return registry
     }
 }

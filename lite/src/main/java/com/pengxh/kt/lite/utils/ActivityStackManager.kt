@@ -1,10 +1,12 @@
 package com.pengxh.kt.lite.utils
 
 import android.app.Activity
-import java.util.Stack
+import java.util.ArrayDeque
+import java.util.concurrent.locks.ReentrantLock
 
 object ActivityStackManager {
-    private val activityStack = Stack<Activity>()
+    private val activityStack = ArrayDeque<Activity>()
+    private val lock = ReentrantLock()
 
     /**
      * 添加Activity到堆栈
@@ -13,22 +15,37 @@ object ActivityStackManager {
         if (activity == null) {
             return
         }
-        activityStack.push(activity)
+        lock.lock()
+        try {
+            activityStack.addLast(activity)
+        } finally {
+            lock.unlock()
+        }
     }
 
     /**
      * 获取当前Activity（堆栈中最后一个压入的）
      */
-    fun currentActivity(): Activity {
-        return activityStack.lastElement()
+    fun currentActivity(): Activity? {
+        lock.lock()
+        try {
+            return activityStack.lastOrNull()
+        } finally {
+            lock.unlock()
+        }
     }
 
     /**
      * 结束当前Activity（堆栈中最后一个压入的）
      */
     fun finishCurrentActivity() {
-        val activity = activityStack.pop() ?: return
-        activity.finish()
+        lock.lock()
+        try {
+            val activity = activityStack.pollLast() ?: return
+            finishActivityInternal(activity)
+        } finally {
+            lock.unlock()
+        }
     }
 
     /**
@@ -38,9 +55,12 @@ object ActivityStackManager {
         if (activity == null) {
             return
         }
-        activityStack.remove(activity)
-        if (!activity.isFinishing) {
-            activity.finish()
+        lock.lock()
+        try {
+            activityStack.remove(activity)
+            finishActivityInternal(activity)
+        } finally {
+            lock.unlock()
         }
     }
 
@@ -48,10 +68,14 @@ object ActivityStackManager {
      * 结束指定类名的Activity
      */
     fun <T> finishActivity(clazz: Class<T>) {
-        for (activity in activityStack) {
-            if (activity.javaClass == clazz) {
-                finishActivity(activity)
+        lock.lock()
+        try {
+            val activitiesToRemove = activityStack.filter { it.javaClass == clazz }.toMutableList()
+            for (activity in activitiesToRemove) {
+                finishActivityInternal(activity)
             }
+        } finally {
+            lock.unlock()
         }
     }
 
@@ -59,9 +83,23 @@ object ActivityStackManager {
      * 结束所有Activity
      */
     fun finishAllActivity() {
-        for (activity in activityStack) {
+        lock.lock()
+        try {
+            for (activity in activityStack) {
+                finishActivityInternal(activity)
+            }
+            activityStack.clear()
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    /**
+     * 内部方法，结束Activity
+     */
+    private fun finishActivityInternal(activity: Activity) {
+        if (!activity.isFinishing) {
             activity.finish()
         }
-        activityStack.clear()
     }
 }

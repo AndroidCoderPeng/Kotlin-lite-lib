@@ -16,7 +16,7 @@ import com.pengxh.kt.lib.databinding.ActivityBigImageBinding
 import com.pengxh.kt.lite.base.KotlinBaseActivity
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.getStatusBarHeight
-import com.pengxh.kt.lite.utils.Constant
+import com.pengxh.kt.lite.utils.LiteKitConstant
 
 class BigImageActivity : KotlinBaseActivity<ActivityBigImageBinding>() {
 
@@ -35,8 +35,8 @@ class BigImageActivity : KotlinBaseActivity<ActivityBigImageBinding>() {
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val index = intent.getIntExtra(Constant.BIG_IMAGE_INTENT_INDEX_KEY, 0)
-        val urls = intent.getStringArrayListExtra(Constant.BIG_IMAGE_INTENT_DATA_KEY)
+        val index = intent.getIntExtra(LiteKitConstant.BIG_IMAGE_INTENT_INDEX_KEY, 0)
+        val urls = intent.getStringArrayListExtra(LiteKitConstant.BIG_IMAGE_INTENT_DATA_KEY)
         if (urls == null || urls.size == 0) {
             return
         }

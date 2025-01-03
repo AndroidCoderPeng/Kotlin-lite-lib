@@ -17,7 +17,7 @@ object RetrofitFactory {
      * @param timeout 网络请求超时时间，单位：秒
      * */
     inline fun <reified T> createRetrofit(
-        httpConfig: String, timeout: Long = Constant.HTTP_TIMEOUT, debug: Boolean = true
+        httpConfig: String, timeout: Long = LiteKitConstant.HTTP_TIMEOUT, debug: Boolean = true
     ): T {
         val httpClientBuilder = OkHttpClient.Builder()
             .connectTimeout(timeout, TimeUnit.SECONDS)

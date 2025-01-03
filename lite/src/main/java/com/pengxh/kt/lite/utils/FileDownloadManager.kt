@@ -1,10 +1,8 @@
 package com.pengxh.kt.lite.utils
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
@@ -15,9 +13,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class FileDownloadManager(builder: Builder) : LifecycleOwner {
+class FileDownloadManager(builder: Builder) {
 
-    private val registry = LifecycleRegistry(this)
     private val httpClient by lazy { OkHttpClient() }
 
     class Builder {
@@ -65,6 +62,9 @@ class FileDownloadManager(builder: Builder) : LifecycleOwner {
         }
 
         fun build(): FileDownloadManager {
+            if (!::url.isInitialized || !::suffix.isInitialized || !::directory.isInitialized || !::downloadListener.isInitialized) {
+                throw IllegalStateException("All properties must be initialized before building.")
+            }
             return FileDownloadManager(this)
         }
     }
@@ -78,10 +78,8 @@ class FileDownloadManager(builder: Builder) : LifecycleOwner {
      * 开始下载
      * */
     fun start() {
-        if (url.isBlank()) {
-            listener.onFailure(IllegalArgumentException("url is empty"))
-            return
-        }
+        val job = SupervisorJob()
+        val scope = CoroutineScope(Dispatchers.Main + job)
 
         val request = Request.Builder().get().url(url).build()
         val newCall = httpClient.newCall(request)
@@ -95,7 +93,7 @@ class FileDownloadManager(builder: Builder) : LifecycleOwner {
         //异步下载文件
         newCall.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                lifecycleScope.launch(Dispatchers.Main) {
+                scope.launch(Dispatchers.Main) {
                     listener.onFailure(e)
                 }
             }
@@ -113,18 +111,19 @@ class FileDownloadManager(builder: Builder) : LifecycleOwner {
                     while (inputStream.read(buffer).also { read = it } != -1) {
                         fileOutputStream.write(buffer, 0, read)
                         sum += read.toLong()
-                        lifecycleScope.launch(Dispatchers.Main) {
+                        scope.launch(Dispatchers.Main) {
                             val progress = (sum * 1.0 / fileSize * 100).toInt()
                             listener.onProgressChanged(progress)
                         }
                     }
-                    lifecycleScope.launch(Dispatchers.Main) {
+                    scope.launch(Dispatchers.Main) {
                         listener.onDownloadEnd(file)
                     }
                     fileOutputStream.flush()
                     //关闭流
                     fileOutputStream.close()
                     inputStream.close()
+                    job.cancel()
                 }
             }
         })
@@ -136,9 +135,5 @@ class FileDownloadManager(builder: Builder) : LifecycleOwner {
         fun onDownloadEnd(file: File)
 
         fun onFailure(throwable: Throwable)
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        return registry
     }
 }
