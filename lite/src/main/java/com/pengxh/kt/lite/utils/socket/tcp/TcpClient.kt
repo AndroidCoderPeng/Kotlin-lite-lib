@@ -1,10 +1,6 @@
 package com.pengxh.kt.lite.utils.socket.tcp
 
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.lifecycleScope
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.AdaptiveRecvByteBufAllocator
 import io.netty.channel.Channel
@@ -21,20 +17,18 @@ import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.handler.codec.bytes.ByteArrayDecoder
 import io.netty.handler.codec.bytes.ByteArrayEncoder
 import io.netty.handler.timeout.IdleStateHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
 
-class TcpClient(private val listener: OnTcpConnectStateListener) : LifecycleOwner {
-
-    private val registry = LifecycleRegistry(this)
-
-    override fun getLifecycle(): Lifecycle {
-        return registry
-    }
+class TcpClient(private val listener: OnTcpConnectStateListener) {
 
     private val kTag = "TcpClient"
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val reconnectDelay = 5L
     private var bootStrap: Bootstrap = Bootstrap()
     private var loopGroup: EventLoopGroup = NioEventLoopGroup()
@@ -111,7 +105,7 @@ class TcpClient(private val listener: OnTcpConnectStateListener) : LifecycleOwne
         if (channel != null && channel!!.isActive) {
             return
         }
-        lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             try {
                 val channelFuture = bootStrap.connect(host, port)
                     .addListener(object : ChannelFutureListener {
@@ -140,6 +134,7 @@ class TcpClient(private val listener: OnTcpConnectStateListener) : LifecycleOwne
     fun stop() {
         isRunning = false
         channel?.close()
+        scope.cancel()
     }
 
     fun sendMessage(bytes: ByteArray) {

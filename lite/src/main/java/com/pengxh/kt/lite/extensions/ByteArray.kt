@@ -1,17 +1,26 @@
 package com.pengxh.kt.lite.extensions
 
 /**
- * ByteArray转ASCII码
+ * ByteArray转Hex
+ * */
+fun ByteArray.toHex(): String {
+    val hexArray = "0123456789ABCDEF".toCharArray()
+    val hexChars = CharArray(this.size * 2)
+    for (j in this.indices) {
+        val i = this[j].toInt() and 0xFF
+        hexChars[j * 2] = hexArray[i ushr 4]
+        hexChars[j * 2 + 1] = hexArray[i and 0x0F]
+    }
+    return String(hexChars)
+}
+
+/**
+ * ByteArray转ASCII
  * */
 fun ByteArray.toAsciiCode(): String {
-    //判断是否能被2整除
-    return if (this.size % 2 == 0) {
-        val builder = StringBuilder()
-        this.forEach {
-            builder.append(Char(it.toInt()))
-        }
-        builder.toString()
-    } else {
-        "Decode Error"
+    val builder = StringBuilder()
+    this.forEach {
+        builder.append(Char(it.toInt()))
     }
+    return builder.toString()
 }

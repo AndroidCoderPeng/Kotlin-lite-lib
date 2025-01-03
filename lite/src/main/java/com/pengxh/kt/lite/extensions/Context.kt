@@ -15,7 +15,7 @@ import android.util.DisplayMetrics
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.core.app.ActivityCompat
-import com.pengxh.kt.lite.utils.Constant
+import com.pengxh.kt.lite.utils.LiteKitConstant
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -54,13 +54,13 @@ inline fun <reified T> Context.navigatePageTo() {
 
 inline fun <reified T> Context.navigatePageTo(value: String) {
     val intent = Intent(this, T::class.java)
-    intent.putExtra(Constant.INTENT_PARAM_KEY, value)
+    intent.putExtra(LiteKitConstant.INTENT_PARAM_KEY, value)
     startActivity(intent)
 }
 
 inline fun <reified T> Context.navigatePageTo(values: ArrayList<String>) {
     val intent = Intent(this, T::class.java)
-    intent.putStringArrayListExtra(Constant.INTENT_PARAM_KEY, values)
+    intent.putStringArrayListExtra(LiteKitConstant.INTENT_PARAM_KEY, values)
     startActivity(intent)
 }
 
@@ -70,8 +70,8 @@ inline fun <reified T> Context.navigatePageTo(values: ArrayList<String>) {
  */
 inline fun <reified T> Context.navigatePageTo(index: Int, imageList: ArrayList<String>) {
     val intent = Intent(this, T::class.java)
-    intent.putExtra(Constant.BIG_IMAGE_INTENT_INDEX_KEY, index)
-    intent.putStringArrayListExtra(Constant.BIG_IMAGE_INTENT_DATA_KEY, imageList)
+    intent.putExtra(LiteKitConstant.BIG_IMAGE_INTENT_INDEX_KEY, index)
+    intent.putStringArrayListExtra(LiteKitConstant.BIG_IMAGE_INTENT_DATA_KEY, imageList)
     startActivity(intent)
 }
 

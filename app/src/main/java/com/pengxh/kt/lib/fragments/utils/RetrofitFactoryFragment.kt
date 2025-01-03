@@ -27,9 +27,11 @@ class RetrofitFactoryFragment : KotlinBaseFragment<FragmentUtilsRetrofitFactoryB
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         httpRequestViewModel = ViewModelProvider(this)[HttpRequestViewModel::class.java]
-        httpRequestViewModel.getNewsByPage(requireContext(), "头条", 1)
-        httpRequestViewModel.httpRequestResult.observe(this) { response ->
-            binding.textView.text = response
+        httpRequestViewModel.getNewsByPage("头条", 1)
+        httpRequestViewModel.httpRequestResult.observe(this) {
+            if (it.status == 0) {
+                binding.textView.text = it.result.list.first().title
+            }
         }
     }
 

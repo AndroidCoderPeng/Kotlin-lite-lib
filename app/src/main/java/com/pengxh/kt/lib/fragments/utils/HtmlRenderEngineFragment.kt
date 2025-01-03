@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.gson.Gson
-import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.pengxh.kt.lib.databinding.FragmentUtilsHtmlRenderBinding
 import com.pengxh.kt.lib.model.NewsListModel
@@ -19,7 +18,7 @@ import com.pengxh.kt.lite.utils.HttpRequestKit
 
 class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBinding>() {
 
-    private val gson by lazy { Gson() }
+    private val gson = Gson()
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -35,20 +34,18 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
     override fun initOnCreate(savedInstanceState: Bundle?) {
         HttpRequestKit.Builder()
             .setAuthentication()
-            .setRequestTarget(LocaleConstant.TARGET_API)
+            .setRequestTarget(LocaleConstant.CONTENT_API)
             .setOnHttpRequestListener(object : HttpRequestKit.OnHttpRequestListener {
                 override fun onSuccess(result: String) {
-                    val element = JsonParser.parseString(result)
-                    val jsonObject = element.asJsonObject
-                    if (jsonObject.get("status").asInt != 0) {
-                        jsonObject.get("msg").asString.show(requireContext())
-                        return
-                    }
-
-                    val listModel = gson.fromJson<NewsListModel>(
+                    val news = gson.fromJson<NewsListModel>(
                         result, object : TypeToken<NewsListModel>() {}.type
                     )
-                    renderHtmlText(listModel.result.list[2].content)
+
+                    if (news.status == 0) {
+                        renderHtmlText(news.result.list.first().content)
+                    } else {
+                        "请求失败，错误码：$${news.status}".show(requireContext())
+                    }
                 }
 
                 override fun onFailure(throwable: Throwable) {

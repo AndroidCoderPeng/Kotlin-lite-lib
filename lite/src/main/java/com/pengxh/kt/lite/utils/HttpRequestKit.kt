@@ -1,11 +1,9 @@
 package com.pengxh.kt.lite.utils
 
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -14,10 +12,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class HttpRequestKit(builder: Builder) : LifecycleOwner {
+class HttpRequestKit(builder: Builder) {
 
     private val kTag = "HttpRequestKit"
-    private val registry = LifecycleRegistry(this)
 
     class Builder {
         lateinit var key: String
@@ -51,6 +48,9 @@ class HttpRequestKit(builder: Builder) : LifecycleOwner {
         }
 
         fun build(): HttpRequestKit {
+            if (!::key.isInitialized || !::value.isInitialized || !::url.isInitialized || !::httpRequestListener.isInitialized) {
+                throw IllegalStateException("All properties must be initialized before building.")
+            }
             return HttpRequestKit(this)
         }
     }
@@ -64,37 +64,35 @@ class HttpRequestKit(builder: Builder) : LifecycleOwner {
      * 发起网络请求
      * */
     fun start() {
-        if (url.isBlank()) {
-            listener.onFailure(IllegalArgumentException("url is empty"))
-            return
-        }
+        val job = SupervisorJob()
+        val scope = CoroutineScope(Dispatchers.Main + job)
+
         //构建Request
         val request = Request.Builder().addHeader(key, value).url(url).get().build()
-        lifecycleScope.launch(Dispatchers.IO) {
-            val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
-                override fun log(message: String) {
-                    Log.d(kTag, ">>>>> $message")
-                }
-            })
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-            val client = OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .readTimeout(Constant.HTTP_TIMEOUT, TimeUnit.SECONDS)
-                .connectTimeout(Constant.HTTP_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(Constant.HTTP_TIMEOUT, TimeUnit.SECONDS)
-                .build()
+        val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                Log.d(kTag, ">>>>> $message")
+            }
+        })
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        val client = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .readTimeout(LiteKitConstant.HTTP_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(LiteKitConstant.HTTP_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(LiteKitConstant.HTTP_TIMEOUT, TimeUnit.SECONDS)
+            .build()
+        scope.launch(Dispatchers.Main) {
             try {
-                val response = client.newCall(request).execute()
+                val response = withContext(Dispatchers.IO) {
+                    client.newCall(request).execute()
+                }
                 response.body?.apply {
-                    withContext(Dispatchers.Main) {
-                        listener.onSuccess(string())
-                    }
+                    listener.onSuccess(string())
                 }
             } catch (e: IOException) {
-                withContext(Dispatchers.Main) {
-                    listener.onFailure(e)
-                }
+                listener.onFailure(e)
             }
+            job.cancel()
         }
     }
 
@@ -102,9 +100,5 @@ class HttpRequestKit(builder: Builder) : LifecycleOwner {
         fun onSuccess(result: String)
 
         fun onFailure(throwable: Throwable)
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        return registry
     }
 }

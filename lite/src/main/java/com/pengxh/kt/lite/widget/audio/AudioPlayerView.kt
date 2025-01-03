@@ -15,7 +15,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.ResourcesCompat
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.appendZero
-import com.pengxh.kt.lite.utils.Constant
+import com.pengxh.kt.lite.utils.LiteKitConstant
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import java.io.File
 import java.io.FileInputStream
@@ -107,7 +107,7 @@ class AudioPlayerView(context: Context, attrs: AttributeSet) : AppCompatTextView
     private var animationRunnable = object : Runnable {
         override fun run() {
             weakReferenceHandler.postDelayed(this, 200)
-            setDrawable(Constant.AUDIO_DRAWABLES[index % 3])
+            setDrawable(LiteKitConstant.AUDIO_DRAWABLES[index % 3])
             index++
         }
     }

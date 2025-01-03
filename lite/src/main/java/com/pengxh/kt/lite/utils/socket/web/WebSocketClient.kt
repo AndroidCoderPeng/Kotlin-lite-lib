@@ -1,11 +1,10 @@
 package com.pengxh.kt.lite.utils.socket.web
 
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
@@ -16,20 +15,16 @@ import okhttp3.WebSocketListener
 import okio.ByteString
 import java.util.concurrent.TimeUnit
 
-class WebSocketClient(private val listener: OnWebSocketListener) : LifecycleOwner {
+class WebSocketClient(private val listener: OnWebSocketListener) {
+
     private val kTag = "WebSocketClient"
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val httpClient = OkHttpClient.Builder().readTimeout(0, TimeUnit.MILLISECONDS).build()
     private val reconnectDelay: Long = 5000
     private lateinit var url: String
     private lateinit var webSocket: WebSocket
     private var isRunning = false
     private var retryTimes = 0
-
-    private val registry = LifecycleRegistry(this)
-
-    override fun getLifecycle(): Lifecycle {
-        return registry
-    }
 
     /**
      * WebSocketClient 是否正在运行
@@ -102,7 +97,7 @@ class WebSocketClient(private val listener: OnWebSocketListener) : LifecycleOwne
 
     private fun reconnect() {
         isRunning = false
-        lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             retryTimes++
             Log.d(kTag, "开始第 $retryTimes 次重连")
             connect()
@@ -114,5 +109,6 @@ class WebSocketClient(private val listener: OnWebSocketListener) : LifecycleOwne
         Log.d(kTag, "$url 断开连接")
         webSocket.close(1000, "Application Request Close")
         isRunning = false
+        scope.cancel()
     }
 }

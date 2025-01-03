@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.pengxh.kt.lib.databinding.ActivityExampleActivityExtensionBinding
 import com.pengxh.kt.lite.extensions.binding
-import com.pengxh.kt.lite.utils.Constant
+import com.pengxh.kt.lite.utils.LiteKitConstant
 
 class ActivityExtensionExample : AppCompatActivity() {
 
@@ -15,9 +15,9 @@ class ActivityExtensionExample : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding.backButton.setOnClickListener { finish() }
 
-        val args = intent.getStringArrayListExtra(Constant.INTENT_PARAM_KEY)
+        val args = intent.getStringArrayListExtra(LiteKitConstant.INTENT_PARAM_KEY)
         if (args == null) {
-            val extra = intent.getStringExtra(Constant.INTENT_PARAM_KEY)
+            val extra = intent.getStringExtra(LiteKitConstant.INTENT_PARAM_KEY)
             binding.textView.text = extra
         } else {
             val builder = StringBuilder()

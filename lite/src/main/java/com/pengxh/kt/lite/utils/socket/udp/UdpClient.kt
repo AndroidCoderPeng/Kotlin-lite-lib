@@ -1,9 +1,5 @@
 package com.pengxh.kt.lite.utils.socket.udp
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.lifecycleScope
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
@@ -18,13 +14,17 @@ import io.netty.channel.socket.DatagramPacket
 import io.netty.channel.socket.nio.NioDatagramChannel
 import io.netty.handler.timeout.IdleStateHandler
 import io.netty.util.CharsetUtil
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
 
-class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
+class UdpClient(private val listener: OnUdpMessageListener) {
 
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val bootStrap by lazy { Bootstrap() }
     private val loopGroup by lazy { NioEventLoopGroup() }
     private lateinit var socketAddress: InetSocketAddress
@@ -56,7 +56,7 @@ class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
 
     fun bind(remote: String, port: Int) {
         this.socketAddress = InetSocketAddress(remote, port)
-        lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             try {
                 val channelFuture = bootStrap.bind(port).sync()
                 channel = channelFuture.channel()
@@ -71,7 +71,7 @@ class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
     }
 
     fun sendMessage(value: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             val byteBuf = Unpooled.copiedBuffer(value, CharsetUtil.UTF_8)
             val datagramPacket = DatagramPacket(byteBuf, socketAddress)
             channel?.writeAndFlush(datagramPacket)
@@ -79,14 +79,14 @@ class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
     }
 
     fun sendMessage(value: ByteArray) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             val datagramPacket = DatagramPacket(Unpooled.copiedBuffer(value), socketAddress)
             channel?.writeAndFlush(datagramPacket)
         }
     }
 
     fun sendMessage(value: ByteBuf) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             val datagramPacket = DatagramPacket(Unpooled.copiedBuffer(value), socketAddress)
             channel?.writeAndFlush(datagramPacket)
         }
@@ -94,11 +94,6 @@ class UdpClient(private val listener: OnUdpMessageListener) : LifecycleOwner {
 
     fun release() {
         loopGroup.shutdownGracefully()
-    }
-
-    private val registry = LifecycleRegistry(this)
-
-    override fun getLifecycle(): Lifecycle {
-        return registry
+        scope.cancel()
     }
 }

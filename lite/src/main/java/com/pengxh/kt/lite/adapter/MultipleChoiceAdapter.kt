@@ -1,10 +1,13 @@
 package com.pengxh.kt.lite.adapter
 
-import android.annotation.SuppressLint
+import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * RecyclerView多选适配器
@@ -14,8 +17,8 @@ abstract class MultipleChoiceAdapter<T>(
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     private val kTag = "MultipleChoiceAdapter"
-    private var multipleSelected = mutableSetOf<Int>()
-    private var selectedItems = ArrayList<T>()
+    private var multipleSelected = ConcurrentHashMap<Int, Boolean>()
+    private var selectedItems = CopyOnWriteArrayList<T>()
 
     override fun getItemCount(): Int = dataRows.size
 
@@ -26,34 +29,47 @@ abstract class MultipleChoiceAdapter<T>(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (position < 0 || position >= dataRows.size) {
+            Log.d(kTag, "Invalid position: $position")
+            return
+        }
+
         convertView(holder, position, dataRows[position])
 
-        holder.itemView.isSelected = multipleSelected.contains(position)
+        holder.itemView.isSelected = multipleSelected.containsKey(position)
         holder.itemView.setOnClickListener {
-            if (multipleSelected.contains(position)) {
+            if (multipleSelected.containsKey(position)) {
                 multipleSelected.remove(position)
-                selectedItems.remove(dataRows[position])
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    selectedItems.removeIf { it == dataRows[position] }
+                } else {
+                    val iterator = selectedItems.iterator()
+                    while (iterator.hasNext()) {
+                        if (iterator.next() == dataRows[position]) {
+                            iterator.remove()
+                        }
+                    }
+                }
                 holder.itemView.isSelected = false
             } else {
-                multipleSelected.add(position)
+                multipleSelected[position] = true
                 selectedItems.add(dataRows[position])
                 holder.itemView.isSelected = true
             }
 
-            itemCheckedListener?.onItemChecked(position, selectedItems)
+            itemCheckedListener?.onItemChecked(selectedItems) ?: run {
+                Log.d(kTag, "No listener set for item checked events")
+            }
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setRefreshData(dataRows: MutableList<T>) {
-        this.dataRows.clear()
-        this.dataRows.addAll(dataRows)
-        notifyDataSetChanged()
-    }
-
-    fun setLoadMoreData(dataRows: MutableList<T>) {
-        this.dataRows.addAll(dataRows)
-        notifyItemRangeInserted(this.dataRows.size, dataRows.size)
+    /**
+     * 加载更多
+     * */
+    fun loadMore(newRows: MutableList<T>) {
+        val startPosition = dataRows.size
+        this.dataRows.addAll(newRows)
+        notifyItemRangeInserted(startPosition, newRows.size)
     }
 
     abstract fun convertView(viewHolder: ViewHolder, position: Int, item: T)
@@ -61,7 +77,7 @@ abstract class MultipleChoiceAdapter<T>(
     private var itemCheckedListener: OnItemCheckedListener<T>? = null
 
     interface OnItemCheckedListener<T> {
-        fun onItemChecked(position: Int, items: ArrayList<T>)
+        fun onItemChecked(items: List<T>)
     }
 
     fun setOnItemCheckedListener(listener: OnItemCheckedListener<T>?) {

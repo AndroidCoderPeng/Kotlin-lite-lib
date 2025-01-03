@@ -6,12 +6,10 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.text.TextPaint
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.lifecycleScope
 import com.pengxh.kt.lite.annotations.WaterMarkPosition
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -20,9 +18,8 @@ import java.io.FileOutputStream
 /**
  * 绘制水印
  */
-class WaterMarkerEngine(builder: Builder) : LifecycleOwner {
+class WaterMarkerEngine(builder: Builder) {
 
-    private val registry = LifecycleRegistry(this)
     private val textPaint by lazy { TextPaint() }
     private val textRect by lazy { Rect() }
 
@@ -101,6 +98,9 @@ class WaterMarkerEngine(builder: Builder) : LifecycleOwner {
         }
 
         fun build(): WaterMarkerEngine {
+            if (!::originalBitmap.isInitialized || !::marker.isInitialized || !::fileName.isInitialized || !::addedListener.isInitialized) {
+                throw IllegalStateException("All properties must be initialized before building.")
+            }
             return WaterMarkerEngine(this)
         }
     }
@@ -118,6 +118,9 @@ class WaterMarkerEngine(builder: Builder) : LifecycleOwner {
      * 开始添加水印
      * */
     fun start() {
+        val job = SupervisorJob()
+        val scope = CoroutineScope(Dispatchers.Main + job)
+
         listener.onStart()
         //初始化画笔
         textPaint.color = textColor
@@ -130,7 +133,7 @@ class WaterMarkerEngine(builder: Builder) : LifecycleOwner {
         //添加水印
         val bitmapConfig = originalBitmap.config
         val copyBitmap = originalBitmap.copy(bitmapConfig, true)
-        lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             val canvas = Canvas(copyBitmap)
             val bitmapWidth = copyBitmap.width
             val bitmapHeight = copyBitmap.height
@@ -180,11 +183,8 @@ class WaterMarkerEngine(builder: Builder) : LifecycleOwner {
             withContext(Dispatchers.Main) {
                 listener.onMarkAdded(file)
             }
+            job.cancel()
         }
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        return registry
     }
 
     interface OnWaterMarkerAddedListener {
