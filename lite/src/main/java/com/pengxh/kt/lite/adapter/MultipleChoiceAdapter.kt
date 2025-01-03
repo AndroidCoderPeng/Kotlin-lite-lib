@@ -57,7 +57,7 @@ abstract class MultipleChoiceAdapter<T>(
                 holder.itemView.isSelected = true
             }
 
-            itemCheckedListener?.onItemChecked(ArrayList(selectedItems)) ?: run {
+            itemCheckedListener?.onItemChecked(selectedItems) ?: run {
                 Log.d(kTag, "No listener set for item checked events")
             }
         }
@@ -77,7 +77,7 @@ abstract class MultipleChoiceAdapter<T>(
     private var itemCheckedListener: OnItemCheckedListener<T>? = null
 
     interface OnItemCheckedListener<T> {
-        fun onItemChecked(items: ArrayList<T>)
+        fun onItemChecked(items: List<T>)
     }
 
     fun setOnItemCheckedListener(listener: OnItemCheckedListener<T>?) {
