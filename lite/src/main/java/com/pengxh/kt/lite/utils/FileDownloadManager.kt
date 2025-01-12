@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -12,6 +13,7 @@ import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.concurrent.atomic.AtomicBoolean
 
 class FileDownloadManager(builder: Builder) {
 
@@ -83,10 +85,12 @@ class FileDownloadManager(builder: Builder) {
 
         val request = Request.Builder().get().url(url).build()
         val newCall = httpClient.newCall(request)
+        val isExecuting = AtomicBoolean(false)
+
         /**
          * 如果已被加入下载队列，则取消之前的，重新下载
          */
-        if (newCall.isExecuted()) {
+        if (isExecuting.getAndSet(true)) {
             newCall.cancel()
         }
 
@@ -99,31 +103,50 @@ class FileDownloadManager(builder: Builder) {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                response.body?.apply {
-                    val inputStream = this.byteStream()
-                    val fileSize = this.contentLength()
+                scope.launch(Dispatchers.IO) {
+                    try {
+                        response.body?.let { body ->
+                            val inputStream = body.byteStream()
+                            val fileSize = body.contentLength()
 
-                    val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
-                    val fileOutputStream = FileOutputStream(file)
-                    val buffer = ByteArray(2048)
-                    var read: Int
-                    var sum = 0L
-                    while (inputStream.read(buffer).also { read = it } != -1) {
-                        fileOutputStream.write(buffer, 0, read)
-                        sum += read.toLong()
-                        scope.launch(Dispatchers.Main) {
-                            val progress = (sum * 1.0 / fileSize * 100).toInt()
-                            listener.onProgressChanged(progress)
+                            if (fileSize <= 0) {
+                                throw IllegalArgumentException("Invalid file size")
+                            }
+
+                            val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
+                            FileOutputStream(file).use { fileOutputStream ->
+                                val buffer = ByteArray(2048)
+                                var read: Int
+                                var sum = 0L
+                                while (inputStream.read(buffer).also { read = it } != -1) {
+                                    fileOutputStream.write(buffer, 0, read)
+                                    sum += read.toLong()
+
+                                    // 限制进度更新频率
+                                    if (sum % 1024 == 0L || sum == fileSize) {
+                                        withContext(Dispatchers.Main) {
+                                            val progress = (sum * 100 / fileSize).toInt()
+                                            listener.onProgressChanged(progress)
+                                        }
+                                    }
+                                }
+                            }
+
+                            withContext(Dispatchers.Main) {
+                                listener.onDownloadEnd(file)
+                            }
+                        } ?: run {
+                            withContext(Dispatchers.Main) {
+                                listener.onFailure(IOException("Response body is null"))
+                            }
                         }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            listener.onFailure(IOException("Response body is null"))
+                        }
+                    } finally {
+                        job.cancel()
                     }
-                    scope.launch(Dispatchers.Main) {
-                        listener.onDownloadEnd(file)
-                    }
-                    fileOutputStream.flush()
-                    //关闭流
-                    fileOutputStream.close()
-                    inputStream.close()
-                    job.cancel()
                 }
             }
         })

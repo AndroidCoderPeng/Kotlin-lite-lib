@@ -1,6 +1,8 @@
 package com.pengxh.kt.lite.utils
 
 import android.util.Log
+import com.pengxh.kt.lite.BuildConfig
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -63,36 +65,51 @@ class HttpRequestKit(builder: Builder) {
     /**
      * 发起网络请求
      * */
-    fun start() {
+    fun start(timeoutSeconds: Long = LiteKitConstant.HTTP_TIMEOUT) {
         val job = SupervisorJob()
         val scope = CoroutineScope(Dispatchers.Main + job)
 
         //构建Request
         val request = Request.Builder().addHeader(key, value).url(url).get().build()
+
+        val logLevel = if (BuildConfig.DEBUG)
+            HttpLoggingInterceptor.Level.BODY
+        else HttpLoggingInterceptor.Level.NONE
         val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
                 Log.d(kTag, ">>>>> $message")
             }
-        })
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        }).setLevel(logLevel)
+
         val client = OkHttpClient.Builder()
             .addInterceptor(interceptor)
-            .readTimeout(LiteKitConstant.HTTP_TIMEOUT, TimeUnit.SECONDS)
-            .connectTimeout(LiteKitConstant.HTTP_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(LiteKitConstant.HTTP_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(timeoutSeconds, TimeUnit.SECONDS)
+            .connectTimeout(timeoutSeconds, TimeUnit.SECONDS)
+            .writeTimeout(timeoutSeconds, TimeUnit.SECONDS)
             .build()
-        scope.launch(Dispatchers.Main) {
+
+        scope.launch(Dispatchers.Main + CoroutineExceptionHandler { _, throwable ->
+            listener.onFailure(throwable)
+        }) {
             try {
                 val response = withContext(Dispatchers.IO) {
                     client.newCall(request).execute()
                 }
-                response.body?.apply {
-                    listener.onSuccess(string())
+
+                if (response.isSuccessful) {
+                    response.body?.string()?.let {
+                        listener.onSuccess(it)
+                    } ?: run {
+                        listener.onFailure(IOException("Response body is null"))
+                    }
+                } else {
+                    listener.onFailure(IOException("Unexpected code ${response.code}"))
                 }
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 listener.onFailure(e)
+            } finally {
+                job.cancel()
             }
-            job.cancel()
         }
     }
 
