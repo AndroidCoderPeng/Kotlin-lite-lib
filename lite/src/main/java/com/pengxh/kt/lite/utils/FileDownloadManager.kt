@@ -11,7 +11,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -98,53 +97,43 @@ class FileDownloadManager(builder: Builder) {
         newCall.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 scope.launch(Dispatchers.Main) {
-                    listener.onFailure(e)
+                    listener.onFailed(e)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 scope.launch(Dispatchers.IO) {
-                    try {
-                        response.body?.let { body ->
-                            val inputStream = body.byteStream()
-                            val fileSize = body.contentLength()
+                    val body = response.body
+                    if (body == null) {
+                        listener.onFailed(IOException("Response body is null"))
+                        throw IOException("Response body is null")
+                    } else {
+                        val inputStream = body.byteStream()
+                        val fileSize = body.contentLength()
 
-                            if (fileSize <= 0) {
-                                throw IllegalArgumentException("Invalid file size")
-                            }
+                        if (fileSize <= 0) {
+                            throw IllegalArgumentException("Invalid file size")
+                        }
+                        listener.onDownloadStart(fileSize)
 
-                            val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
-                            FileOutputStream(file).use { fileOutputStream ->
-                                val buffer = ByteArray(2048)
-                                var read: Int
-                                var sum = 0L
-                                while (inputStream.read(buffer).also { read = it } != -1) {
-                                    fileOutputStream.write(buffer, 0, read)
-                                    sum += read.toLong()
-
-                                    // 限制进度更新频率
-                                    if (sum % 1024 == 0L || sum == fileSize) {
-                                        withContext(Dispatchers.Main) {
-                                            val progress = (sum * 100 / fileSize).toInt()
-                                            listener.onProgressChanged(progress)
-                                        }
-                                    }
+                        val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
+                        file.outputStream().use { fos ->
+                            val buffer = ByteArray(2048)
+                            var sum = 0L
+                            var read: Int
+                            while (inputStream.read(buffer).also { read = it } != -1) {
+                                fos.write(buffer, 0, read)
+                                sum += read.toLong()
+                                withContext(Dispatchers.Main) {
+                                    listener.onProgressChanged(sum)
                                 }
                             }
+                        }
 
-                            withContext(Dispatchers.Main) {
-                                listener.onDownloadEnd(file)
-                            }
-                        } ?: run {
-                            withContext(Dispatchers.Main) {
-                                listener.onFailure(IOException("Response body is null"))
-                            }
-                        }
-                    } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            listener.onFailure(IOException("Response body is null"))
+                            listener.onDownloadEnd(file)
                         }
-                    } finally {
+
                         job.cancel()
                     }
                 }
@@ -153,10 +142,9 @@ class FileDownloadManager(builder: Builder) {
     }
 
     interface OnFileDownloadListener {
-        fun onProgressChanged(progress: Int)
-
+        fun onDownloadStart(total: Long)
+        fun onProgressChanged(progress: Long)
         fun onDownloadEnd(file: File)
-
-        fun onFailure(throwable: Throwable)
+        fun onFailed(t: Throwable)
     }
 }
