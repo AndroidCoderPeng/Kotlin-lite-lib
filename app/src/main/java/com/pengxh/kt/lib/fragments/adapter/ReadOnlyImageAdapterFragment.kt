@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.AdapterView
 import com.pengxh.kt.lib.databinding.FragmentAdapterReadonlyImageBinding
-import com.pengxh.kt.lite.adapter.ReadOnlyImageAdapter
+import com.pengxh.kt.lite.adapter.GridViewImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class ReadOnlyImageAdapterFragment : KotlinBaseFragment<FragmentAdapterReadonlyImageBinding>() {
@@ -33,7 +33,7 @@ class ReadOnlyImageAdapterFragment : KotlinBaseFragment<FragmentAdapterReadonlyI
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val imageAdapter = ReadOnlyImageAdapter(requireContext(), images)
+        val imageAdapter = GridViewImageAdapter(requireContext(), images)
         binding.gridView.adapter = imageAdapter
         binding.gridView.onItemClickListener =
             AdapterView.OnItemClickListener { adapterView, view, position, l ->

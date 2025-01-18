@@ -11,6 +11,7 @@ import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.divider.RecyclerViewItemDivider
+import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.show
 
 class RecyclerViewItemDividerFragment : KotlinBaseFragment<FragmentRvItemDividerBinding>() {
@@ -34,12 +35,16 @@ class RecyclerViewItemDividerFragment : KotlinBaseFragment<FragmentRvItemDivider
                 viewHolder.setText(R.id.cityName, item)
             }
         }
-        binding.recyclerView.addItemDecoration(RecyclerViewItemDivider(1, Color.RED))
+        binding.recyclerView.addItemDecoration(
+            RecyclerViewItemDivider(
+                10f.dp2px(requireContext()), 10f.dp2px(requireContext()), Color.RED
+            )
+        )
         binding.recyclerView.adapter = cityAdapter
         cityAdapter.setOnItemClickedListener(object :
             NormalRecyclerAdapter.OnItemClickedListener<String> {
-            override fun onItemClicked(position: Int, t: String) {
-                t.show(requireContext())
+            override fun onItemClicked(position: Int, item: String) {
+                item.show(requireContext())
             }
         })
     }

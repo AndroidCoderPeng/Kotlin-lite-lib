@@ -13,10 +13,10 @@ import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.getScreenWidth
 
 /**
- * 不可编辑图片适配器
+ * 九宫格图片适配器，不可编辑
  * 仅支持 [android.widget.GridView]
  */
-class ReadOnlyImageAdapter(private val context: Context, private val images: List<String>) :
+class GridViewImageAdapter(private val context: Context, private val images: List<String>) :
     BaseAdapter() {
 
     private val screenWidth = context.getScreenWidth()
