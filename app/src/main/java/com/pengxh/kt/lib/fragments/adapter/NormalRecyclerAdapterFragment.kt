@@ -46,8 +46,8 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRe
         binding.recyclerView.adapter = normalAdapter
         normalAdapter.setOnItemClickedListener(object :
             NormalRecyclerAdapter.OnItemClickedListener<String> {
-            override fun onItemClicked(position: Int, t: String) {
-                t.show(requireContext())
+            override fun onItemClicked(position: Int, item: String) {
+                item.show(requireContext())
             }
         })
     }

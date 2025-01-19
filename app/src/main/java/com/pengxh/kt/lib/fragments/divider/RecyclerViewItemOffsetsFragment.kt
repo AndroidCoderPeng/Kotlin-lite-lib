@@ -37,8 +37,8 @@ class RecyclerViewItemOffsetsFragment : KotlinBaseFragment<FragmentRvItemOffsets
         binding.recyclerView.adapter = cityAdapter
         cityAdapter.setOnItemClickedListener(object :
             NormalRecyclerAdapter.OnItemClickedListener<String> {
-            override fun onItemClicked(position: Int, t: String) {
-                t.show(requireContext())
+            override fun onItemClicked(position: Int, item: String) {
+                item.show(requireContext())
             }
         })
     }

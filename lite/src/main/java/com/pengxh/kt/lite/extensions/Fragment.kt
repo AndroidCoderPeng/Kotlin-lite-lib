@@ -22,6 +22,7 @@ class FragmentBindingDelegate<VB : ViewBinding>(private val clazz: Class<VB>) :
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun getValue(thisRef: Fragment, property: KProperty<*>): VB {
         if (binding == null) {
             try {

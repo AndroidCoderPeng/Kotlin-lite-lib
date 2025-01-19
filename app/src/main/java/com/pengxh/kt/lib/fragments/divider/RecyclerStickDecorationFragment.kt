@@ -92,8 +92,8 @@ class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecora
         binding.recyclerView.adapter = cityAdapter
         cityAdapter.setOnItemClickedListener(object :
             NormalRecyclerAdapter.OnItemClickedListener<CityModel> {
-            override fun onItemClicked(position: Int, t: CityModel) {
-                t.city.show(requireContext())
+            override fun onItemClicked(position: Int, item: CityModel) {
+                item.city.show(requireContext())
             }
         })
     }

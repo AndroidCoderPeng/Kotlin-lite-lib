@@ -48,8 +48,8 @@ class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentAdapterSingleChoi
         binding.recyclerView.adapter = selectedAdapter
         selectedAdapter.setOnItemCheckedListener(object :
             SingleChoiceAdapter.OnItemCheckedListener<String> {
-            override fun onItemChecked(position: Int, t: String) {
-                Log.d(kTag, "onItemChecked => $t")
+            override fun onItemChecked(position: Int, item: String) {
+                Log.d(kTag, "onItemChecked => $item")
             }
         })
     }

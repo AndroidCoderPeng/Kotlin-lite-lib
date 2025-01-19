@@ -106,7 +106,7 @@ fun String.diffCurrentTime(): Int {
         return 0
     }
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-    val date = simpleDateFormat.parse(this)
+    val date = simpleDateFormat.parse(this) ?: return 0
     val diff = abs(System.currentTimeMillis() - date.time)
     return (diff / (3600000)).toInt()
 }
@@ -119,7 +119,7 @@ fun String.formatToYearMonthDay(): String {
         return this
     }
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-    val date = simpleDateFormat.parse(this)
+    val date = simpleDateFormat.parse(this)!!
 
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
     return dateFormat.format(date)

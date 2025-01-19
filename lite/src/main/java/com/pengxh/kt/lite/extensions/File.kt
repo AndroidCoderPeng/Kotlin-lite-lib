@@ -1,35 +1,9 @@
 package com.pengxh.kt.lite.extensions
 
 import android.util.Base64
-import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileReader
-import java.io.IOException
-
-/**
- * 用[java.io.File.readText]代替
- * */
-@Deprecated("请使用：File.readText(Charsets.UTF_8)")
-fun File.read(): String {
-    val builder: StringBuilder
-    try {
-        val bufferedReader = BufferedReader(FileReader(this))
-        var line = bufferedReader.readLine()
-        builder = StringBuilder()
-        while (line != null) {
-            builder.append(line)
-            builder.append("\n")
-            line = bufferedReader.readLine()
-        }
-        bufferedReader.close()
-        return builder.toString()
-    } catch (e: IOException) {
-        e.printStackTrace()
-    }
-    return ""
-}
 
 /**
  * 获取图片文件base64编码

@@ -10,7 +10,6 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.calculateSize
 import com.pengxh.kt.lite.extensions.deleteFile
 import com.pengxh.kt.lite.extensions.formatFileSize
-import com.pengxh.kt.lite.extensions.read
 import com.pengxh.kt.lite.extensions.toBase64
 import com.pengxh.kt.lite.extensions.writeToFile
 import java.io.File
@@ -41,7 +40,6 @@ class FileExtensionFragment : KotlinBaseFragment<FragmentExtensionFileBinding>()
         documentDir = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), ""
         )
-        binding.filePathView.text = "$documentDir${File.separator}协议模拟数据.txt"
 
         val imageDir = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), ""
@@ -65,10 +63,6 @@ class FileExtensionFragment : KotlinBaseFragment<FragmentExtensionFileBinding>()
     }
 
     override fun initEvent() {
-        binding.readFileButton.setOnClickListener {
-            binding.fileContentView.text = File(binding.filePathView.text.toString()).read()
-        }
-
         binding.base64Button.setOnClickListener {
             val imageFile = File(imageFilePath).toBase64()
             imageFile.writeToFile(base64File)

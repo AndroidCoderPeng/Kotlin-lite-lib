@@ -3,12 +3,11 @@ package com.pengxh.kt.lib.fragments.adapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView
-import com.pengxh.kt.lib.databinding.FragmentAdapterReadonlyImageBinding
+import com.pengxh.kt.lib.databinding.FragmentAdapterGridviewImageBinding
 import com.pengxh.kt.lite.adapter.GridViewImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
-class ReadOnlyImageAdapterFragment : KotlinBaseFragment<FragmentAdapterReadonlyImageBinding>() {
+class GridViewImageAdapterFragment : KotlinBaseFragment<FragmentAdapterGridviewImageBinding>() {
 
     private val images = mutableListOf(
         "https://img.zcool.cn/community/010d5c5b9d17c9a8012099c8781b7e.jpg@1280w_1l_2o_100sh.jpg",
@@ -24,8 +23,8 @@ class ReadOnlyImageAdapterFragment : KotlinBaseFragment<FragmentAdapterReadonlyI
     override fun initViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentAdapterReadonlyImageBinding {
-        return FragmentAdapterReadonlyImageBinding.inflate(inflater, container, false)
+    ): FragmentAdapterGridviewImageBinding {
+        return FragmentAdapterGridviewImageBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {
@@ -33,12 +32,7 @@ class ReadOnlyImageAdapterFragment : KotlinBaseFragment<FragmentAdapterReadonlyI
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val imageAdapter = GridViewImageAdapter(requireContext(), images)
-        binding.gridView.adapter = imageAdapter
-        binding.gridView.onItemClickListener =
-            AdapterView.OnItemClickListener { adapterView, view, position, l ->
-
-            }
+        binding.gridView.adapter = GridViewImageAdapter(requireContext(), images)
     }
 
     override fun observeRequestState() {

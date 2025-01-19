@@ -8,9 +8,9 @@ import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentAdapterPackageBinding
 import com.pengxh.kt.lib.fragments.adapter.EditableImageAdapterFragment
+import com.pengxh.kt.lib.fragments.adapter.GridViewImageAdapterFragment
 import com.pengxh.kt.lib.fragments.adapter.MultipleChoiceAdapterFragment
 import com.pengxh.kt.lib.fragments.adapter.NormalRecyclerAdapterFragment
-import com.pengxh.kt.lib.fragments.adapter.ReadOnlyImageAdapterFragment
 import com.pengxh.kt.lib.fragments.adapter.SingleChoiceAdapterFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
@@ -18,7 +18,7 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
 
     private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
-        "可变适配器", "多选适配器", "普通适配器", "只读适配器", "单选适配器"
+        "可变适配器", "多选适配器", "普通适配器", "宫格适配器", "单选适配器"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
@@ -26,7 +26,7 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
         fragmentPages.add(EditableImageAdapterFragment())
         fragmentPages.add(MultipleChoiceAdapterFragment())
         fragmentPages.add(NormalRecyclerAdapterFragment())
-        fragmentPages.add(ReadOnlyImageAdapterFragment())
+        fragmentPages.add(GridViewImageAdapterFragment())
         fragmentPages.add(SingleChoiceAdapterFragment())
     }
 

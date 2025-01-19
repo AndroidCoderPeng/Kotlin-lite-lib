@@ -25,7 +25,6 @@ import com.pengxh.kt.lib.fragments.extensions.StringExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.TextSwitcherExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.UriExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.ViewBindingExtensionFragment
-import com.pengxh.kt.lib.fragments.extensions.ViewExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.ViewModelExtensionFragment
 import com.pengxh.kt.lib.fragments.extensions.WindowExtensionFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
@@ -51,7 +50,6 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         "String",
         "TextSwitcher",
         "Uri",
-        "View",
         "ViewBinding",
         "ViewModel",
         "Window"
@@ -76,7 +74,6 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         fragmentPages.add(StringExtensionFragment())
         fragmentPages.add(TextSwitcherExtensionFragment())
         fragmentPages.add(UriExtensionFragment())
-        fragmentPages.add(ViewExtensionFragment())
         fragmentPages.add(ViewBindingExtensionFragment())
         fragmentPages.add(ViewModelExtensionFragment())
         fragmentPages.add(WindowExtensionFragment())

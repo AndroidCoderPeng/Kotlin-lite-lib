@@ -67,9 +67,8 @@ fun Bitmap.toBase64(): String {
 /**
  * 圆形图片
  *
- * 用[com.google.android.material.imageview.ShapeableImageView]代替
+ * 也可以用[com.google.android.material.imageview.ShapeableImageView]代替
  * */
-@Deprecated("用ShapeableImageView代替")
 fun Bitmap.createRoundDrawable(context: Context, borderStroke: Float, color: Int): Bitmap {
     //转换为正方形后的宽高。以最短边为正方形边长，也是圆形图像的直径
     val squareBitmapBorderLength = min(this.width, this.height)
