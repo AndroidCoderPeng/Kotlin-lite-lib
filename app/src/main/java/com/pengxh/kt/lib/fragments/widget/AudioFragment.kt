@@ -40,7 +40,7 @@ class AudioFragment : KotlinBaseFragment<FragmentWidgetAudioBinding>() {
                 override fun onViewCreated(
                     window: PopupWindow, imageView: ImageView, textView: TextView
                 ) {
-                    binding.recodeAudioButton.setOnTouchListener { v, event ->
+                    binding.recodeAudioButton.setOnTouchListener { _, event ->
                         when (event.action) {
                             MotionEvent.ACTION_DOWN -> {
                                 binding.recodeAudioButton.animate()

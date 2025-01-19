@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.SparseArray
 import android.view.View
-import android.view.View.OnLongClickListener
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,7 +16,7 @@ import com.bumptech.glide.Glide
  * 通用的 ViewHolder
  * */
 class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val convertView: View
+    private val convertView: View = itemView
     private val views: SparseArray<View> = SparseArray()
 
     companion object {
@@ -30,17 +29,14 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
     }
 
-    init {
-        convertView = itemView
-    }
-
     /**
      * 根据资源获取View对象
      *
      * @param res 控件ID
      * @param <T> 类型
      * @return 控件
-    </T> */
+     */
+    @Suppress("UNCHECKED_CAST")
     fun <T : View> getView(@IdRes res: Int): T {
         var view = views[res]
         if (view == null) {
@@ -114,14 +110,11 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * 设置ImageView显示图片
      *
      * @param idRes 控件ID
-     * @param res   图片路径
+     * @param resource   图片路径
      * @return holder
      */
-    fun setImageResource(@IdRes idRes: Int, @DrawableRes res: Int): ViewHolder {
-        val view = getView<View>(idRes)
-        if (view is ImageView) {
-            view.setImageResource(res)
-        }
+    fun setImageResource(@IdRes idRes: Int, @DrawableRes resource: Int): ViewHolder {
+        setImageInternal(idRes) { it.setImageResource(resource) }
         return this
     }
 
@@ -133,10 +126,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, bitmap: Bitmap): ViewHolder {
-        val view = getView<View>(idRes)
-        if (view is ImageView) {
-            view.setImageBitmap(bitmap)
-        }
+        setImageInternal(idRes) { it.setImageBitmap(bitmap) }
         return this
     }
 
@@ -148,10 +138,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, drawable: Drawable): ViewHolder {
-        val view = getView<View>(idRes)
-        if (view is ImageView) {
-            view.setImageDrawable(drawable)
-        }
+        setImageInternal(idRes) { it.setImageDrawable(drawable) }
         return this
     }
 
@@ -163,11 +150,14 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, imageUrl: String): ViewHolder {
-        val view = getView<View>(idRes)
-        if (view is ImageView) {
-            Glide.with(convertView).load(imageUrl).into(view)
-        }
+        setImageInternal(idRes) { Glide.with(convertView).load(imageUrl).into(it) }
         return this
+    }
+
+    private fun setImageInternal(@IdRes idRes: Int, action: (ImageView) -> Unit): Boolean {
+        val imageView = getView<ImageView>(idRes)
+        action(imageView)
+        return true
     }
 
     /**
@@ -190,7 +180,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @param listener 监听接口
      * @return holder
      */
-    fun setOnLongClickListener(@IdRes idRes: Int, listener: OnLongClickListener?): ViewHolder {
+    fun setOnLongClickListener(@IdRes idRes: Int, listener: View.OnLongClickListener?): ViewHolder {
         val view = getView<View>(idRes)
         view.setOnLongClickListener(listener)
         return this

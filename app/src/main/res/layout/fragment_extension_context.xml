@@ -147,22 +147,6 @@
             android:layout_height="@dimen/titleViewHeight"
             android:paddingHorizontal="@dimen/dp_10">
 
-            <Button
-                android:id="@+id/getSimCardButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="获取SIM卡序列号"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/titleViewHeight"
-            android:paddingHorizontal="@dimen/dp_10">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

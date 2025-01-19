@@ -24,7 +24,6 @@ import com.pengxh.kt.lite.extensions.createVideoFileDir
 import com.pengxh.kt.lite.extensions.getScreenDensity
 import com.pengxh.kt.lite.extensions.getScreenHeight
 import com.pengxh.kt.lite.extensions.getScreenWidth
-import com.pengxh.kt.lite.extensions.getSimCardSerialNumber
 import com.pengxh.kt.lite.extensions.getStatusBarHeight
 import com.pengxh.kt.lite.extensions.getSystemService
 import com.pengxh.kt.lite.extensions.isNetworkConnected
@@ -32,7 +31,6 @@ import com.pengxh.kt.lite.extensions.navigatePageTo
 import com.pengxh.kt.lite.extensions.readAssetsFile
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
-import java.util.Locale
 
 class ContextExtensionFragment : KotlinBaseFragment<FragmentExtensionContextBinding>() {
 
@@ -128,15 +126,6 @@ class ContextExtensionFragment : KotlinBaseFragment<FragmentExtensionContextBind
 
         binding.readAssertsButton.setOnClickListener {
             requireContext().readAssetsFile("Test.json").show(requireContext())
-        }
-
-        binding.getSimCardButton.setOnClickListener {
-            val serialNumber = requireContext().getSimCardSerialNumber()
-            if (serialNumber.isNullOrBlank()) {
-                "无法获取本机SIM序列号".show(requireContext())
-            } else {
-                serialNumber.uppercase(Locale.getDefault()).show(requireContext())
-            }
         }
 
         binding.createLogFileButton.setOnClickListener {

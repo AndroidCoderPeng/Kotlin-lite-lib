@@ -1,44 +1,32 @@
 package com.pengxh.kt.lite.extensions
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
-import android.provider.Settings
-import android.telephony.TelephonyManager
-import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.core.app.ActivityCompat
 import com.pengxh.kt.lite.utils.LiteKitConstant
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * 判断是否有网络连接
  * @return
  */
-@SuppressLint("MissingPermission")
-fun Context.isNetworkConnected(): Boolean { //true是连接，false是没连接
+fun Context.isNetworkConnected(): Boolean {
     val manager = this.getSystemService<ConnectivityManager>()
-    if (manager == null) {
-        return false
-    } else {
-        val netWorkInfo = manager.activeNetworkInfo
-        if (netWorkInfo != null) {
-            return netWorkInfo.isAvailable
-        }
-    }
-    return false
+    val network = manager?.activeNetwork ?: return false
+    val networkCapabilities = manager.getNetworkCapabilities(network) ?: return false
+    return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
 
 /**
@@ -92,47 +80,6 @@ fun Context.readAssetsFile(fileName: String?): String {
         return data.toString()
     } catch (e: IOException) {
         e.printStackTrace()
-    }
-    return ""
-}
-
-//获取SimSerialNumber
-@SuppressLint("MissingPermission", "HardwareIds")
-fun Context.getSimCardSerialNumber(): String? {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        //Android 10改为获取Android_ID
-        return Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
-    } else {
-        val telephony = this.getSystemService<TelephonyManager>()!!
-        val telephonyClass: Class<*>
-        try {
-            telephonyClass = Class.forName(telephony.javaClass.name)
-            if (ActivityCompat.checkSelfPermission(
-                    this, Manifest.permission.READ_PHONE_STATE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return ""
-            }
-            val imei = telephony.deviceId
-            return if (TextUtils.isEmpty(imei)) {
-                val m = telephonyClass.getMethod(
-                    "getSimSerialNumber", Int::class.javaPrimitiveType
-                )
-                //主卡，卡1
-                val mainCard = m.invoke(telephony, 0) as String
-                //副卡，卡2
-                val otherCard = m.invoke(telephony, 1) as String
-                if (TextUtils.isEmpty(mainCard)) {
-                    otherCard
-                } else {
-                    mainCard
-                }
-            } else {
-                imei
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
     return ""
 }
