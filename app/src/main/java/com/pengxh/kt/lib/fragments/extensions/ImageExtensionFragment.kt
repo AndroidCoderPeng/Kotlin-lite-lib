@@ -1,6 +1,7 @@
 package com.pengxh.kt.lib.fragments.extensions
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.ImageFormat
 import android.graphics.RectF
@@ -9,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Display
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.ViewGroup
@@ -90,7 +92,12 @@ class ImageExtensionFragment : KotlinBaseFragment<FragmentExtensionImageBinding>
             aspectRatio(metrics.width(), metrics.height())
         } else {
             val outMetrics = DisplayMetrics()
-            requireActivity().windowManager.defaultDisplay.getMetrics(outMetrics)
+            val display = requireActivity().windowManager?.defaultDisplay ?: Resources.getSystem().displayMetrics
+            if (display is Display) {
+                display.getMetrics(outMetrics)
+            } else if (display is DisplayMetrics) {
+                outMetrics.setTo(display)
+            }
             aspectRatio(outMetrics.widthPixels, outMetrics.heightPixels)
         }
 
