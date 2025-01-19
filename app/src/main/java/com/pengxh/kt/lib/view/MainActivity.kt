@@ -2,6 +2,7 @@ package com.pengxh.kt.lib.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayoutMediator
 import com.gyf.immersionbar.ImmersionBar
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.ViewPagerAdapter
@@ -46,10 +47,13 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        binding.viewPager.adapter = ViewPagerAdapter(
-            supportFragmentManager, fragmentPages, itemTitles
+        val adapter = ViewPagerAdapter(
+            supportFragmentManager, lifecycle, fragmentPages, itemTitles
         )
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        binding.viewPager.adapter = adapter
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = adapter.getPageTitle(position)
+        }.attach()
     }
 
     override fun observeRequestState() {
