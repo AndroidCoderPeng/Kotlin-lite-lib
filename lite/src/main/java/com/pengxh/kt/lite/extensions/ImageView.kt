@@ -8,41 +8,31 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
 import android.widget.ImageView
 
+fun ImageView.switchBackground(blurBitmap: Bitmap?) {
+    if (blurBitmap == null) return
 
-fun ImageView.switchBackground(blurBitmap: Bitmap) {
-    var transitionDrawable: TransitionDrawable? = null
-    val lastDrawable: Drawable
-    when (this.drawable) {
-        is TransitionDrawable -> {
-            transitionDrawable = this.drawable as TransitionDrawable
-            lastDrawable = transitionDrawable.findDrawableByLayerId(
-                transitionDrawable.getId(1)
-            )
-        }
+    val lastDrawable: Drawable = when (this.drawable) {
+        is TransitionDrawable -> (this.drawable as TransitionDrawable).getDrawable(1) ?: ColorDrawable(Color.TRANSPARENT)
+        is BitmapDrawable -> this.drawable
+        null -> ColorDrawable(Color.TRANSPARENT)
+        else -> ColorDrawable(Color.TRANSPARENT)
+    }
 
-        is BitmapDrawable -> {
-            lastDrawable = this.drawable
-        }
+    val newDrawable = BitmapDrawable(resources, blurBitmap)
 
-        else -> {
-            lastDrawable = ColorDrawable(Color.TRANSPARENT)
+    val transitionDrawable = this.drawable as? TransitionDrawable ?: run {
+        TransitionDrawable(arrayOf(lastDrawable, newDrawable)).apply {
+            setIds()
+            isCrossFadeEnabled = true
+            setImageDrawable(this)
         }
     }
 
-    if (transitionDrawable == null) {
-        transitionDrawable = TransitionDrawable(
-            arrayOf(lastDrawable, BitmapDrawable(resources, blurBitmap))
-        )
-        transitionDrawable.setId(0, 0)
-        transitionDrawable.setId(1, 1)
-        transitionDrawable.isCrossFadeEnabled = true
-        this.setImageDrawable(transitionDrawable)
-    } else {
-        transitionDrawable.setDrawableByLayerId(transitionDrawable.getId(0), lastDrawable)
-        transitionDrawable.setDrawableByLayerId(
-            transitionDrawable.getId(1),
-            BitmapDrawable(resources, blurBitmap)
-        )
-    }
+    transitionDrawable.setDrawableByLayerId(transitionDrawable.getId(1), newDrawable)
     transitionDrawable.startTransition(1000)
+}
+
+private fun TransitionDrawable.setIds() {
+    setId(0, 0)
+    setId(1, 1)
 }

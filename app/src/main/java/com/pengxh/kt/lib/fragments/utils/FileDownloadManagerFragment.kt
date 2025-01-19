@@ -59,7 +59,7 @@ class FileDownloadManagerFragment : KotlinBaseFragment<FragmentUtilsFileDownload
                         binding.startDownloadButton.isEnabled = true
                     }
 
-                    override fun onFailed(t: Throwable) {
+                    override fun onDownloadFailed(t: Throwable) {
                         binding.startDownloadButton.isEnabled = true
                     }
                 }).build().start()

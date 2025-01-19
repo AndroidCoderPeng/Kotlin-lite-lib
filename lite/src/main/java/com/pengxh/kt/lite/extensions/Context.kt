@@ -79,9 +79,9 @@ inline fun <reified T> Context.navigatePageTo(index: Int, imageList: ArrayList<S
  * 获取本地Asserts文件内容
  */
 fun Context.readAssetsFile(fileName: String?): String {
-    if (fileName.toString().isBlank()) return ""
+    if (fileName.isNullOrBlank()) return ""
     try {
-        val inputStreamReader = InputStreamReader(this.assets.open(fileName!!))
+        val inputStreamReader = InputStreamReader(this.assets.open(fileName))
         val bufferedReader = BufferedReader(inputStreamReader)
         val data = StringBuilder()
         var line: String

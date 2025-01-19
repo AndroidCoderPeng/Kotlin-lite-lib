@@ -45,7 +45,8 @@ fun String.getHanYuPinyin(): String {
 /**
  * 手动换行
  * */
-fun String.breakLine(length: Int): String {
+fun String.wrapLine(length: Int): String {
+    // 单行最大显示15个汉字
     val step = if (length <= 0) {
         15
     } else {
@@ -56,38 +57,22 @@ fun String.breakLine(length: Int): String {
         return this
     }
 
-    val lines = this.length / step
-
     if (this.length <= step) {
         return this
-    } else {
-        if (this.length % step == 0) {
-            //整除
-            val builder = StringBuilder()
-            for (i in 0 until lines) {
-                if (i == lines - 1) {
-                    //最后一段文字
-                    builder.append(this.substring(i * step))
-                } else {
-                    val s = this.substring(i * step, (i + 1) * step)
-                    builder.append(s).append("\r\n")
-                }
-            }
-            return builder.toString()
-        } else {
-            val builder = StringBuilder()
-            for (i in 0..lines) {
-                if (i == lines) {
-                    //最后一段文字
-                    builder.append(this.substring(i * step))
-                } else {
-                    val s = this.substring(i * step, (i + 1) * step)
-                    builder.append(s).append("\r\n")
-                }
-            }
-            return builder.toString()
-        }
     }
+
+    val builder = StringBuilder()
+    var start = 0
+    while (start < this.length) {
+        val end = minOf(start + step, this.length)
+        builder.append(this.substring(start, end))
+        if (end < this.length) {
+            builder.append("\r\n")
+        }
+        start += step
+    }
+
+    return builder.toString()
 }
 
 /**
@@ -178,13 +163,9 @@ fun String.isChinese(): Boolean {
 
 
 fun String.isPhoneNumber(): Boolean {
-    return if (this.length != 11) {
-        false
-    } else {
-        val regExp = "^1[3-9]\\d{9}\$"
-        val regex = Regex(regExp)
-        this.matches(regex)
-    }
+    if (this.isBlank()) return false
+    val regex = Regex("^1[3-9]\\d{9}\$")
+    return this.length == 11 && this.matches(regex)
 }
 
 /**

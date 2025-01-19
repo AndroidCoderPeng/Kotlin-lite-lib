@@ -10,15 +10,19 @@ object SaveKeyValues {
         val packageName = context.packageName
         //获取到的包名带有“.”方便命名，取最后一个作为sp文件名
         val split = packageName.split(".")
-        val fileName = split.last()
+        val fileName = if (split.isNotEmpty()) split.last() else "default_prefs"
         sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
     }
 
     /**
      * 存储
      */
-    fun putValue(key: String, any: Any) {
+    fun putValue(key: String, any: Any?) {
         if (key.isBlank()) {
+            return
+        }
+        if (any == null) {
+            removeKey(key)
             return
         }
         val editor = sp.edit()
@@ -30,7 +34,11 @@ object SaveKeyValues {
             is Long -> editor.putLong(key, any)
             else -> editor.putString(key, any.toString())
         }
-        editor.apply()
+        try {
+            editor.apply()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     /**
@@ -57,14 +65,22 @@ object SaveKeyValues {
         if (key.isBlank()) {
             return
         }
-        sp.edit().remove(key).apply()
+        try {
+            sp.edit().remove(key).apply()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     /**
      * 清除所有数据
      */
     fun clearAll() {
-        sp.edit().clear().apply()
+        try {
+            sp.edit().clear().apply()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     /**

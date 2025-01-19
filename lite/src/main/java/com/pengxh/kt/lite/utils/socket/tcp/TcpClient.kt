@@ -24,19 +24,27 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class TcpClient(private val listener: OnTcpConnectStateListener) {
 
     private val kTag = "TcpClient"
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val reconnectDelay = 5L
+    private var maxRetryTimes = 10 // 设置最大重连次数
+    private var needReconnect = false
     private var bootStrap: Bootstrap = Bootstrap()
     private var loopGroup: EventLoopGroup = NioEventLoopGroup()
     private lateinit var host: String
     private var port: Int = 0
     private var channel: Channel? = null
-    private var isRunning = false
-    private var retryTimes = 0
+    private var scope: CoroutineScope? = null
+
+    @Volatile
+    private var isRunning = AtomicBoolean(false)
+
+    @Volatile
+    private var retryTimes = AtomicInteger(0)
 
     init {
         bootStrap.group(loopGroup)
@@ -54,13 +62,13 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
      * TcpClient 是否正在运行
      * */
     fun isRunning(): Boolean {
-        return isRunning
+        return isRunning.get()
     }
 
     fun start(host: String, port: Int) {
         this.host = host
         this.port = port
-        if (isRunning) {
+        if (isRunning.get()) {
             return
         }
         connect()
@@ -84,13 +92,16 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
                         val address = ctx.channel().remoteAddress() as InetSocketAddress
                         Log.d(kTag, "${address.address.hostAddress} 已断开")
                         listener.onDisconnected()
-                        reconnect()
+                        if (needReconnect) {
+                            reconnect()
+                        }
                     }
 
                     override fun channelRead0(ctx: ChannelHandlerContext, msg: ByteArray?) {
                         listener.onMessageReceived(msg)
                     }
 
+                    @Deprecated("Deprecated in Java")
                     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
                         Log.d(kTag, "exceptionCaught: ${cause.message}")
                         listener.onConnectFailed()
@@ -105,19 +116,26 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
         if (channel != null && channel!!.isActive) {
             return
         }
-        scope.launch(Dispatchers.IO) {
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope?.launch(Dispatchers.IO) {
             try {
                 val channelFuture = bootStrap.connect(host, port)
                     .addListener(object : ChannelFutureListener {
                         override fun operationComplete(channelFuture: ChannelFuture) {
                             if (channelFuture.isSuccess) {
-                                isRunning = true
-                                retryTimes = 0
+                                isRunning.set(true)
+                                retryTimes.set(0)
                                 channel = channelFuture.channel()
+                            } else {
+                                Log.e(kTag, "连接失败: ${channelFuture.cause()?.message}")
+                                reconnect()
                             }
                         }
                     }).sync()
                 channelFuture.channel().closeFuture().sync()
+            } catch (e: InterruptedException) {
+                Log.d(kTag, "连接中断: ${e.message}")
+                reconnect()
             } catch (e: Exception) {
                 Log.d(kTag, "连接失败: ${e.message}")
                 reconnect()
@@ -126,19 +144,25 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
     }
 
     private fun reconnect() {
-        retryTimes++
-        Log.d(kTag, "开始第 $retryTimes 次重连")
-        loopGroup.schedule({ connect() }, reconnectDelay, TimeUnit.SECONDS)
+        val currentRetryTimes = retryTimes.incrementAndGet()
+        if (currentRetryTimes <= maxRetryTimes) {
+            Log.w(kTag, "开始第 $currentRetryTimes 次重连")
+            loopGroup.schedule({ connect() }, reconnectDelay, TimeUnit.SECONDS)
+        } else {
+            Log.e(kTag, "达到最大重连次数，停止重连")
+            listener.onConnectFailed()
+        }
     }
 
-    fun stop() {
-        isRunning = false
+    fun stop(needReconnect: Boolean) {
+        this.needReconnect = needReconnect
+        isRunning.set(false)
         channel?.close()
-        scope.cancel()
+        scope?.cancel()
     }
 
     fun sendMessage(bytes: ByteArray) {
-        if (!isRunning) {
+        if (!isRunning.get()) {
             return
         }
         channel?.writeAndFlush(bytes)

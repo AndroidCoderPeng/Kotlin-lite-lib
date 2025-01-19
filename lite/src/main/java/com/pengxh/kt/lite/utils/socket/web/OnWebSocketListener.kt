@@ -15,5 +15,6 @@ interface OnWebSocketListener {
 
     fun onClientDisconnected(webSocket: WebSocket, code: Int, reason: String)
 
-    fun onFailure(webSocket: WebSocket)
+    fun onFailure(webSocket: WebSocket?, t: Throwable? = null)
+    fun onMaxRetryReached()
 }

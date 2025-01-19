@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.FileUtils
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import java.io.File
 import java.io.FileOutputStream
@@ -12,32 +13,46 @@ import java.io.FileOutputStream
 //将content路径转为path
 fun Uri.realFilePath(context: Context): String {
     var path = ""
-    if (this.scheme == ContentResolver.SCHEME_FILE) {
-        path = File(this.path!!).absolutePath
-    } else if (this.scheme == ContentResolver.SCHEME_CONTENT) {
-        val cursor = context.contentResolver.query(this, null, null, null, null)!!
-        if (cursor.moveToFirst()) {
-            try {
-                val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                val displayName = cursor.getString(columnIndex)
-                val inputStream = context.contentResolver.openInputStream(this)
-                if (inputStream != null) {
-                    //Android 10+需要转移到沙盒
-                    val cache = File(context.cacheDir.absolutePath, displayName)
-                    val fos = FileOutputStream(cache)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        FileUtils.copy(inputStream, fos)
-                        path = cache.absolutePath
-                        fos.close()
-                        inputStream.close()
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                cursor.close()
+    when (this.scheme) {
+        ContentResolver.SCHEME_FILE -> {
+            this.path?.let {
+                path = File(it).absolutePath
             }
         }
+
+        ContentResolver.SCHEME_CONTENT -> {
+            context.contentResolver.query(this, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    val displayName = cursor.getString(columnIndex)
+                    context.contentResolver.openInputStream(this)?.use { inputStream ->
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            val uniqueFileName = "${System.currentTimeMillis()}_$displayName"
+                            val cache = File(context.cacheDir, uniqueFileName)
+                            FileOutputStream(cache).use { fos ->
+                                FileUtils.copy(inputStream, fos)
+                                path = cache.absolutePath
+                            }
+                        } else {
+                            // 处理 Android 10 以下的情况
+                            val projection = arrayOf(MediaStore.Images.Media.DATA)
+                            context.contentResolver.query(
+                                this, projection, null, null, null
+                            )?.use { cursor ->
+                                if (cursor.moveToFirst()) {
+                                    val index = cursor.getColumnIndexOrThrow(
+                                        MediaStore.Images.Media.DATA
+                                    )
+                                    path = cursor.getString(index)
+                                }
+                            }
+                        }
+                    }
+                }
+            } ?: throw IllegalStateException("Cursor is null")
+        }
+
+        else -> throw IllegalArgumentException("Unsupported scheme: ${this.scheme}")
     }
     return path
 }

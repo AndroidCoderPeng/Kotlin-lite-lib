@@ -4,31 +4,26 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import java.util.concurrent.ConcurrentHashMap
 
 class BroadcastManager(private val context: Context) {
 
-    private var receiverMap: MutableMap<String, BroadcastReceiver> = HashMap()
-
-    /**
-     * 添加单个Action,广播的初始化
-     */
-    fun addAction(receiver: BroadcastReceiver, action: String) {
-        val filter = IntentFilter()
-        filter.addAction(action)
-        context.registerReceiver(receiver, filter)
-        receiverMap[action] = receiver
-    }
+    private val receiverMap: MutableMap<String, BroadcastReceiver> = ConcurrentHashMap()
+    private val intentFilter = IntentFilter()
 
     /**
      * 添加多个Action,广播的初始化
      */
     fun addAction(receiver: BroadcastReceiver, vararg actions: String) {
-        val filter = IntentFilter()
-        for (action in actions) {
-            filter.addAction(action)
-            receiverMap[action] = receiver
+        synchronized(this) {
+            for (action in actions) {
+                if (!intentFilter.hasAction(action)) {
+                    intentFilter.addAction(action)
+                    receiverMap[action] = receiver
+                }
+            }
+            context.registerReceiver(receiver, intentFilter)
         }
-        context.registerReceiver(receiver, filter)
     }
 
     /**
@@ -38,9 +33,13 @@ class BroadcastManager(private val context: Context) {
      * @param msg    参数
      */
     fun sendBroadcast(action: String, msg: String) {
-        val intent = Intent()
-        intent.action = action
-        intent.putExtra(LiteKitConstant.BROADCAST_MESSAGE_KEY, msg)
+        if (action.isEmpty() || msg.isEmpty()) {
+            throw IllegalArgumentException("Action and message cannot be empty")
+        }
+        val intent = Intent().apply {
+            this.action = action
+            putExtra(LiteKitConstant.BROADCAST_MESSAGE_KEY, msg)
+        }
         context.sendBroadcast(intent)
     }
 
@@ -50,15 +49,17 @@ class BroadcastManager(private val context: Context) {
      * @param actions action集合
      */
     fun destroy(vararg actions: String) {
-        try {
+        synchronized(this) {
             for (action in actions) {
-                val receiver = receiverMap[action]
+                val receiver = receiverMap.remove(action)
                 if (receiver != null) {
-                    context.unregisterReceiver(receiver)
+                    try {
+                        context.unregisterReceiver(receiver)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace()
         }
     }
 }

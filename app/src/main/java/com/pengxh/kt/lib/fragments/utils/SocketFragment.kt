@@ -75,7 +75,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
             val address = text.toString()
             val strings = address.split(":")
             if (tcpClient.isRunning()) {
-                tcpClient.stop()
+                tcpClient.stop(false)
             } else {
                 tcpClient.start(strings[0], strings[1].toInt())
             }
@@ -117,7 +117,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
                 if (url.isNullOrBlank()) {
                     return@setOnClickListener
                 }
-                webSocketClient.start("$url/" + System.currentTimeMillis())
+                webSocketClient.start("$url" + System.currentTimeMillis())
             }
         }
     }
@@ -191,13 +191,17 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
         }
     }
 
-    override fun onFailure(webSocket: WebSocket) {
+    override fun onFailure(webSocket: WebSocket?, t: Throwable?) {
+
+    }
+
+    override fun onMaxRetryReached() {
 
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        tcpClient?.stop()
+        tcpClient.stop(false)
         udpClient.release()
     }
 }

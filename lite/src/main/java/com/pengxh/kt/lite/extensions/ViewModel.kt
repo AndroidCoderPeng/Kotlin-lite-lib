@@ -2,7 +2,7 @@ package com.pengxh.kt.lite.extensions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -17,13 +17,13 @@ fun ViewModel.launch(
     onError: (Throwable) -> Unit = {},
     onComplete: () -> Unit = {}
 ) {
-    viewModelScope.launch(
-        CoroutineExceptionHandler { _, throwable ->
-            onError(throwable)
-        }
-    ) {
+    viewModelScope.launch {
         try {
             block()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            onError(e)
         } finally {
             onComplete()
         }

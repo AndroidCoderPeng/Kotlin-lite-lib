@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.pengxh.kt.lib.databinding.FragmentExtensionStringBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.extensions.breakLine
 import com.pengxh.kt.lite.extensions.createLogFile
 import com.pengxh.kt.lite.extensions.dateToTimestamp
 import com.pengxh.kt.lite.extensions.diffCurrentTime
@@ -19,6 +18,7 @@ import com.pengxh.kt.lite.extensions.isNumber
 import com.pengxh.kt.lite.extensions.isPhoneNumber
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
+import com.pengxh.kt.lite.extensions.wrapLine
 import com.pengxh.kt.lite.extensions.writeToFile
 import java.io.File
 import java.util.Calendar
@@ -63,7 +63,7 @@ class StringExtensionFragment : KotlinBaseFragment<FragmentExtensionStringBindin
         }
 
         binding.breakLineButton.setOnClickListener {
-            binding.breakLineResultView.text = binding.breakLineView.text.toString().breakLine(24)
+            binding.breakLineResultView.text = binding.breakLineView.text.toString().wrapLine(24)
         }
 
         binding.timeToTimestampButton.setOnClickListener {

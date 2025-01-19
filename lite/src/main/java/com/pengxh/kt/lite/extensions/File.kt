@@ -8,6 +8,10 @@ import java.io.FileInputStream
 import java.io.FileReader
 import java.io.IOException
 
+/**
+ * 用[java.io.File.readText]代替
+ * */
+@Deprecated("请使用：File.readText(Charsets.UTF_8)")
 fun File.read(): String {
     val builder: StringBuilder
     try {

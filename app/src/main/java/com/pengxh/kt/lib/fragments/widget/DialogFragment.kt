@@ -7,7 +7,10 @@ import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentWidgetDialogBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.convertColor
+import com.pengxh.kt.lite.extensions.createDownloadFileDir
+import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
+import com.pengxh.kt.lite.utils.FileDownloadManager
 import com.pengxh.kt.lite.widget.dialog.AlertControlDialog
 import com.pengxh.kt.lite.widget.dialog.AlertInputDialog
 import com.pengxh.kt.lite.widget.dialog.AlertMessageDialog
@@ -15,6 +18,9 @@ import com.pengxh.kt.lite.widget.dialog.BottomActionSheet
 import com.pengxh.kt.lite.widget.dialog.ChangePasswordDialog
 import com.pengxh.kt.lite.widget.dialog.GlobeAlertDialog
 import com.pengxh.kt.lite.widget.dialog.NoNetworkDialog
+import com.pengxh.kt.lite.widget.dialog.ProgressDialog
+import com.pengxh.kt.lite.widget.dialog.UpdateDialog
+import java.io.File
 
 class DialogFragment : KotlinBaseFragment<FragmentWidgetDialogBinding>() {
     override fun initViewBinding(
@@ -144,6 +150,50 @@ class DialogFragment : KotlinBaseFragment<FragmentWidgetDialogBinding>() {
                 })
                 .build()
                 .show()
+        }
+        binding.showProgressDialogButton.setOnClickListener {
+            val progressDialog = ProgressDialog(requireContext())
+            progressDialog.show()
+            FileDownloadManager.Builder()
+                .setDownloadFileSource("http://111.198.10.15:20110/apk/2025-01/b33739c02dba389072319b9d5aea95e0.apk")
+                .setFileSuffix("apk")
+                .setFileSaveDirectory(requireContext().createDownloadFileDir())
+                .setOnFileDownloadListener(object : FileDownloadManager.OnFileDownloadListener {
+                    override fun onDownloadStart(total: Long) {
+                        progressDialog.setMaxProgress(total)
+                    }
+
+                    override fun onDownloadEnd(file: File) {
+                        progressDialog.dismiss()
+                        "下载成功".show(requireContext())
+                    }
+
+                    override fun onDownloadFailed(t: Throwable) {
+                        t.printStackTrace()
+                        progressDialog.dismiss()
+                    }
+
+                    override fun onProgressChanged(progress: Long) {
+                        progressDialog.updateProgress(progress)
+                    }
+                }).build().start()
+        }
+        binding.showUpdateDialogButton.setOnClickListener {
+            UpdateDialog.Builder()
+                .setContext(requireContext())
+                .setUpdateMessage(
+                    arrayListOf(
+                        "这里是更新内容",
+                        "这里是更新内容",
+                        "这里是更新内容",
+                        "这里是更新内容"
+                    )
+                )
+                .setOnUpdateListener(object : UpdateDialog.OnUpdateListener {
+                    override fun onUpdate() {
+
+                    }
+                }).build().show()
         }
     }
 }

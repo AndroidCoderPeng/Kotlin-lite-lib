@@ -13,6 +13,7 @@ import com.pengxh.kt.lib.fragments.widget.CircleProgressBarFragment
 import com.pengxh.kt.lib.fragments.widget.DeleteEditTextFragment
 import com.pengxh.kt.lib.fragments.widget.DialogFragment
 import com.pengxh.kt.lib.fragments.widget.EasyPopupWindowFragment
+import com.pengxh.kt.lib.fragments.widget.EmptyViewFragment
 import com.pengxh.kt.lib.fragments.widget.KeyBoardViewFragment
 import com.pengxh.kt.lib.fragments.widget.NoScrollViewPagerFragment
 import com.pengxh.kt.lib.fragments.widget.SlideBarViewFragment
@@ -25,11 +26,12 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
     private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
         "音频录制及播放",
-        "仿iOS对话框",
+        "对话框",
         "空气指数表盘",
         "圆形进度条",
         "带删除的输入框",
         "PopupWindow",
+        "空白页面",
         "数字键盘",
         "NoScrollViewPager",
         "联系人侧边栏",
@@ -45,6 +47,7 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         fragmentPages.add(CircleProgressBarFragment())
         fragmentPages.add(DeleteEditTextFragment())
         fragmentPages.add(EasyPopupWindowFragment())
+        fragmentPages.add(EmptyViewFragment())
         fragmentPages.add(KeyBoardViewFragment())
         fragmentPages.add(NoScrollViewPagerFragment())
         fragmentPages.add(SlideBarViewFragment())
