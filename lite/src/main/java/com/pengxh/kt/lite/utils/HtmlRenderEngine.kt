@@ -1,7 +1,6 @@
 package com.pengxh.kt.lite.utils
 
 import android.content.Context
-import android.os.Build
 import android.text.Editable
 import android.text.Html
 import android.text.Spanned
@@ -81,11 +80,7 @@ class HtmlRenderEngine(builder: Builder) {
         scope.launch(Dispatchers.Main) {
             textView.movementMethod = LinkMovementMethod.getInstance()
             //默认不处理图片先这样简单设置
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                textView.text = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
-            } else {
-                textView.text = Html.fromHtml(html)
-            }
+            textView.text = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
             withContext(Dispatchers.IO) {
                 val imageGetter = Html.ImageGetter { source ->
                     val drawable = try {
@@ -107,35 +102,16 @@ class HtmlRenderEngine(builder: Builder) {
                     drawable
                 }
 
-                val htmlText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    Html.fromHtml(
-                        html, Html.FROM_HTML_MODE_LEGACY, imageGetter, object : Html.TagHandler {
-                            override fun handleTag(
-                                opening: Boolean, tag: String,
-                                output: Editable, xmlReader: XMLReader
-                            ) {
-                                if (tag.lowercase(Locale.getDefault()) == "img") {
-                                    val len = output.length
-                                    val images = output.getSpans(
-                                        len - 1, len, ImageSpan::class.java
-                                    )
-                                    val imgSource = images[0].source ?: return
-                                    output.setSpan(object : ClickableSpan() {
-                                        override fun onClick(widget: View) {
-                                            listener.imageSource(imgSource)
-                                        }
-                                    }, len - 1, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                                }
-                            }
-                        })
-                } else {
-                    Html.fromHtml(html, imageGetter, object : Html.TagHandler {
+                val htmlText = Html.fromHtml(
+                    html, Html.FROM_HTML_MODE_LEGACY, imageGetter, object : Html.TagHandler {
                         override fun handleTag(
                             opening: Boolean, tag: String, output: Editable, xmlReader: XMLReader
                         ) {
                             if (tag.lowercase(Locale.getDefault()) == "img") {
                                 val len = output.length
-                                val images = output.getSpans(len - 1, len, ImageSpan::class.java)
+                                val images = output.getSpans(
+                                    len - 1, len, ImageSpan::class.java
+                                )
                                 val imgSource = images[0].source ?: return
                                 output.setSpan(object : ClickableSpan() {
                                     override fun onClick(widget: View) {
@@ -145,7 +121,6 @@ class HtmlRenderEngine(builder: Builder) {
                             }
                         }
                     })
-                }
                 withContext(Dispatchers.Main) {
                     textView.text = htmlText
                 }

@@ -19,13 +19,12 @@ import kotlin.math.min
 /**
  * 保存图片，不压缩
  */
-fun Bitmap.saveImage(imagePath: String) {
+fun Bitmap.saveImage(imagePath: String, quality: Int = 100) {
+    val imageFile = File(imagePath)
     try {
-        val imageFile = File(imagePath)
-        val fileOutputStream = FileOutputStream(imageFile)
-        this.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-        fileOutputStream.flush()
-        fileOutputStream.close()
+        FileOutputStream(imageFile).use { fos ->
+            this.compress(Bitmap.CompressFormat.JPEG, quality, fos)
+        }
     } catch (e: IOException) {
         e.printStackTrace()
     }
@@ -34,11 +33,24 @@ fun Bitmap.saveImage(imagePath: String) {
 /**
  * 旋转图片
  */
-fun Bitmap.rotateImage(angle: Int): Bitmap {
+fun Bitmap.rotateImage(angle: Float): Bitmap {
+    // 确保在0到360度之间
+    val rotatedAngle = (angle % 360 + 360) % 360
+    if (rotatedAngle == 0f) {
+        return this
+    }
+
     val matrix = Matrix()
-    matrix.postRotate(angle.toFloat())
+    matrix.postRotate(rotatedAngle)
     // 创建新的图片
-    return Bitmap.createBitmap(this, 0, 0, this.width, this.height, matrix, true)
+    val rotatedBitmap = Bitmap.createBitmap(this, 0, 0, this.width, this.height, matrix, true)
+
+    // 尝试复用原Bitmap对象以节省内存
+    if (rotatedBitmap != this) {
+        this.recycle()
+    }
+
+    return rotatedBitmap
 }
 
 /**

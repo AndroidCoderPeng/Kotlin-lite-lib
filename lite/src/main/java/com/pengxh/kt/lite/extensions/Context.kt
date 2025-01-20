@@ -10,10 +10,8 @@ import android.util.DisplayMetrics
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.pengxh.kt.lite.utils.LiteKitConstant
-import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
-import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -68,20 +66,16 @@ inline fun <reified T> Context.navigatePageTo(index: Int, imageList: ArrayList<S
  */
 fun Context.readAssetsFile(fileName: String?): String {
     if (fileName.isNullOrBlank()) return ""
-    try {
-        val inputStreamReader = InputStreamReader(this.assets.open(fileName))
-        val bufferedReader = BufferedReader(inputStreamReader)
-        val data = StringBuilder()
-        var line: String
-        while (true) {
-            line = bufferedReader.readLine() ?: break
-            data.append(line)
+    return try {
+        this.assets.open(fileName).use { inputStream ->
+            inputStream.bufferedReader().use { bufferedReader ->
+                bufferedReader.useLines { lines -> lines.joinToString(separator = "") }
+            }
         }
-        return data.toString()
     } catch (e: IOException) {
         e.printStackTrace()
+        ""
     }
-    return ""
 }
 
 /**

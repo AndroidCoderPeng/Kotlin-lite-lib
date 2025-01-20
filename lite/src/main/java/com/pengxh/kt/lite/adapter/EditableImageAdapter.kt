@@ -29,24 +29,22 @@ class EditableImageAdapter(
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_editable_rv_g, parent, false)
-        )
+        val view = LayoutInflater.from(context).inflate(R.layout.item_editable_rv_g, parent, false)
+        val imageSize = viewWidth / spanCount
+        val params = LinearLayout.LayoutParams(imageSize, imageSize)
+        view.findViewById<ImageView>(R.id.imageView).layoutParams = params
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imageView = holder.getView<ImageView>(R.id.imageView)
-        val imageSize = viewWidth / spanCount
-        val params = LinearLayout.LayoutParams(imageSize, imageSize)
-        imageView.layoutParams = params
-
         if (position == itemCount - 1 && images.size < imageCountLimit) {
             imageView.setImageResource(R.drawable.ic_add_pic)
             imageView.setOnClickListener { //添加图片
                 itemClickListener?.onAddImageClick()
             }
         } else {
-            Glide.with(context).load(images[position]).into(imageView)
+            Glide.with(holder.itemView.context).load(images[position]).into(imageView)
             imageView.setOnClickListener { // 点击操作，查看大图
                 itemClickListener?.onItemClick(holder.bindingAdapterPosition)
             }
@@ -58,11 +56,7 @@ class EditableImageAdapter(
         }
     }
 
-    override fun getItemCount(): Int = if (images.size >= imageCountLimit) {
-        imageCountLimit
-    } else {
-        images.size + 1
-    }
+    override fun getItemCount(): Int = minOf(imageCountLimit, images.size + 1)
 
     private var itemClickListener: OnItemClickListener? = null
 

@@ -87,7 +87,7 @@ class ImageExtensionFragment : KotlinBaseFragment<FragmentExtensionImageBinding>
     }
 
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
-        val screenAspectRatio = if (Build.VERSION.SDK_INT >= 30) {
+        val screenAspectRatio = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val metrics = requireActivity().windowManager.currentWindowMetrics.bounds
             aspectRatio(metrics.width(), metrics.height())
         } else {

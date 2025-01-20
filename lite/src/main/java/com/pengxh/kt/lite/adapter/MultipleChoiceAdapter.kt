@@ -1,6 +1,5 @@
 package com.pengxh.kt.lite.adapter
 
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -40,16 +39,7 @@ abstract class MultipleChoiceAdapter<T>(
         holder.itemView.setOnClickListener {
             if (multipleSelected.containsKey(position)) {
                 multipleSelected.remove(position)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    selectedItems.removeIf { it == dataRows[position] }
-                } else {
-                    val iterator = selectedItems.iterator()
-                    while (iterator.hasNext()) {
-                        if (iterator.next() == dataRows[position]) {
-                            iterator.remove()
-                        }
-                    }
-                }
+                selectedItems.removeIf { it == dataRows[position] }
                 holder.itemView.isSelected = false
             } else {
                 multipleSelected[position] = true

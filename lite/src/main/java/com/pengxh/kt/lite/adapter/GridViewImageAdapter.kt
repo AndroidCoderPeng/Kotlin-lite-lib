@@ -19,13 +19,16 @@ import com.pengxh.kt.lite.extensions.getScreenWidth
 class GridViewImageAdapter(private val context: Context, private val images: List<String>) :
     BaseAdapter() {
 
-    private val screenWidth = context.getScreenWidth()
-
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getCount(): Int = images.size
 
-    override fun getItem(position: Int): Any = images[position]
+    override fun getItem(position: Int): Any {
+        if (position < 0 || position >= images.size) {
+            throw IndexOutOfBoundsException("Position $position is out of bounds")
+        }
+        return images[position]
+    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
@@ -39,20 +42,27 @@ class GridViewImageAdapter(private val context: Context, private val images: Lis
             view = convertView
             holder = view.tag as ItemViewHolder
         }
-        Glide.with(context)
+        Glide.with(context.applicationContext)
             .load(images[position])
             .apply(RequestOptions().error(R.mipmap.load_image_error))
             .into(holder.imageView)
 
         //动态设置图片高度，和图片宽度保持一致
+        val screenWidth = context.getScreenWidth()
         val padding = (view.paddingLeft + view.paddingRight) * 3
         val imageSize = (screenWidth - padding) / 3
-        val params = LinearLayout.LayoutParams(imageSize, imageSize)
-        holder.imageView.layoutParams = params
+        if (holder.cachedLayoutParams == null) {
+            holder.cachedLayoutParams = LinearLayout.LayoutParams(imageSize, imageSize)
+        } else {
+            holder.cachedLayoutParams?.width = imageSize
+            holder.cachedLayoutParams?.height = imageSize
+        }
+        holder.imageView.layoutParams = holder.cachedLayoutParams
         return view
     }
 
     private class ItemViewHolder {
         lateinit var imageView: ImageView
+        var cachedLayoutParams: LinearLayout.LayoutParams? = null
     }
 }
