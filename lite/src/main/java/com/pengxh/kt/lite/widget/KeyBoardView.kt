@@ -5,9 +5,8 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.TextView
 import com.pengxh.kt.lite.R
 
 class KeyBoardView constructor(context: Context, attrs: AttributeSet) :
@@ -49,15 +48,11 @@ class KeyBoardView constructor(context: Context, attrs: AttributeSet) :
     }
 
     override fun onClick(v: View) {
-        if (v is TextView) {
-            // 如果点击的是TextView
-            val value = v.text.toString()
-            if (value.isNotBlank()) {
-                listener?.onClick(value)
-            }
-        } else if (v is ImageView) {
-            // 如果是图片那肯定点击的是删除
+        val value = (v as Button).text.toString()
+        if (value == "DEL") {
             listener?.onDelete()
+        } else {
+            listener?.onClick(value)
         }
     }
 

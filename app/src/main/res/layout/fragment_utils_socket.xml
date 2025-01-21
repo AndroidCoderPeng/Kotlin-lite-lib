@@ -45,9 +45,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/dp_5"
-                android:text="Server："
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="Server：" />
 
             <EditText
                 android:id="@+id/tcpIpInputView"
@@ -55,9 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:text="192.168.3.2:9000"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="192.168.3.2:9000" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -77,17 +73,13 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:gravity="center_vertical" />
 
             <Button
                 android:id="@+id/sendTcpButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="发送"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="发送" />
         </LinearLayout>
     </LinearLayout>
 
@@ -117,9 +109,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/dp_5"
-                android:text="Server："
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="Server：" />
 
             <EditText
                 android:id="@+id/udpIpInputView"
@@ -127,9 +117,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:text="192.168.3.2:5000"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="192.168.3.2:5000" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -149,17 +137,13 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:gravity="center_vertical" />
 
             <Button
                 android:id="@+id/sendUdpButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="发送"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="发送" />
         </LinearLayout>
     </LinearLayout>
 
@@ -202,9 +186,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/dp_5"
-                android:text="Server："
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="Server：" />
 
             <EditText
                 android:id="@+id/websocketInputView"
@@ -212,9 +194,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:text="ws://192.168.3.2:9000/"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="ws://192.168.3.2:9000/" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

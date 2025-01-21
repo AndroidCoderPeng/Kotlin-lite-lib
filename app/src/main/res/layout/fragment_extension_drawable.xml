@@ -16,9 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="高斯模糊"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sp_16" />
+        android:text="高斯模糊" />
 
     <ImageView
         android:id="@+id/blurImageView"

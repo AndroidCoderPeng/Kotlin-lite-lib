@@ -93,7 +93,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="显示"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sp_16" />
+        android:text="显示" />
 </LinearLayout>

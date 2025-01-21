@@ -35,7 +35,7 @@ class KeyBoardViewFragment : KotlinBaseFragment<FragmentWidgetKeyBoardViewBindin
             }
 
             override fun onDelete() {
-
+                "删除".show(requireContext())
             }
         })
     }

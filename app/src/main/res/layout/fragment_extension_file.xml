@@ -70,9 +70,7 @@
                     android:id="@+id/dirSizeView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sp_16" />
+                    android:layout_centerVertical="true" />
 
                 <Button
                     android:id="@+id/calculateSizeButton"
@@ -80,9 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:text="计算文件夹大小"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sp_16" />
+                    android:text="计算文件夹大小" />
             </RelativeLayout>
 
             <TextView
@@ -103,9 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:text="删除文件/文件夹"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16" />
+                android:text="删除文件/文件夹" />
         </RelativeLayout>
 
         <TextView

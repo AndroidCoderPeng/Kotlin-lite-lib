@@ -12,70 +12,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="取消/确定对话框"
-        android:textColor="@color/black" />
+        android:text="取消/确定对话框" />
 
     <Button
         android:id="@+id/showAlertInputDialogButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="输入对话框"
-        android:textColor="@color/black" />
+        android:text="输入对话框" />
 
     <Button
         android:id="@+id/showAlertMessageDialogButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="普通提示对话框对话框"
-        android:textColor="@color/black" />
+        android:text="普通提示对话框对话框" />
 
     <Button
         android:id="@+id/showBottomActionSheetButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="底部列表Sheet"
-        android:textColor="@color/black" />
+        android:text="底部列表Sheet" />
 
     <Button
         android:id="@+id/showChangePasswordDialogButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="修改密码对话框"
-        android:textColor="@color/black" />
+        android:text="修改密码对话框" />
 
     <Button
         android:id="@+id/showGlobeAlertDialogButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="全局对话框"
-        android:textColor="@color/black" />
+        android:text="全局对话框" />
 
     <Button
         android:id="@+id/showNoNetworkDialogButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="断网对话框"
-        android:textColor="@color/black" />
+        android:text="断网对话框" />
 
     <Button
         android:id="@+id/showProgressDialogButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="进度加载对话框"
-        android:textColor="@color/black" />
+        android:text="进度加载对话框" />
 
     <Button
         android:id="@+id/showUpdateDialogButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_10"
-        android:text="更新版本对话框"
-        android:textColor="@color/black" />
+        android:text="更新版本对话框" />
 </LinearLayout>

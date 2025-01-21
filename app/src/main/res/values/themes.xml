@@ -1,11 +1,15 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorAccent">@color/mainColor</item>
+    <!--    android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"-->  <!-- 圆方紫色按钮白字 -->
+    <!--    android:theme="@style/Theme.AppCompat.Light.NoActionBar"-->  <!-- 默认 -->
+    <style name="Base.Theme.KotlinLiteKit" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/mainColor</item>
     </style>
 
-    <style name="Theme.BigImageActivity" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.KotlinLiteKit" parent="Base.Theme.KotlinLiteKit" />
+
+    <style name="Theme.BigImageActivity" parent="Theme.KotlinLiteKit">
         <item name="android:windowAnimationStyle">@style/ActivityInOutAnimation</item>
     </style>
 </resources>
