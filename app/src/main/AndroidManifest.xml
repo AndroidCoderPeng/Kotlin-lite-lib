@@ -34,7 +34,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KotlinLiteKit"
+        android:theme="@style/Theme.KotlinLiteKit.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".view.WelcomeActivity"

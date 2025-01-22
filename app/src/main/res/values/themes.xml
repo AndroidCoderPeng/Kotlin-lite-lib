@@ -2,14 +2,14 @@
     <!-- Base application theme. -->
     <!--    android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"-->  <!-- 圆方紫色按钮白字 -->
     <!--    android:theme="@style/Theme.AppCompat.Light.NoActionBar"-->  <!-- 默认 -->
-    <style name="Base.Theme.KotlinLiteKit" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Base.Theme.KotlinLiteKit.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/mainColor</item>
     </style>
 
-    <style name="Theme.KotlinLiteKit" parent="Base.Theme.KotlinLiteKit" />
+    <style name="Theme.KotlinLiteKit.NoActionBar" parent="Base.Theme.KotlinLiteKit.NoActionBar" />
 
-    <style name="Theme.BigImageActivity" parent="Theme.KotlinLiteKit">
+    <style name="Theme.BigImageActivity" parent="Theme.KotlinLiteKit.NoActionBar">
         <item name="android:windowAnimationStyle">@style/ActivityInOutAnimation</item>
     </style>
 </resources>
