@@ -51,8 +51,6 @@
             android:name=".view.BigImageActivity"
             android:theme="@style/Theme.BigImageActivity" />
 
-        <!-- Example -->
-        <activity android:name=".example.BaseActivityExample" />
         <activity android:name=".example.ActivityExtensionExample" />
     </application>
 

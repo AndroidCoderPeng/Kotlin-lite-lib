@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentUtilsPackageBinding
-import com.pengxh.kt.lib.fragments.utils.ActivityStackManagerFragment
 import com.pengxh.kt.lib.fragments.utils.BroadcastReceiverFragment
 import com.pengxh.kt.lib.fragments.utils.FileDownloadManagerFragment
 import com.pengxh.kt.lib.fragments.utils.GalleryScaleHelperFragment
@@ -18,7 +17,6 @@ import com.pengxh.kt.lib.fragments.utils.RetrofitFactoryFragment
 import com.pengxh.kt.lib.fragments.utils.SaveKeyValuesFragment
 import com.pengxh.kt.lib.fragments.utils.SocketFragment
 import com.pengxh.kt.lib.fragments.utils.WaterMarkerEngineFragment
-import com.pengxh.kt.lib.fragments.utils.WeakReferenceHandlerFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
@@ -26,7 +24,6 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
     private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
         "Socket",
-        "Activity栈管理",
         "广播接受者管理器",
         "文件下载管理器",
         "模糊背景画廊",
@@ -35,14 +32,12 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         "加载对话框",
         "Retrofit构造器",
         "SharedPreferences",
-        "水印绘制引擎",
-        "防内存泄漏Handler"
+        "水印绘制引擎"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
         fragmentPages.add(SocketFragment())
-        fragmentPages.add(ActivityStackManagerFragment())
         fragmentPages.add(BroadcastReceiverFragment())
         fragmentPages.add(FileDownloadManagerFragment())
         fragmentPages.add(GalleryScaleHelperFragment())
@@ -52,7 +47,6 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         fragmentPages.add(RetrofitFactoryFragment())
         fragmentPages.add(SaveKeyValuesFragment())
         fragmentPages.add(WaterMarkerEngineFragment())
-        fragmentPages.add(WeakReferenceHandlerFragment())
     }
 
     override fun initViewBinding(

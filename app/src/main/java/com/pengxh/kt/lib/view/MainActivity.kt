@@ -8,7 +8,6 @@ import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.ViewPagerAdapter
 import com.pengxh.kt.lib.databinding.ActivityMainBinding
 import com.pengxh.kt.lib.fragments.AdapterPackageFragment
-import com.pengxh.kt.lib.fragments.BasePackageFragment
 import com.pengxh.kt.lib.fragments.DividerPackageFragment
 import com.pengxh.kt.lib.fragments.ExtensionsPackageFragment
 import com.pengxh.kt.lib.fragments.UtilsPackageFragment
@@ -20,13 +19,12 @@ import com.pengxh.kt.lite.extensions.getStatusBarHeight
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
     private val itemTitles = arrayOf(
-        "adapter", "base", "divider", "extensions", "utils", "widget"
+        "adapter", "divider", "extensions", "utils", "widget"
     )
     private var fragmentPages: ArrayList<Fragment> = ArrayList()
 
     init {
         fragmentPages.add(AdapterPackageFragment())
-        fragmentPages.add(BasePackageFragment())
         fragmentPages.add(DividerPackageFragment())
         fragmentPages.add(ExtensionsPackageFragment())
         fragmentPages.add(UtilsPackageFragment())
@@ -47,9 +45,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val adapter = ViewPagerAdapter(
-            supportFragmentManager, lifecycle, fragmentPages, itemTitles
-        )
+        val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle, fragmentPages, itemTitles)
         binding.viewPager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = adapter.getPageTitle(position)

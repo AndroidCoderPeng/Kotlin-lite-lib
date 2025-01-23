@@ -15,7 +15,6 @@ import com.pengxh.kt.lib.fragments.widget.DialogFragment
 import com.pengxh.kt.lib.fragments.widget.EasyPopupWindowFragment
 import com.pengxh.kt.lib.fragments.widget.EmptyViewFragment
 import com.pengxh.kt.lib.fragments.widget.KeyBoardViewFragment
-import com.pengxh.kt.lib.fragments.widget.NoScrollViewPagerFragment
 import com.pengxh.kt.lib.fragments.widget.SlideBarViewFragment
 import com.pengxh.kt.lib.fragments.widget.SteeringWheelViewFragment
 import com.pengxh.kt.lib.fragments.widget.TitleBarViewFragment
@@ -33,7 +32,6 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         "PopupWindow",
         "空白页面",
         "数字键盘",
-        "NoScrollViewPager",
         "联系人侧边栏",
         "方向控制盘",
         "顶部标题栏"
@@ -49,7 +47,6 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         fragmentPages.add(EasyPopupWindowFragment())
         fragmentPages.add(EmptyViewFragment())
         fragmentPages.add(KeyBoardViewFragment())
-        fragmentPages.add(NoScrollViewPagerFragment())
         fragmentPages.add(SlideBarViewFragment())
         fragmentPages.add(SteeringWheelViewFragment())
         fragmentPages.add(TitleBarViewFragment())
