@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/titleViewHeight"
-        android:background="@color/mainColor"
         android:orientation="horizontal">
 
         <TextView
@@ -17,8 +16,8 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:paddingHorizontal="@dimen/dp_10"
-            android:text="Uri"
-            android:textColor="@color/white"
+            android:text="Uri转实际路径"
+            android:textColor="@color/mainColor"
             android:textSize="@dimen/sp_16" />
 
         <Button
@@ -32,6 +31,7 @@
         android:id="@+id/uriResultView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_16" />
 
@@ -39,6 +39,7 @@
         android:id="@+id/pathResultView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10"
         android:textColor="@color/mainColor"
         android:textSize="@dimen/sp_16" />
 
@@ -46,5 +47,6 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:padding="@dimen/dp_10" />
 </LinearLayout>

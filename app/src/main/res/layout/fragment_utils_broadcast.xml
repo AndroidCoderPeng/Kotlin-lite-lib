@@ -9,11 +9,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/titleViewHeight"
-        android:background="@color/mainColor"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/dp_10"
         android:text="单个Action"
-        android:textColor="@color/white"
+        android:textColor="@color/mainColor"
         android:textSize="@dimen/sp_16" />
 
     <RelativeLayout
@@ -47,11 +46,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/titleViewHeight"
-        android:background="@color/mainColor"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/dp_10"
         android:text="多个Action"
-        android:textColor="@color/white"
+        android:textColor="@color/mainColor"
         android:textSize="@dimen/sp_16" />
 
     <RelativeLayout

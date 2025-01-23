@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/dp_10">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/titleViewHeight"
-        android:paddingHorizontal="@dimen/dp_10">
+        android:layout_height="@dimen/titleViewHeight">
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,7 +36,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -44,9 +43,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="px 转 dp"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
@@ -82,7 +80,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -90,9 +87,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="dp 转 px"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
@@ -128,7 +124,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -136,9 +131,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="sp 转 px"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
 

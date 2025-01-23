@@ -3,63 +3,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/dp_10">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/dp_10"
             android:text="任意角度旋转图片"
-            android:textColor="@color/white"
+            android:textColor="@color/mainColor"
             android:textSize="@dimen/sp_16" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/originalImageView"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <View
-                android:layout_width="@dimen/dp_1"
-                android:layout_height="match_parent"
-                android:background="@color/mainBackground" />
-
-            <ImageView
-                android:id="@+id/revolvedImageView"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:background="@color/mainBackground" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <EditText
+            <ImageView
+                android:id="@+id/originalImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/revolvedImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.pengxh.kt.lite.widget.DeleteEditText
                 android:id="@+id/angleView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@null"
                 android:hint="整数角度"
                 android:inputType="number"
                 android:maxLength="3" />
@@ -81,7 +67,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -89,9 +74,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="图片base64编码"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -104,7 +88,7 @@
         <TextView
             android:id="@+id/base64View"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
@@ -116,7 +100,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -124,9 +107,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="圆形图片"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button

@@ -8,32 +8,32 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/titleViewHeight"
-        android:background="@color/mainColor"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/dp_10"
         android:text="带标题"
-        android:textColor="@color/white"
+        android:textColor="@color/mainColor"
         android:textSize="@dimen/sp_16" />
 
     <Button
         android:id="@+id/showButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_10"
         android:text="显示" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/titleViewHeight"
-        android:background="@color/mainColor"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/dp_10"
         android:text="不带标题"
-        android:textColor="@color/white"
+        android:textColor="@color/mainColor"
         android:textSize="@dimen/sp_16" />
 
     <Button
         android:id="@+id/showWithTitleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_10"
         android:text="显示" />
 </LinearLayout>

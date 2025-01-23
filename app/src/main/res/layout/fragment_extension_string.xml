@@ -7,12 +7,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/dp_10">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -20,9 +20,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="汉语转拼音首字母"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -43,7 +42,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
@@ -54,7 +52,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
@@ -62,7 +59,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -70,9 +66,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="String手动换行"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -109,7 +104,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -117,9 +111,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="时间转时间戳"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -140,7 +133,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dp_3"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
@@ -151,7 +143,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dp_3"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
@@ -159,7 +150,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -167,9 +157,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="时间是否已过"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <TextView
@@ -177,15 +166,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -193,9 +180,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="时间差"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -216,7 +202,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
             android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/dp_10"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_16" />
 
@@ -225,14 +210,12 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
             android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/dp_10"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_16" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -240,9 +223,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="时间去掉时分秒"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -257,7 +239,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
             android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/dp_10"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_16" />
 
@@ -266,14 +247,12 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
             android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/dp_10"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_16" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -281,9 +260,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="判断数字"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -304,7 +282,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
@@ -315,7 +292,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
@@ -323,7 +299,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -331,9 +306,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="判断数字数字和字母"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -354,7 +328,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
@@ -365,7 +338,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
@@ -373,7 +345,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -381,9 +352,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="判断汉字"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -404,7 +374,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
@@ -415,7 +384,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
@@ -423,7 +391,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -431,9 +398,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="判断手机号"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -454,7 +420,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
@@ -465,7 +430,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
@@ -473,7 +437,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -481,9 +444,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="判断邮箱"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -504,7 +466,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
@@ -515,7 +476,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>
@@ -523,7 +483,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -531,9 +490,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/dp_10"
                 android:text="文件写入"
-                android:textColor="@color/white"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
@@ -548,21 +506,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/dp_10"
             android:textColor="@color/darkMainColor"
             android:textSize="@dimen/sp_16" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/showToastButton"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/showToastButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="show Toast" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/dp_10"
+            android:text="show Toast" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

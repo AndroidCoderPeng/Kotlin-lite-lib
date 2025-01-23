@@ -43,14 +43,7 @@ fun Bitmap.rotateImage(angle: Float): Bitmap {
     val matrix = Matrix()
     matrix.postRotate(rotatedAngle)
     // 创建新的图片
-    val rotatedBitmap = Bitmap.createBitmap(this, 0, 0, this.width, this.height, matrix, true)
-
-    // 尝试复用原Bitmap对象以节省内存
-    if (rotatedBitmap != this) {
-        this.recycle()
-    }
-
-    return rotatedBitmap
+    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }
 
 /**

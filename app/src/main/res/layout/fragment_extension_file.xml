@@ -18,7 +18,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/titleViewHeight"
-                android:background="@color/mainColor"
                 android:orientation="horizontal">
 
                 <TextView
@@ -28,7 +27,7 @@
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/dp_10"
                     android:text="图片File转base64"
-                    android:textColor="@color/white"
+                    android:textColor="@color/mainColor"
                     android:textSize="@dimen/sp_16" />
 
                 <Button

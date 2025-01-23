@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.pengxh.kt.lib.databinding.FragmentExtensionBitmapBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.createRoundDrawable
+import com.pengxh.kt.lite.extensions.dp2px
+import com.pengxh.kt.lite.extensions.getScreenWidth
 import com.pengxh.kt.lite.extensions.rotateImage
 import com.pengxh.kt.lite.extensions.toBase64
 import com.pengxh.kt.lite.extensions.writeToFile
@@ -42,6 +45,12 @@ class BitmapExtensionFragment : KotlinBaseFragment<FragmentExtensionBitmapBindin
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
+        val viewWidth = requireContext().getScreenWidth() - 20.dp2px(requireContext())
+        val imageSize = viewWidth / 2
+        val params = LinearLayout.LayoutParams(imageSize, imageSize)
+        binding.originalImageView.layoutParams = params
+        binding.revolvedImageView.layoutParams = params
+
         lifecycleScope.launch(Dispatchers.Main) {
             originalBitmap = withContext(Dispatchers.IO) {
                 Glide.with(requireContext())
@@ -64,7 +73,8 @@ class BitmapExtensionFragment : KotlinBaseFragment<FragmentExtensionBitmapBindin
             if (binding.angleView.text.isNullOrBlank()) {
                 return@setOnClickListener
             }
-            val rotateImage = originalBitmap.rotateImage(binding.angleView.text.toString().toFloat())
+            val rotateImage =
+                originalBitmap.rotateImage(binding.angleView.text.toString().toFloat())
             binding.revolvedImageView.setImageBitmap(rotateImage)
         }
 

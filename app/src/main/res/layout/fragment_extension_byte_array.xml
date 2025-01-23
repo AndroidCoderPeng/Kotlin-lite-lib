@@ -14,7 +14,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/titleViewHeight"
-            android:background="@color/mainColor"
             android:orientation="horizontal">
 
             <TextView
@@ -23,8 +22,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/dp_10"
-                android:text="ByteArray转ASCII"
-                android:textColor="@color/white"
+                android:text="转ASCII"
+                android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
 
             <Button
