@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class ViewPagerAdapter(
     manager: FragmentManager, lifecycle: Lifecycle,
-    private val pages: ArrayList<Fragment>,
+    private val pages: List<Fragment>,
     private val titles: Array<String>
 ) : FragmentStateAdapter(manager, lifecycle) {
     override fun createFragment(position: Int): Fragment = pages[position]

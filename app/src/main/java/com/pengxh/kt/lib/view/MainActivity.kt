@@ -1,7 +1,6 @@
 package com.pengxh.kt.lib.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.gyf.immersionbar.ImmersionBar
 import com.pengxh.kt.lib.R
@@ -21,14 +20,14 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     private val itemTitles = arrayOf(
         "adapter", "divider", "extensions", "utils", "widget"
     )
-    private var fragmentPages: ArrayList<Fragment> = ArrayList()
-
-    init {
-        fragmentPages.add(AdapterPackageFragment())
-        fragmentPages.add(DividerPackageFragment())
-        fragmentPages.add(ExtensionsPackageFragment())
-        fragmentPages.add(UtilsPackageFragment())
-        fragmentPages.add(WidgetPackageFragment())
+    private val fragmentPages by lazy {
+        listOf(
+            AdapterPackageFragment(),
+            DividerPackageFragment(),
+            ExtensionsPackageFragment(),
+            UtilsPackageFragment(),
+            WidgetPackageFragment()
+        )
     }
 
     override fun initViewBinding(): ActivityMainBinding {
