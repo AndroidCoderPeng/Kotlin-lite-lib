@@ -47,7 +47,7 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val viewWidth = requireContext().getScreenWidth() - 100.dp2px(requireContext())
+        val viewWidth = requireContext().getScreenWidth() - 20.dp2px(requireContext())
         imageAdapter = EditableImageAdapter(requireContext(), recyclerViewImages, viewWidth, 9, 3)
         binding.recyclerView.addItemDecoration(
             RecyclerViewItemOffsets(marginOffset, marginOffset, marginOffset, marginOffset)

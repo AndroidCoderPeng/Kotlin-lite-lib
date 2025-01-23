@@ -17,9 +17,6 @@ import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.getHanYuPinyin
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.widget.SlideBarView
-import java.text.Collator
-import java.util.Collections
-import java.util.Locale
 
 class SlideBarViewFragment : KotlinBaseFragment<FragmentWidgetSlideBarViewBinding>() {
 
@@ -37,11 +34,9 @@ class SlideBarViewFragment : KotlinBaseFragment<FragmentWidgetSlideBarViewBindin
      * 将城市整理成分组数据
      */
     private fun sortCity(): MutableList<CityModel> {
-        //先将数据按照字母排序
-        Collections.sort(LocaleConstant.CITIES, Collator.getInstance(Locale.CHINA))
         //格式化数据
         val cityBeans = ArrayList<CityModel>()
-        for (city in LocaleConstant.CITIES) {
+        for (city in LocaleConstant.cities) {
             val cityBean = CityModel()
             cityBean.city = city
             val firstLetter = city.getHanYuPinyin().substring(0, 1)
@@ -87,7 +82,7 @@ class SlideBarViewFragment : KotlinBaseFragment<FragmentWidgetSlideBarViewBindin
                 }).build()
         binding.cityRecyclerView.addItemDecoration(stickDecoration)
         binding.slideBarView.attachToRecyclerView(
-            binding.cityRecyclerView, LocaleConstant.CITIES.toMutableList()
+            binding.cityRecyclerView, LocaleConstant.cities
         )
         binding.cityRecyclerView.adapter = cityAdapter
         cityAdapter.setOnItemClickedListener(object :

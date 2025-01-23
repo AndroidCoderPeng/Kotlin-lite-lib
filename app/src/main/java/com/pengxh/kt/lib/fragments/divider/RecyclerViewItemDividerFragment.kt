@@ -29,7 +29,7 @@ class RecyclerViewItemDividerFragment : KotlinBaseFragment<FragmentRvItemDivider
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val cityAdapter = object : NormalRecyclerAdapter<String>(
-            R.layout.item_divider_rv_l, LocaleConstant.CITIES.toMutableList()
+            R.layout.item_divider_rv_l, LocaleConstant.cities
         ) {
             override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
                 viewHolder.setText(R.id.cityName, item)

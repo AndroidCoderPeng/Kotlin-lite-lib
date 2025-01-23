@@ -16,9 +16,6 @@ import com.pengxh.kt.lite.divider.RecyclerStickDecoration
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.getHanYuPinyin
 import com.pengxh.kt.lite.extensions.show
-import java.text.Collator
-import java.util.Collections
-import java.util.Locale
 
 class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecorationBinding>() {
 
@@ -28,11 +25,8 @@ class RecyclerStickDecorationFragment : KotlinBaseFragment<FragmentRvStickDecora
      * 将城市整理成分组数据
      */
     private fun sortCity(): MutableList<CityModel> {
-        //先将数据按照字母排序
-        Collections.sort(LocaleConstant.CITIES, Collator.getInstance(Locale.CHINA))
-        //格式化数据
         val cityBeans = ArrayList<CityModel>()
-        for (city in LocaleConstant.CITIES) {
+        for (city in LocaleConstant.cities) {
             val cityBean = CityModel()
             cityBean.city = city
             val firstLetter = city.getHanYuPinyin().substring(0, 1)

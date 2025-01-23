@@ -27,13 +27,13 @@ class RecyclerViewItemOffsetsFragment : KotlinBaseFragment<FragmentRvItemOffsets
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val cityAdapter = object : NormalRecyclerAdapter<String>(
-            R.layout.item_offsets_rv_l, LocaleConstant.CITIES.toMutableList()
+            R.layout.item_offsets_rv_l, LocaleConstant.cities
         ) {
             override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
                 viewHolder.setText(R.id.cityName, item)
             }
         }
-        binding.recyclerView.addItemDecoration(RecyclerViewItemOffsets(30, 10, 30, 10))
+        binding.recyclerView.addItemDecoration(RecyclerViewItemOffsets(20, 10, 20, 10))
         binding.recyclerView.adapter = cityAdapter
         cityAdapter.setOnItemClickedListener(object :
             NormalRecyclerAdapter.OnItemClickedListener<String> {

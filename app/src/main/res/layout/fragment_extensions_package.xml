@@ -2,23 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="@dimen/dp_100"
-        android:layout_height="match_parent"
-        android:scrollbars="none" />
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/titleViewHeight" />
 
     <View
-        android:layout_width="@dimen/dp_1"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
         android:background="@color/mainBackground" />
 
     <FrameLayout
         android:id="@+id/contentLayout"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@color/mainBackground" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>
