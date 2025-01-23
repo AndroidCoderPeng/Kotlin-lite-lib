@@ -2,10 +2,12 @@ package com.pengxh.kt.lib.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentUtilsPackageBinding
 import com.pengxh.kt.lib.fragments.utils.BroadcastReceiverFragment
 import com.pengxh.kt.lib.fragments.utils.FileDownloadManagerFragment
@@ -21,7 +23,6 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
 
-    private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
         "Socket",
         "广播接受者管理器",
@@ -34,19 +35,27 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         "SharedPreferences",
         "水印绘制引擎"
     )
-    private var fragmentPages: ArrayList<Fragment> = ArrayList()
+    private val fragmentPages = mutableListOf<Fragment>()
 
-    init {
-        fragmentPages.add(SocketFragment())
-        fragmentPages.add(BroadcastReceiverFragment())
-        fragmentPages.add(FileDownloadManagerFragment())
-        fragmentPages.add(GalleryScaleHelperFragment())
-        fragmentPages.add(HtmlRenderEngineFragment())
-        fragmentPages.add(HttpRequestFragment())
-        fragmentPages.add(LoadingDialogFragment())
-        fragmentPages.add(RetrofitFactoryFragment())
-        fragmentPages.add(SaveKeyValuesFragment())
-        fragmentPages.add(WaterMarkerEngineFragment())
+    private fun getFragmentAt(position: Int): Fragment {
+        if (position < fragmentPages.size) {
+            return fragmentPages[position]
+        }
+        val fragment = when (position) {
+            0 -> SocketFragment()
+            1 -> BroadcastReceiverFragment()
+            2 -> FileDownloadManagerFragment()
+            3 -> GalleryScaleHelperFragment()
+            4 -> HtmlRenderEngineFragment()
+            5 -> HttpRequestFragment()
+            6 -> LoadingDialogFragment()
+            7 -> RetrofitFactoryFragment()
+            8 -> SaveKeyValuesFragment()
+            9 -> WaterMarkerEngineFragment()
+            else -> throw IllegalArgumentException("Invalid position")
+        }
+        fragmentPages.add(fragment)
+        return fragment
     }
 
     override fun initViewBinding(
@@ -61,15 +70,20 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        slideAdapter = SlideAdapter(requireContext(), itemTitles)
-        binding.listView.adapter = slideAdapter
+        binding.spinner.adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, itemTitles)
+        binding.spinner.setSelection(0)
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                switchPage(getFragmentAt(position))
+            }
 
-        //默认选中第一个
-        slideAdapter.setSelectItem(0)
-        slideAdapter.notifyDataSetInvalidated()
+            override fun onNothingSelected(parent: AdapterView<*>?) {
 
-        //显示首页
-        switchPage(fragmentPages[0])
+            }
+        }
     }
 
     override fun observeRequestState() {
@@ -77,13 +91,7 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
     }
 
     override fun initEvent() {
-        binding.listView.setOnItemClickListener { _, _, position, _ ->
-            slideAdapter.setSelectItem(position)
-            slideAdapter.notifyDataSetInvalidated()
 
-            //切换页面
-            switchPage(fragmentPages[position])
-        }
     }
 
     private fun switchPage(description: Fragment) {

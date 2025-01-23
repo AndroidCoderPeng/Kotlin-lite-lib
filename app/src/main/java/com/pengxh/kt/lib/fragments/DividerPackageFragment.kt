@@ -19,12 +19,20 @@ class DividerPackageFragment : KotlinBaseFragment<FragmentDividerPackageBinding>
     private val itemTitles = arrayOf(
         "吸顶分割线", "普通分割线", "四周边框线"
     )
-    private var fragmentPages: ArrayList<Fragment> = ArrayList()
+    private val fragmentPages = mutableListOf<Fragment>()
 
-    init {
-        fragmentPages.add(RecyclerStickDecorationFragment())
-        fragmentPages.add(RecyclerViewItemDividerFragment())
-        fragmentPages.add(RecyclerViewItemOffsetsFragment())
+    private fun getFragmentAt(position: Int): Fragment {
+        if (position < fragmentPages.size) {
+            return fragmentPages[position]
+        }
+        val fragment = when (position) {
+            0 -> RecyclerStickDecorationFragment()
+            1 -> RecyclerViewItemDividerFragment()
+            2 -> RecyclerViewItemOffsetsFragment()
+            else -> throw IllegalArgumentException("Invalid position")
+        }
+        fragmentPages.add(fragment)
+        return fragment
     }
 
     override fun initViewBinding(
@@ -46,7 +54,7 @@ class DividerPackageFragment : KotlinBaseFragment<FragmentDividerPackageBinding>
             override fun onItemSelected(
                 parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
-                switchPage(fragmentPages[position])
+                switchPage(getFragmentAt(position))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {

@@ -2,10 +2,12 @@ package com.pengxh.kt.lib.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
-import com.pengxh.kt.lib.adapter.SlideAdapter
 import com.pengxh.kt.lib.databinding.FragmentWidgetPackageBinding
 import com.pengxh.kt.lib.fragments.widget.AirDashBoardViewFragment
 import com.pengxh.kt.lib.fragments.widget.AudioFragment
@@ -22,7 +24,6 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>() {
 
-    private lateinit var slideAdapter: SlideAdapter
     private val itemTitles = arrayOf(
         "音频录制及播放",
         "对话框",
@@ -36,20 +37,28 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         "方向控制盘",
         "顶部标题栏"
     )
-    private var fragmentPages: ArrayList<Fragment> = ArrayList()
+    private val fragmentPages = mutableListOf<Fragment>()
 
-    init {
-        fragmentPages.add(AudioFragment())
-        fragmentPages.add(DialogFragment())
-        fragmentPages.add(AirDashBoardViewFragment())
-        fragmentPages.add(CircleProgressBarFragment())
-        fragmentPages.add(DeleteEditTextFragment())
-        fragmentPages.add(EasyPopupWindowFragment())
-        fragmentPages.add(EmptyViewFragment())
-        fragmentPages.add(KeyBoardViewFragment())
-        fragmentPages.add(SlideBarViewFragment())
-        fragmentPages.add(SteeringWheelViewFragment())
-        fragmentPages.add(TitleBarViewFragment())
+    private fun getFragmentAt(position: Int): Fragment {
+        if (position < fragmentPages.size) {
+            return fragmentPages[position]
+        }
+        val fragment = when (position) {
+            0 -> AudioFragment()
+            1 -> DialogFragment()
+            2 -> AirDashBoardViewFragment()
+            3 -> CircleProgressBarFragment()
+            4 -> DeleteEditTextFragment()
+            5 -> EasyPopupWindowFragment()
+            6 -> EmptyViewFragment()
+            7 -> KeyBoardViewFragment()
+            8 -> SlideBarViewFragment()
+            9 -> SteeringWheelViewFragment()
+            10 -> TitleBarViewFragment()
+            else -> throw IllegalArgumentException("Invalid position")
+        }
+        fragmentPages.add(fragment)
+        return fragment
     }
 
     override fun initViewBinding(
@@ -64,15 +73,20 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        slideAdapter = SlideAdapter(requireContext(), itemTitles)
-        binding.listView.adapter = slideAdapter
+        binding.spinner.adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, itemTitles)
+        binding.spinner.setSelection(0)
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                switchPage(getFragmentAt(position))
+            }
 
-        //默认选中第一个
-        slideAdapter.setSelectItem(0)
-        slideAdapter.notifyDataSetInvalidated()
+            override fun onNothingSelected(parent: AdapterView<*>?) {
 
-        //显示首页
-        switchPage(fragmentPages[0])
+            }
+        }
     }
 
     override fun observeRequestState() {
@@ -80,13 +94,7 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
     }
 
     override fun initEvent() {
-        binding.listView.setOnItemClickListener { _, _, position, _ ->
-            slideAdapter.setSelectItem(position)
-            slideAdapter.notifyDataSetInvalidated()
 
-            //切换页面
-            switchPage(fragmentPages[position])
-        }
     }
 
     private fun switchPage(description: Fragment) {

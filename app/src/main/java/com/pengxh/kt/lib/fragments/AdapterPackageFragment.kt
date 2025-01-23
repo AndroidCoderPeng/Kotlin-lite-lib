@@ -22,14 +22,22 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
     private val itemTitles = arrayOf(
         "可变适配器", "多选适配器", "普通适配器", "宫格适配器", "单选适配器"
     )
-    private var fragmentPages: ArrayList<Fragment> = ArrayList()
+    private val fragmentPages = mutableListOf<Fragment>()
 
-    init {
-        fragmentPages.add(EditableImageAdapterFragment())
-        fragmentPages.add(MultipleChoiceAdapterFragment())
-        fragmentPages.add(NormalRecyclerAdapterFragment())
-        fragmentPages.add(GridViewImageAdapterFragment())
-        fragmentPages.add(SingleChoiceAdapterFragment())
+    private fun getFragmentAt(position: Int): Fragment {
+        if (position < fragmentPages.size) {
+            return fragmentPages[position]
+        }
+        val fragment = when (position) {
+            0 -> EditableImageAdapterFragment()
+            1 -> MultipleChoiceAdapterFragment()
+            2 -> NormalRecyclerAdapterFragment()
+            3 -> GridViewImageAdapterFragment()
+            4 -> SingleChoiceAdapterFragment()
+            else -> throw IllegalArgumentException("Invalid position")
+        }
+        fragmentPages.add(fragment)
+        return fragment
     }
 
     override fun initViewBinding(
@@ -50,7 +58,7 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
             override fun onItemSelected(
                 parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
-                switchPage(fragmentPages[position])
+                switchPage(getFragmentAt(position))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -59,17 +67,17 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
         }
     }
 
+    private fun switchPage(target: Fragment) {
+        val transition = childFragmentManager.beginTransaction()
+        transition.replace(R.id.contentLayout, target)
+        transition.commit()
+    }
+
     override fun observeRequestState() {
 
     }
 
     override fun initEvent() {
 
-    }
-
-    private fun switchPage(description: Fragment) {
-        val transition = childFragmentManager.beginTransaction()
-        transition.replace(R.id.contentLayout, description)
-        transition.commit()
     }
 }

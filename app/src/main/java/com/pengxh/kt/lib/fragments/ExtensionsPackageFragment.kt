@@ -43,23 +43,31 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
         "TextSwitcher",
         "Uri"
     )
-    private var fragmentPages: ArrayList<Fragment> = ArrayList()
+    private val fragmentPages = mutableListOf<Fragment>()
 
-    init {
-        fragmentPages.add(BitmapExtensionFragment())
-        fragmentPages.add(ByteArrayExtensionFragment())
-        fragmentPages.add(ContextExtensionFragment())
-        fragmentPages.add(DialogExtensionFragment())
-        fragmentPages.add(DrawableExtensionFragment())
-        fragmentPages.add(FileExtensionFragment())
-        fragmentPages.add(FloatExtensionFragment())
-        fragmentPages.add(ImageExtensionFragment())
-        fragmentPages.add(ImageViewExtensionFragment())
-        fragmentPages.add(IntExtensionFragment())
-        fragmentPages.add(LongExtensionFragment())
-        fragmentPages.add(StringExtensionFragment())
-        fragmentPages.add(TextSwitcherExtensionFragment())
-        fragmentPages.add(UriExtensionFragment())
+    private fun getFragmentAt(position: Int): Fragment {
+        if (position < fragmentPages.size) {
+            return fragmentPages[position]
+        }
+        val fragment = when (position) {
+            0 -> BitmapExtensionFragment()
+            1 -> ByteArrayExtensionFragment()
+            2 -> ContextExtensionFragment()
+            3 -> DialogExtensionFragment()
+            4 -> DrawableExtensionFragment()
+            5 -> FileExtensionFragment()
+            6 -> FloatExtensionFragment()
+            7 -> ImageExtensionFragment()
+            8 -> ImageViewExtensionFragment()
+            9 -> IntExtensionFragment()
+            10 -> LongExtensionFragment()
+            11 -> StringExtensionFragment()
+            12 -> TextSwitcherExtensionFragment()
+            13 -> UriExtensionFragment()
+            else -> throw IllegalArgumentException("Invalid position")
+        }
+        fragmentPages.add(fragment)
+        return fragment
     }
 
     override fun initViewBinding(
@@ -81,7 +89,7 @@ class ExtensionsPackageFragment : KotlinBaseFragment<FragmentExtensionsPackageBi
             override fun onItemSelected(
                 parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
-                switchPage(fragmentPages[position])
+                switchPage(getFragmentAt(position))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
