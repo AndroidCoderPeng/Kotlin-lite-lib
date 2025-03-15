@@ -1,2 +1,0 @@
-rootProject.name = "Kotlin-lite-lib"
-include ':app',':lite'

@@ -131,7 +131,7 @@ class WaterMarkerEngine(builder: Builder) {
         textPaint.getTextBounds(marker, 0, marker.length, textRect)
 
         //添加水印
-        val bitmapConfig = originalBitmap.config
+        val bitmapConfig = originalBitmap.config!!
         val copyBitmap = originalBitmap.copy(bitmapConfig, true)
         scope.launch(Dispatchers.IO) {
             val canvas = Canvas(copyBitmap)
