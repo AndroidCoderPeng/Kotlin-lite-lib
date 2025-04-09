@@ -8,6 +8,7 @@ import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.scale
 import kotlin.math.roundToInt
 
 
@@ -26,7 +27,7 @@ fun Drawable.toBlurBitmap(context: Context, radius: Float): Bitmap {
     val height = (bitmap.height * BITMAP_SCALE).roundToInt()
 
     // 将缩小后的图片做为预渲染的图片。
-    val inputBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false)
+    val inputBitmap = bitmap.scale(width, height, false)
     // 创建一张渲染后的输出图片。
     val outputBitmap = Bitmap.createBitmap(inputBitmap)
 

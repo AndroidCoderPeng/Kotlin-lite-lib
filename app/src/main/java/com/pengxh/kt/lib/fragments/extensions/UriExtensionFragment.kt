@@ -50,8 +50,8 @@ class UriExtensionFragment : KotlinBaseFragment<FragmentExtensionUriBinding>() {
     private val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
             object : ActivityResultCallback<ActivityResult> {
-                override fun onActivityResult(result: ActivityResult?) {
-                    if (result?.resultCode == Activity.RESULT_OK) {
+                override fun onActivityResult(result: ActivityResult) {
+                    if (result.resultCode == Activity.RESULT_OK) {
                         val data = result.data ?: return
                         val uri = data.data
                         binding.uriResultView.text = "Uri路径：${uri.toString()}"
