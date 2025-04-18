@@ -15,7 +15,7 @@
         app:tbv_right_image="@drawable/ic_title_right"
         app:tbv_show_left_image="false"
         app:tbv_show_right_image="false"
-        app:tbv_smaller_title="false"
+        app:tbv_smaller_title="true"
         app:tbv_text="Kotlin-lite-lib用法示例"
         app:tbv_text_color="@color/white" />
 

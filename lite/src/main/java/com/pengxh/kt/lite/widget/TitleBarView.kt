@@ -9,19 +9,16 @@ import android.widget.LinearLayout
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.databinding.WidgetViewTitleBarBinding
 
-
 /**
  * 界面顶部标题栏
  * */
-class TitleBarView constructor(context: Context, attrs: AttributeSet? = null) :
-    LinearLayout(context, attrs) {
+class TitleBarView(context: Context, attrs: AttributeSet? = null) : LinearLayout(context, attrs) {
 
-    private val kTag = "TitleBarView"
-    private var binding: WidgetViewTitleBarBinding
+    private var binding = WidgetViewTitleBarBinding.inflate(
+        LayoutInflater.from(context), this, true
+    )
 
     init {
-        binding = WidgetViewTitleBarBinding.inflate(LayoutInflater.from(context), this, true)
-
         val type = context.obtainStyledAttributes(attrs, R.styleable.TitleBarView)
         val leftImageRes = type.getResourceId(
             R.styleable.TitleBarView_tbv_left_image, R.drawable.ic_title_left
