@@ -46,6 +46,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle, fragmentPages, itemTitles)
         binding.viewPager.adapter = adapter
+        binding.viewPager.offscreenPageLimit = fragmentPages.size
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = adapter.getPageTitle(position)
         }.attach()
