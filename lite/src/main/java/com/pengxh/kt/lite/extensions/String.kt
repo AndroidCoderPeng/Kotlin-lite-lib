@@ -2,6 +2,7 @@ package com.pengxh.kt.lite.extensions
 
 import android.content.Context
 import android.widget.Toast
+import com.google.gson.Gson
 import net.sourceforge.pinyin4j.PinyinHelper
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
@@ -196,4 +197,10 @@ fun String.writeToFile(file: File) {
 
 fun String.show(context: Context) {
     Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
+}
+
+val gson by lazy { Gson() }
+
+inline fun <reified T> unpackingResponse(response: String): T {
+    return gson.fromJson(response, T::class.java)
 }
