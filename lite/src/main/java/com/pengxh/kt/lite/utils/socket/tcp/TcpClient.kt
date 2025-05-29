@@ -19,7 +19,7 @@ import io.netty.handler.timeout.IdleStateHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
@@ -28,20 +28,22 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class TcpClient(private val listener: OnTcpConnectStateListener) {
 
+    companion object {
+        private const val INITIAL_IDLE_TIME = 15L
+        private const val MAX_RETRY_TIMES = 10
+        private const val RECONNECT_DELAY_SECONDS = 15L
+        private const val RECEIVE_BUFFER_MIN = 5000
+        private const val RECEIVE_BUFFER_MAX = 8000
+    }
+
     private val kTag = "TcpClient"
-    private val reconnectDelay = 15L
-    private val maxRetryTimes = 10 // 设置最大重连次数
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val loopGroup by lazy { NioEventLoopGroup() }
-    private var needReconnect = false
-    private lateinit var host: String
+    private var host: String = ""
     private var port: Int = 0
+    private var needReconnect = false
     private var channel: Channel? = null
-    private var scope: CoroutineScope? = null
-
-    @Volatile
     private var isRunning = AtomicBoolean(false)
-
-    @Volatile
     private var retryTimes = AtomicInteger(0)
 
     /**
@@ -54,21 +56,24 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
     fun start(host: String, port: Int) {
         this.host = host
         this.port = port
-        if (isRunning.get()) {
-            Log.d(kTag, "start: TcpClient 正在运行")
-            return
-        }
+        connect()
+    }
+
+    fun start() {
         connect()
     }
 
     private inner class SimpleChannelInitializer : ChannelInitializer<SocketChannel>() {
         override fun initChannel(ch: SocketChannel) {
-            val channelPipeline = ch.pipeline()
-            channelPipeline
-                .addLast(ByteArrayDecoder())
-                .addLast(ByteArrayEncoder())
-                .addLast(IdleStateHandler(15, 15, 60, TimeUnit.SECONDS))//如果连接没有接收或发送数据超过60秒钟就发送一次心跳
-                .addLast(object : SimpleChannelInboundHandler<ByteArray>() {
+            ch.pipeline().apply {
+                addLast(ByteArrayDecoder())
+                addLast(ByteArrayEncoder())
+                addLast(//如果连接没有接收或发送数据超过60秒钟就发送一次心跳
+                    IdleStateHandler(
+                        INITIAL_IDLE_TIME, INITIAL_IDLE_TIME, 60, TimeUnit.SECONDS
+                    )
+                )
+                addLast(object : SimpleChannelInboundHandler<ByteArray>() {
                     override fun channelActive(ctx: ChannelHandlerContext) {
                         val address = ctx.channel().remoteAddress() as InetSocketAddress
                         Log.d(kTag, "${address.address.hostAddress} 已连接")
@@ -96,41 +101,31 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
                         isRunning.set(false)
                     }
                 })
+            }
         }
     }
 
     @Synchronized
     private fun connect() {
-        if (channel != null && channel!!.isActive) {
-            Log.d(kTag, "connect: TcpClient 正在运行")
+        if (isRunning()) {
+            Log.d(kTag, "start: TcpClient 正在运行")
             return
         }
-        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-        scope?.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             try {
-                Log.d(kTag, "start connect: ${host}:${port}")
-                var bootStrap = Bootstrap().apply {
-                    group(loopGroup)
-                    channel(NioSocketChannel::class.java)
-                    option(ChannelOption.TCP_NODELAY, true) //无阻塞
-                    option(ChannelOption.SO_KEEPALIVE, true) //长连接
-                    option(
-                        ChannelOption.RCVBUF_ALLOCATOR,
-                        AdaptiveRecvByteBufAllocator(5000, 5000, 8000)
-                    )
-                    option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
-                    handler(SimpleChannelInitializer())
-                }
-                val channelFuture = bootStrap.connect(host, port)
-                    .addListener(object : ChannelFutureListener {
-                        override fun operationComplete(channelFuture: ChannelFuture) {
-                            if (channelFuture.isSuccess) {
+                Log.d(kTag, "开始连接: $host:$port")
+                val bootstrap = createBootstrap()
+                val channelFuture = bootstrap.connect(host, port).apply {
+                    addListener(object : ChannelFutureListener {
+                        override fun operationComplete(future: ChannelFuture) {
+                            if (future.isSuccess) {
                                 isRunning.set(true)
                                 retryTimes.set(0)
-                                channel = channelFuture.channel()
+                                channel = future.channel()
                             }
                         }
-                    }).sync()
+                    })
+                }.sync()
                 channelFuture.channel().closeFuture().sync()
             } catch (e: InterruptedException) {
                 e.printStackTrace()
@@ -141,11 +136,32 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
         }
     }
 
+    private fun createBootstrap(): Bootstrap {
+        return Bootstrap().apply {
+            group(loopGroup)
+            channel(NioSocketChannel::class.java)
+            option(ChannelOption.TCP_NODELAY, true) //无阻塞
+            option(ChannelOption.SO_KEEPALIVE, true) //长连接
+            option(
+                ChannelOption.RCVBUF_ALLOCATOR,
+                AdaptiveRecvByteBufAllocator(
+                    RECEIVE_BUFFER_MIN, RECEIVE_BUFFER_MIN, RECEIVE_BUFFER_MAX
+                )
+            )
+            option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+            handler(SimpleChannelInitializer())
+        }
+    }
+
     private fun reconnect() {
         val currentRetryTimes = retryTimes.incrementAndGet()
-        if (currentRetryTimes <= maxRetryTimes) {
-            Log.d(kTag, "reconnect: 开始第 $currentRetryTimes 次重连")
-            loopGroup.schedule({ connect() }, reconnectDelay, TimeUnit.SECONDS)
+        if (currentRetryTimes <= MAX_RETRY_TIMES) {
+            Log.d(kTag, "开始第 $currentRetryTimes 次重连")
+            //使用协程延迟重连，替代 Netty 的 loopGroup.schedule，防止调度器滥用。
+            scope.launch(Dispatchers.Main) {
+                delay(RECONNECT_DELAY_SECONDS * 1000L)
+                connect()
+            }
         } else {
             Log.e(kTag, "达到最大重连次数，停止重连")
             listener.onConnectFailed()
@@ -156,13 +172,10 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
         this.needReconnect = needReconnect
         isRunning.set(false)
         channel?.close()
-        scope?.cancel()
     }
 
     fun sendMessage(bytes: ByteArray) {
-        if (!isRunning.get()) {
-            return
-        }
+        if (!isRunning()) return
         channel?.writeAndFlush(bytes)
     }
 }
