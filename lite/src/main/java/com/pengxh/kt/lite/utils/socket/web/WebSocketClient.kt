@@ -3,6 +3,7 @@ package com.pengxh.kt.lite.utils.socket.web
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -15,23 +16,23 @@ import okio.ByteString
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.locks.ReentrantLock
 
 class WebSocketClient(private val listener: OnWebSocketListener) {
 
+    companion object {
+        private const val MAX_RETRY_TIMES = 10
+        private const val RECONNECT_DELAY_SECONDS = 15L
+        private const val NORMAL_CLOSE = 1000
+        private const val SERVER_CLOSE = 1001
+    }
+
     private val kTag = "WebSocketClient"
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val httpClient = OkHttpClient.Builder().readTimeout(0, TimeUnit.MILLISECONDS).build()
-    private val reconnectDelay: Long = 5000
-    private var maxRetryTimes = 10 // 设置最大重连次数
     private lateinit var url: String
     private lateinit var webSocket: WebSocket
-
-    @Volatile
     private var isRunning = AtomicBoolean(false)
-
-    @Volatile
     private var retryTimes = AtomicInteger(0)
-    private val lock = ReentrantLock()
 
     /**
      * WebSocketClient 是否正在运行
@@ -40,23 +41,34 @@ class WebSocketClient(private val listener: OnWebSocketListener) {
         return isRunning.get()
     }
 
+
+    private fun isValidWebSocketUrl(url: String): Boolean {
+        return url.isNotEmpty() && (url.startsWith("ws://") || url.startsWith("wss://"))
+    }
+
     fun start(url: String) {
-        if (url.isEmpty() || !url.startsWith("ws://") && !url.startsWith("wss://")) {
-            Log.e(kTag, "Invalid URL: $url")
-            listener.onFailure(null)
-            return
-        }
         this.url = url
-        if (isRunning.get()) {
-            return
-        }
         connect()
     }
 
+    fun start() {
+        connect()
+    }
+
+    @Synchronized
     private fun connect() {
-        lock.lock()
+        if (!isValidWebSocketUrl(url)) {
+            Log.e(kTag, "Invalid URL: $url")
+            return
+        }
+
+        if (isRunning()) {
+            Log.d(kTag, "connect: WebSocketClient 正在运行")
+            return
+        }
+
         try {
-            Log.d(kTag, "connect: $url")
+            Log.d(kTag, "开始连接: $url")
             val request = Request.Builder().url(url).build()
             webSocket = httpClient.newWebSocket(request, object : WebSocketListener() {
                 override fun onOpen(webSocket: WebSocket, response: Response) {
@@ -79,15 +91,7 @@ class WebSocketClient(private val listener: OnWebSocketListener) {
                 override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
                     super.onClosing(webSocket, code, reason)
                     listener.onServerDisconnected(webSocket, code, reason)
-                    /**
-                     * APP主动断开，code = 1000
-                     * 服务器主动断开，code = 1001
-                     *
-                     *
-                     * APP主动断开，onClosing和onClosed都会走
-                     * 服务器主动断开，只走onClosing
-                     */
-                    if (code == 1001) {
+                    if (code == SERVER_CLOSE) {
                         Log.d(kTag, "$code, $reason")
                         reconnect()
                     }
@@ -106,30 +110,35 @@ class WebSocketClient(private val listener: OnWebSocketListener) {
                     reconnect()
                 }
             })
-        } finally {
-            lock.unlock()
+        } catch (e: Exception) {
+            Log.e(kTag, "WebSocket 连接异常", e)
+            listener.onFailure(null)
         }
     }
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-
     private fun reconnect() {
         scope.launch {
-            if (retryTimes.get() <= maxRetryTimes) {
-                val currentRetryTimes = retryTimes.incrementAndGet()
-                Log.d(kTag, "开始第 $currentRetryTimes 次重连")
-                delay(reconnectDelay)
-                withContext(Dispatchers.IO) { connect() }
-            } else {
-                Log.e(kTag, "达到最大重连次数，停止重连")
-                listener.onMaxRetryReached()
+            try {
+                if (retryTimes.get() <= MAX_RETRY_TIMES) {
+                    val currentRetryTimes = retryTimes.incrementAndGet()
+                    Log.d(kTag, "开始第 $currentRetryTimes 次重连")
+                    delay(RECONNECT_DELAY_SECONDS)
+                    withContext(Dispatchers.IO) { connect() }
+                } else {
+                    Log.e(kTag, "达到最大重连次数，停止重连")
+                    listener.onMaxRetryReached()
+                }
+            } catch (e: Exception) {
+                Log.e(kTag, "重连失败", e)
             }
         }
     }
 
     fun stop() {
         Log.d(kTag, "$url 断开连接")
-        webSocket.close(1000, "Application Request Close")
+        if (::webSocket.isInitialized) {
+            webSocket.close(NORMAL_CLOSE, "Application Request Close")
+        }
         isRunning.set(false)
     }
 }

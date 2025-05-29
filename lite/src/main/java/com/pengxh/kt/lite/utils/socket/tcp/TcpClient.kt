@@ -108,7 +108,7 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
     @Synchronized
     private fun connect() {
         if (isRunning()) {
-            Log.d(kTag, "start: TcpClient 正在运行")
+            Log.d(kTag, "connect: TcpClient 正在运行")
             return
         }
         scope.launch(Dispatchers.IO) {
