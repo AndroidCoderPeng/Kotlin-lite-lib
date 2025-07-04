@@ -15,7 +15,7 @@ import com.pengxh.kt.lite.extensions.dp2px
 /**
  * 圆形进度条
  */
-class CircleProgressBar constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class CircleProgressBar(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private val ringRadius: Int
     private var rectF: RectF

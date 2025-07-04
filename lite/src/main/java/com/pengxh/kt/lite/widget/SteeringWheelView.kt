@@ -16,7 +16,7 @@ import com.pengxh.kt.lite.extensions.getScreenWidth
  * 方向盘控件
  * */
 @SuppressLint("ClickableViewAccessibility")
-class SteeringWheelView constructor(context: Context, attrs: AttributeSet) :
+class SteeringWheelView(context: Context, attrs: AttributeSet) :
     RelativeLayout(context, attrs) {
 
     init {

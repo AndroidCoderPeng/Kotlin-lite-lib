@@ -19,6 +19,8 @@ import com.pengxh.kt.lite.extensions.getScreenWidth
 class GridViewImageAdapter(private val context: Context, private val images: List<String>) :
     BaseAdapter() {
 
+    private val screenWidth by lazy { context.getScreenWidth() }
+
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getCount(): Int = images.size
@@ -48,7 +50,6 @@ class GridViewImageAdapter(private val context: Context, private val images: Lis
             .into(holder.imageView)
 
         //动态设置图片高度，和图片宽度保持一致
-        val screenWidth = context.getScreenWidth()
         val padding = (view.paddingLeft + view.paddingRight) * 3
         val imageSize = (screenWidth - padding) / 3
         if (holder.cachedLayoutParams == null) {

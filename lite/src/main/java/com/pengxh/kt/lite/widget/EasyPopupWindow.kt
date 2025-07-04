@@ -12,7 +12,7 @@ import android.widget.TextView
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.getScreenWidth
 
-class EasyPopupWindow constructor(context: Context) : PopupWindow() {
+class EasyPopupWindow(context: Context) : PopupWindow() {
 
     init {
         width = ((context.getScreenWidth() * 0.4).toInt())

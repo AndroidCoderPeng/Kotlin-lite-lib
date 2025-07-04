@@ -11,8 +11,7 @@ import java.text.DecimalFormat
  * 小于10首位补〇
  * */
 fun Int.appendZero(): String {
-    require(this >= 0) { "Input must be a non-negative integer" }
-    return String.format("%02d", this)
+    return "%02d".format(this)
 }
 
 /**

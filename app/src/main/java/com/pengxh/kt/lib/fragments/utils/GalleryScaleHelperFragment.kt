@@ -58,7 +58,7 @@ class GalleryScaleHelperFragment : KotlinBaseFragment<FragmentUtilsGalleryScaleB
             }
         }
         binding.recyclerView.adapter = galleryAdapter
-        scaleHelper.attachToRecyclerView(binding.recyclerView)
+        scaleHelper.attachToRecyclerView(binding.recyclerView, 0.5f)
         renderBackground(scaleHelper.getCurrentIndex())
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

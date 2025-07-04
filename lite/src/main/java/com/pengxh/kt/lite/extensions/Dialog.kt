@@ -2,14 +2,14 @@ package com.pengxh.kt.lite.extensions
 
 import android.app.Dialog
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.WindowManager
 import androidx.annotation.StyleRes
+import androidx.core.graphics.drawable.toDrawable
 import androidx.viewbinding.ViewBinding
 
 fun Dialog.initDialogLayoutParams(ratio: Float) {
     val window = this.window ?: return
-    window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    window.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
     window.decorView.setBackgroundColor(Color.TRANSPARENT)
     val params = window.attributes
     var r = ratio
@@ -21,13 +21,14 @@ fun Dialog.initDialogLayoutParams(ratio: Float) {
     window.attributes = params
 }
 
-fun Dialog.resetParams(gravity: Int, @StyleRes resId: Int, ratio: Float) {
+fun Dialog.resetParams(gravity: Int, @StyleRes resId: Int = 0, ratio: Float) {
     val window = this.window ?: return
-    window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    window.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
     window.decorView.setBackgroundColor(Color.TRANSPARENT)
     window.setGravity(gravity)
-    //设置Dialog出现的动画
-    window.setWindowAnimations(resId)
+    if (resId != 0) {
+        window.setWindowAnimations(resId)
+    }
     val params = window.attributes
     var r = ratio
     if (r >= 1) {

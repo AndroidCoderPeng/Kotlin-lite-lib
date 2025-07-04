@@ -15,7 +15,7 @@ import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.convertDrawable
 
 
-class DeleteEditText constructor(context: Context, attrs: AttributeSet) :
+class DeleteEditText(context: Context, attrs: AttributeSet) :
     AppCompatEditText(context, attrs), OnFocusChangeListener, TextWatcher {
 
     private val kTag = "DeleteEditText"

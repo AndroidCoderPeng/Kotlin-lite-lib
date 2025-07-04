@@ -9,13 +9,13 @@ import android.widget.Button
 import android.widget.LinearLayout
 import com.pengxh.kt.lite.R
 
-class KeyBoardView constructor(context: Context, attrs: AttributeSet) :
+class KeyBoardView(context: Context, attrs: AttributeSet) :
     LinearLayout(context, attrs), View.OnClickListener {
 
     private var listener: KeyboardClickListener? = null
 
     init {
-        View.inflate(context, R.layout.widget_view_keyboard, this)
+        inflate(context, R.layout.widget_view_keyboard, this)
         setChildViewOnclick(this)
     }
 
@@ -40,7 +40,7 @@ class KeyBoardView constructor(context: Context, attrs: AttributeSet) :
         }
         if (event.keyCode == KeyEvent.KEYCODE_BACK) {
             if (isShown) {
-                this.visibility = View.GONE
+                this.visibility = GONE
                 return true
             }
         }

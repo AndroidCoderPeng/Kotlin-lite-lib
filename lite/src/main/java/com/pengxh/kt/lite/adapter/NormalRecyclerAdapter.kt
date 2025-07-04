@@ -34,25 +34,20 @@ abstract class NormalRecyclerAdapter<T>(
     /**
      * 刷新列表，局部刷新
      * */
-    fun refresh(newRows: MutableList<T>) {
-        val diffCallback = object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = dataRows.size
-            override fun getNewListSize(): Int = newRows.size
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return dataRows[oldItemPosition] === newRows[newItemPosition]
-            }
+    fun refresh(newRows: MutableList<T>, diffCallback: DiffUtil.Callback?) {
+        if (newRows.isEmpty()) return
+        if (diffCallback != null) {
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return dataRows[oldItemPosition] == newRows[newItemPosition]
-            }
+            dataRows.clear()
+            dataRows.addAll(newRows)
+
+            diffResult.dispatchUpdatesTo(this)
+        } else {
+            dataRows.clear()
+            dataRows.addAll(newRows)
+            notifyItemRangeChanged(0, dataRows.size)
         }
-
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-
-        dataRows.clear()
-        dataRows.addAll(newRows)
-
-        diffResult.dispatchUpdatesTo(this)
     }
 
     /**
@@ -63,8 +58,9 @@ abstract class NormalRecyclerAdapter<T>(
             return
         }
         val startPosition = this.dataRows.size
+        val newSize = newRows.size
         this.dataRows.addAll(newRows)
-        notifyItemRangeInserted(startPosition, newRows.size)
+        notifyItemRangeInserted(startPosition, newSize)
     }
 
     abstract fun convertView(viewHolder: ViewHolder, position: Int, item: T)

@@ -16,12 +16,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.getHanYuPinyin
 import kotlin.math.abs
 
-class SlideBarView constructor(context: Context, attrs: AttributeSet) : View(context, attrs),
+class SlideBarView(context: Context, attrs: AttributeSet) : View(context, attrs),
     View.OnTouchListener {
 
     private val kTag = "SlideBarView"
@@ -173,7 +174,7 @@ class SlideBarView constructor(context: Context, attrs: AttributeSet) : View(con
             //字母变色
             if (touchIndex == i) {
                 //让当前字母变色
-                textPaint.color = Color.parseColor("#00CB87")
+                textPaint.color = "#00CB87".toColorInt()
                 textPaint.typeface = Typeface.DEFAULT_BOLD
             } else {
                 //其他字母不变色

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
-class NoScrollViewPager constructor(context: Context, attrs: AttributeSet) :
+class NoScrollViewPager(context: Context, attrs: AttributeSet) :
     ViewPager(context, attrs) {
 
     /**

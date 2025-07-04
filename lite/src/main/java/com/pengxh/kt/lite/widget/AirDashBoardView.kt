@@ -21,7 +21,7 @@ import com.pengxh.kt.lite.extensions.sp2px
  *                 .setCenterText("优")
  *                 .setCurrentValue(255)
  */
-class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class AirDashBoardView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     //View中心X坐标
     private var centerX = 0f
@@ -63,6 +63,7 @@ class AirDashBoardView constructor(context: Context, attrs: AttributeSet) : View
 
     init {
         val type = context.obtainStyledAttributes(attrs, R.styleable.AirDashBoardView)
+
         /**
          * getDimension()返回的是float
          * getDimensionPixelSize()返回的是实际数值的四舍五入

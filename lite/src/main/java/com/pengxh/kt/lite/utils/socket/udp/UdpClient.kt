@@ -96,7 +96,7 @@ class UdpClient(private val listener: OnUdpMessageListener) {
     }
 
     fun sendMessage(value: ByteBuf) {
-        val datagramPacket = DatagramPacket(Unpooled.copiedBuffer(value), socketAddress)
+        val datagramPacket = DatagramPacket(value, socketAddress)
         channel?.writeAndFlush(datagramPacket)
     }
 

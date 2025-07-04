@@ -13,6 +13,7 @@ import kotlin.math.roundToInt
 
 
 private const val BITMAP_SCALE = 0.4f
+private const val MAX_BLUR_RADIUS = 25f
 
 /**
  * radius 模糊半径，值越大越模糊
@@ -20,26 +21,33 @@ private const val BITMAP_SCALE = 0.4f
  * 取值区间[0,25]
  * */
 fun Drawable.toBlurBitmap(context: Context, radius: Float): Bitmap {
-    val bitmap = this.toBitmap()
+    val originalBitmap = this.toBitmap()
+    if (originalBitmap.isRecycled) throw IllegalStateException("Bitmap is already recycled")
 
     // 计算图片缩小后的长宽
-    val width = (bitmap.width * BITMAP_SCALE).roundToInt()
-    val height = (bitmap.height * BITMAP_SCALE).roundToInt()
+    val width = (originalBitmap.width * BITMAP_SCALE).roundToInt()
+    val height = (originalBitmap.height * BITMAP_SCALE).roundToInt()
+    val inputBitmap = originalBitmap.scale(width, height, false)
 
-    // 将缩小后的图片做为预渲染的图片。
-    val inputBitmap = bitmap.scale(width, height, false)
-    // 创建一张渲染后的输出图片。
-    val outputBitmap = Bitmap.createBitmap(inputBitmap)
+    val outputBitmap = inputBitmap.copy(inputBitmap.config ?: Bitmap.Config.ARGB_8888, true)
 
-    // 创建RenderScript内核对象
+    // 初始化 RenderScript
     val rs = RenderScript.create(context)
-    // 创建一个模糊效果的RenderScript的工具对象
     val blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
+
     val tmpIn = Allocation.createFromBitmap(rs, inputBitmap)
     val tmpOut = Allocation.createFromBitmap(rs, outputBitmap)
-    blurScript.setRadius(radius)
+
+    blurScript.setRadius(radius.coerceAtMost(MAX_BLUR_RADIUS))
     blurScript.setInput(tmpIn)
     blurScript.forEach(tmpOut)
+
     tmpOut.copyTo(outputBitmap)
+
+    // 释放资源
+    tmpIn.destroy()
+    tmpOut.destroy()
+    blurScript.destroy()
+    rs.destroy()
     return outputBitmap
 }

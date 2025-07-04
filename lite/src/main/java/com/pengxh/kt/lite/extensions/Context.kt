@@ -106,7 +106,7 @@ fun Context.getStatusBarHeight(): Int {
         val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars())
         return insets.top
     } else {
-        if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi") {
+        if (Build.MANUFACTURER.equals("xiaomi", ignoreCase = true)) {
             val resourceId = this.resources.getIdentifier("status_bar_height", "dimen", "android")
             return if (resourceId > 0) {
                 this.resources.getDimensionPixelSize(resourceId)
@@ -118,13 +118,16 @@ fun Context.getStatusBarHeight(): Int {
                 val clazz = Class.forName("com.android.internal.R\$dimen")
                 val obj = clazz.newInstance()
                 val field = clazz.getField("status_bar_height")
-                if (field[obj] == null) {
-                    return 0
+                val resIdValue = field[obj]?.toString()?.toIntOrNull()
+                if (resIdValue != null && resIdValue > 0) {
+                    return this.resources.getDimensionPixelSize(resIdValue)
                 }
-                val x = field[obj]!!.toString().toInt()
-                if (x > 0) {
-                    return this.resources.getDimensionPixelSize(x)
-                }
+            } catch (e: ClassNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IllegalAccessException) {
+                e.printStackTrace()
+            } catch (e: NoSuchFieldException) {
+                e.printStackTrace()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

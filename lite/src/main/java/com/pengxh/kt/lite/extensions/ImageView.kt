@@ -3,22 +3,22 @@ package com.pengxh.kt.lite.extensions
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
 import android.widget.ImageView
+import androidx.core.graphics.drawable.toDrawable
 
 fun ImageView.switchBackground(blurBitmap: Bitmap?) {
     if (blurBitmap == null) return
 
     val lastDrawable: Drawable = when (this.drawable) {
-        is TransitionDrawable -> (this.drawable as TransitionDrawable).getDrawable(1) ?: ColorDrawable(Color.TRANSPARENT)
+        is TransitionDrawable -> (this.drawable as TransitionDrawable).getDrawable(1) ?: Color.TRANSPARENT.toDrawable()
         is BitmapDrawable -> this.drawable
-        null -> ColorDrawable(Color.TRANSPARENT)
-        else -> ColorDrawable(Color.TRANSPARENT)
+        null -> Color.TRANSPARENT.toDrawable()
+        else -> Color.TRANSPARENT.toDrawable()
     }
 
-    val newDrawable = BitmapDrawable(resources, blurBitmap)
+    val newDrawable = blurBitmap.toDrawable(resources)
 
     val transitionDrawable = this.drawable as? TransitionDrawable ?: run {
         TransitionDrawable(arrayOf(lastDrawable, newDrawable)).apply {

@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.RectF
 import android.util.Base64
+import androidx.core.graphics.createBitmap
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -78,9 +79,7 @@ fun Bitmap.createRoundDrawable(context: Context, borderStroke: Float, color: Int
     //转换为正方形后的宽高。以最短边为正方形边长，也是圆形图像的直径
     val squareBitmapBorderLength = min(this.width, this.height)
 
-    val roundedBitmap = Bitmap.createBitmap(
-        squareBitmapBorderLength, squareBitmapBorderLength, Bitmap.Config.ARGB_8888
-    )
+    val roundedBitmap = createBitmap(squareBitmapBorderLength, squareBitmapBorderLength)
     val canvas = Canvas(roundedBitmap)
     val paint = Paint()
     paint.isAntiAlias = true

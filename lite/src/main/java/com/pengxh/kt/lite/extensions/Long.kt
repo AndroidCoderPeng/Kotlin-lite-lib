@@ -98,12 +98,14 @@ fun Long.getQuarterOfYear(): Int {
  * 判断时间是否早于当前时间
  */
 fun Long.isEarlierThanStart(date: String?): Boolean {
-    if (date.toString().isBlank()) {
+    val dateString = date ?: return false
+    if (dateString.isBlank()) {
         return false
     }
     val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
     try {
-        return this < dateFormat.parse(date!!)!!.time
+        val parsedDate = dateFormat.parse(dateString) ?: return false
+        return this < parsedDate.time
     } catch (e: ParseException) {
         e.printStackTrace()
     }
@@ -113,16 +115,16 @@ fun Long.isEarlierThanStart(date: String?): Boolean {
 private const val KB = 1024L
 private const val MB = 1024 * 1024L
 private const val GB = 1024 * 1024 * 1024L
+private val FILE_SIZE_DF = DecimalFormat("0.00").apply {
+    roundingMode = RoundingMode.HALF_UP
+}
 
 fun Long.formatFileSize(): String {
-    val df = DecimalFormat("0.00").apply {
-        roundingMode = RoundingMode.HALF_UP
-    }
     return when {
-        this < 0 -> "Invalid size" // 处理负数情况
-        this < KB -> df.format(this) + " B"
-        this < MB -> df.format(this.toDouble() / KB) + " KB"
-        this < GB -> df.format(this.toDouble() / MB) + " MB"
-        else -> df.format(this.toDouble() / GB) + " GB"
+        this < 0 -> "Invalid size"
+        this < KB -> "${FILE_SIZE_DF.format(this)} B"
+        this < MB -> "${FILE_SIZE_DF.format(this.toDouble() / KB)} KB"
+        this < GB -> "${FILE_SIZE_DF.format(this.toDouble() / MB)} MB"
+        else -> "${FILE_SIZE_DF.format(this.toDouble() / GB)} GB"
     }
 }

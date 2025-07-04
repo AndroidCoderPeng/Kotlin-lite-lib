@@ -57,9 +57,13 @@ abstract class MultipleChoiceAdapter<T>(
      * 加载更多
      * */
     fun loadMore(newRows: MutableList<T>) {
-        val startPosition = dataRows.size
+        if (newRows.isEmpty()) {
+            return
+        }
+        val startPosition = this.dataRows.size
+        val newSize = newRows.size
         this.dataRows.addAll(newRows)
-        notifyItemRangeInserted(startPosition, newRows.size)
+        notifyItemRangeInserted(startPosition, newSize)
     }
 
     abstract fun convertView(viewHolder: ViewHolder, position: Int, item: T)

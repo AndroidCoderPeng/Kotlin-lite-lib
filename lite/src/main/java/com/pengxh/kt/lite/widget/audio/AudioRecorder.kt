@@ -13,7 +13,7 @@ import kotlin.math.log10
 /**
  * 音频录制类
  * */
-class AudioRecorder constructor(private val context: Context) : Handler.Callback {
+class AudioRecorder(private val context: Context) : Handler.Callback {
 
     private val stateUpdateHandler by lazy { WeakReferenceHandler(this) }
     private val updateStatusRunnable = Runnable { updateMicStatus() }
