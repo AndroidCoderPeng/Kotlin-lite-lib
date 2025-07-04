@@ -6,7 +6,6 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-
 /**
  * RecyclerView普通列表适配器
  */
@@ -34,15 +33,35 @@ abstract class NormalRecyclerAdapter<T>(
     /**
      * 刷新列表，局部刷新
      * */
-    fun refresh(newRows: MutableList<T>, diffCallback: DiffUtil.Callback?) {
+    fun refresh(newRows: MutableList<T>, itemComparator: ItemComparator<T>? = null) {
         if (newRows.isEmpty()) return
-        if (diffCallback != null) {
-            val diffResult = DiffUtil.calculateDiff(diffCallback)
+        if (itemComparator != null) {
+            val diffCallback = object : DiffUtil.Callback() {
+                override fun getOldListSize() = dataRows.size
 
-            dataRows.clear()
-            dataRows.addAll(newRows)
+                override fun getNewListSize() = newRows.size
 
-            diffResult.dispatchUpdatesTo(this)
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    return itemComparator.areItemsTheSame(
+                        dataRows[oldItemPosition], newRows[newItemPosition]
+                    )
+                }
+
+                override fun areContentsTheSame(
+                    oldItemPosition: Int, newItemPosition: Int
+                ): Boolean {
+                    return itemComparator.areContentsTheSame(
+                        dataRows[oldItemPosition], newRows[newItemPosition]
+                    )
+                }
+            }
+
+            // 异步计算差异，避免阻塞主线程
+            DiffUtil.calculateDiff(diffCallback, true).also { result ->
+                dataRows.clear()
+                dataRows.addAll(newRows)
+                result.dispatchUpdatesTo(this)
+            }
         } else {
             dataRows.clear()
             dataRows.addAll(newRows)
@@ -73,5 +92,11 @@ abstract class NormalRecyclerAdapter<T>(
 
     fun setOnItemClickedListener(listener: OnItemClickedListener<T>?) {
         itemClickedListener = listener
+    }
+
+    interface ItemComparator<T> {
+        fun areItemsTheSame(oldItem: T, newItem: T): Boolean
+
+        fun areContentsTheSame(oldItem: T, newItem: T): Boolean
     }
 }
