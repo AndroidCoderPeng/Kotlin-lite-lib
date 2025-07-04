@@ -6,6 +6,11 @@ package com.pengxh.kt.lite.utils
  */
 sealed class LoadState {
     /**
+     * 默认状态
+     */
+    object Idle : LoadState()
+
+    /**
      * 加载中
      */
     object Loading : LoadState()

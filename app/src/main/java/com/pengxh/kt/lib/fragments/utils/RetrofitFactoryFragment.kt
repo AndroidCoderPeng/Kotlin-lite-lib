@@ -8,6 +8,7 @@ import com.pengxh.kt.lib.databinding.FragmentUtilsRetrofitFactoryBinding
 import com.pengxh.kt.lib.vm.HttpRequestViewModel
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.show
+import com.pengxh.kt.lite.utils.LoadState
 import com.pengxh.kt.lite.utils.LoadingDialog
 
 class RetrofitFactoryFragment : KotlinBaseFragment<FragmentUtilsRetrofitFactoryBinding>() {
@@ -26,25 +27,30 @@ class RetrofitFactoryFragment : KotlinBaseFragment<FragmentUtilsRetrofitFactoryB
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        httpRequestViewModel.getNewsByPage(
-            "头条", 1,
-            onLoading = {
-                LoadingDialog.show(requireActivity(), "数据请求中，请稍后...")
-            },
-            onSuccess = {
-                LoadingDialog.dismiss()
-                binding.textView.text = it.result.list.first().content
-            },
-            onFailed = {
-                LoadingDialog.dismiss()
-                it.show(requireContext())
-            }
-        )
+        httpRequestViewModel.getNewsByPage("头条", 1)
     }
 
 
     override fun observeRequestState() {
+        httpRequestViewModel.newsListData.observe(this) { response ->
+            when (response.state) {
+                LoadState.Loading -> {
+                    LoadingDialog.show(requireActivity(), "数据请求中，请稍后...")
+                }
 
+                LoadState.Success -> {
+                    LoadingDialog.dismiss()
+                    binding.textView.text = response.body?.result?.list?.first()?.content
+                }
+
+                LoadState.Fail -> {
+                    LoadingDialog.dismiss()
+                    response.message?.show(requireContext())
+                }
+
+                else -> {}
+            }
+        }
     }
 
     override fun initEvent() {

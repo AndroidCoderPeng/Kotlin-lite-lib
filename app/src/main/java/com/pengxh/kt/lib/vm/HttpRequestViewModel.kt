@@ -1,5 +1,6 @@
 package com.pengxh.kt.lib.vm
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -7,27 +8,26 @@ import com.pengxh.kt.lib.model.NewsListModel
 import com.pengxh.kt.lib.utils.RetrofitServiceManager
 import com.pengxh.kt.lite.extensions.launch
 import com.pengxh.kt.lite.extensions.unpackingResponse
+import com.pengxh.kt.lite.utils.HttpResponse
 
 class HttpRequestViewModel : ViewModel() {
 
-    val gson by lazy { Gson() }
+    private val gson by lazy { Gson() }
+    val newsListData = MutableLiveData<HttpResponse<NewsListModel>>()
 
-    fun getNewsByPage(
-        channel: String,
-        start: Int,
-        onLoading: () -> Unit,
-        onSuccess: (NewsListModel) -> Unit,
-        onFailed: (String) -> Unit
-    ) = launch({
-        onLoading()
+    fun getNewsByPage(channel: String, start: Int) = launch({
+        newsListData.value = HttpResponse.Loading()
         val response = RetrofitServiceManager.getNewsByPage(channel, start)
         val header = response.getResponseHeader()
         when (header.first) {
-            0 -> onSuccess(unpackingResponse<NewsListModel>(response))
-            else -> onFailed(header.second)
+            0 -> newsListData.value = HttpResponse.Success(
+                unpackingResponse<NewsListModel>(response)
+            )
+
+            else -> newsListData.value = HttpResponse.Error(header.second)
         }
     }, {
-        onFailed(it.message ?: "Unknown error")
+        newsListData.value = HttpResponse.Error(it.message ?: "Unknown error")
     })
 
     private fun String.getResponseHeader(): Pair<Int, String> {
