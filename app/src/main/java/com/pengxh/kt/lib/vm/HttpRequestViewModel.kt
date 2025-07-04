@@ -8,26 +8,26 @@ import com.pengxh.kt.lib.model.NewsListModel
 import com.pengxh.kt.lib.utils.RetrofitServiceManager
 import com.pengxh.kt.lite.extensions.launch
 import com.pengxh.kt.lite.extensions.unpackingResponse
-import com.pengxh.kt.lite.utils.HttpResponse
+import com.pengxh.kt.lite.utils.HttpState
 
 class HttpRequestViewModel : ViewModel() {
 
     private val gson by lazy { Gson() }
-    val newsListData = MutableLiveData<HttpResponse<NewsListModel>>()
+    val newsListData = MutableLiveData<HttpState<NewsListModel>>()
 
     fun getNewsByPage(channel: String, start: Int) = launch({
-        newsListData.value = HttpResponse.Loading()
+        newsListData.value = HttpState.Loading
         val response = RetrofitServiceManager.getNewsByPage(channel, start)
         val header = response.getResponseHeader()
         when (header.first) {
-            0 -> newsListData.value = HttpResponse.Success(
+            0 -> newsListData.value = HttpState.Success(
                 unpackingResponse<NewsListModel>(response)
             )
 
-            else -> newsListData.value = HttpResponse.Error(header.second)
+            else -> newsListData.value = HttpState.Error(header.first, header.second)
         }
     }, {
-        newsListData.value = HttpResponse.Error(it.message ?: "Unknown error")
+        newsListData.value = HttpState.Error(0, it.message ?: "Unknown error", it)
     })
 
     private fun String.getResponseHeader(): Pair<Int, String> {
