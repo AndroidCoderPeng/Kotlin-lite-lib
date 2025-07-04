@@ -6,24 +6,14 @@ package com.pengxh.kt.lite.utils
  */
 sealed class HttpState<out T> {
     /**
-     * 默认状态
-     */
-    object Idle : HttpState<Nothing>()
-
-    /**
      * 加载中
      */
     object Loading : HttpState<Nothing>()
 
     /**
-     * 成功-带数据
+     * 成功
      */
     data class Success<T>(val body: T) : HttpState<T>()
-
-    /**
-     * 成功-不带数据
-     */
-    object EmptySuccess : HttpState<Nothing>()
 
     /**
      * 失败

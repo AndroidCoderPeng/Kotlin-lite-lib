@@ -18,16 +18,16 @@ class HttpRequestViewModel : ViewModel() {
     fun getNewsByPage(channel: String, start: Int) = launch({
         newsListData.value = HttpState.Loading
         val response = RetrofitServiceManager.getNewsByPage(channel, start)
-        val header = response.getResponseHeader()
-        when (header.first) {
+        val (code, message) = response.getResponseHeader()
+        when (code) {
             0 -> newsListData.value = HttpState.Success(
                 unpackingResponse<NewsListModel>(response)
             )
 
-            else -> newsListData.value = HttpState.Error(header.first, header.second)
+            else -> newsListData.value = HttpState.Error(code, message)
         }
     }, {
-        newsListData.value = HttpState.Error(0, it.message ?: "Unknown error", it)
+        newsListData.value = HttpState.Error(500, it.message ?: "Unknown error", it)
     })
 
     private fun String.getResponseHeader(): Pair<Int, String> {
