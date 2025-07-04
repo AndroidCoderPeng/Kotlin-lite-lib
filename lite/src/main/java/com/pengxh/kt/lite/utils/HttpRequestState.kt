@@ -1,19 +1,18 @@
 package com.pengxh.kt.lite.utils
 
 /**
- * 加载状态
- * sealed 关键字表示此类仅内部继承，密封类
+ * 网络请求状态密封类（用于关注返回值的情况）
  */
-sealed class HttpState<out T> {
+sealed class HttpRequestState<out T> {
     /**
      * 加载中
      */
-    object Loading : HttpState<Nothing>()
+    object Loading : HttpRequestState<Nothing>()
 
     /**
      * 成功
      */
-    data class Success<T>(val body: T) : HttpState<T>()
+    data class Success<T>(val body: T) : HttpRequestState<T>()
 
     /**
      * 失败
@@ -22,5 +21,5 @@ sealed class HttpState<out T> {
         val code: Int? = null,
         val message: String,
         val ex: Throwable? = null
-    ) : HttpState<Nothing>()
+    ) : HttpRequestState<Nothing>()
 }
