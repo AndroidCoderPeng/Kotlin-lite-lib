@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id('com.android.library')
     id('org.jetbrains.kotlin.android')
@@ -9,6 +11,7 @@ android {
 
     defaultConfig {
         minSdk 26
+        versionName '1.1.6'
 
         consumerProguardFiles('consumer-rules.pro')
     }
@@ -33,6 +36,17 @@ android {
         buildConfig true
         viewBinding true
     }
+
+    libraryVariants.configureEach {
+        outputs.configureEach {
+            outputFileName = "lite-lib-ktx_${getBuildDate()}_${defaultConfig.versionName}.aar"
+        }
+    }
+}
+
+static def getBuildDate() {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.CHINA)
+    return dateFormat.format(System.currentTimeMillis())
 }
 
 dependencies {
