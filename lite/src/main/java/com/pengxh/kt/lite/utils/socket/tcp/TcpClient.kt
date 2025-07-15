@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-class TcpClient(private val listener: OnTcpConnectStateListener) {
+class TcpClient(private val listener: OnStateChangedListener) {
 
     companion object {
         private const val INITIAL_IDLE_TIME = 15L
@@ -90,7 +90,7 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
                     }
 
                     override fun channelRead0(ctx: ChannelHandlerContext, msg: ByteArray?) {
-                        listener.onMessageReceived(msg)
+                        listener.onReceivedData(msg)
                     }
 
                     @Deprecated("Deprecated in Java")
@@ -174,8 +174,15 @@ class TcpClient(private val listener: OnTcpConnectStateListener) {
         channel?.close()
     }
 
-    fun sendMessage(bytes: ByteArray) {
-        if (!isRunning()) return
-        channel?.writeAndFlush(bytes)
+    fun send(msg: Any) {
+        if (!isRunning()) {
+            Log.d(kTag, "send: 通讯服务未连接")
+            return
+        }
+        when (msg) {
+            is ByteArray -> channel?.writeAndFlush(msg)
+            is String -> channel?.writeAndFlush(msg.toByteArray(Charsets.UTF_8))
+            else -> throw IllegalArgumentException("msg must be ByteArray or String")
+        }
     }
 }

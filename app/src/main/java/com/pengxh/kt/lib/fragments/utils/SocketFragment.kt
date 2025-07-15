@@ -11,7 +11,7 @@ import com.pengxh.kt.lib.model.MessageModel
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.timestampToTime
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
-import com.pengxh.kt.lite.utils.socket.tcp.OnTcpConnectStateListener
+import com.pengxh.kt.lite.utils.socket.tcp.OnStateChangedListener
 import com.pengxh.kt.lite.utils.socket.tcp.TcpClient
 import com.pengxh.kt.lite.utils.socket.udp.OnUdpMessageListener
 import com.pengxh.kt.lite.utils.socket.udp.UdpClient
@@ -21,7 +21,7 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okio.ByteString
 
-class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpConnectStateListener,
+class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnStateChangedListener,
     OnUdpMessageListener, OnWebSocketListener, Handler.Callback {
 
     private val kTag = "SocketFragment"
@@ -91,7 +91,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
             tcpMessageArray.add(
                 MessageModel(System.currentTimeMillis().timestampToTime(), message.toString())
             )
-            tcpClient.sendMessage(message.toString().toByteArray())
+            tcpClient.send(message.toString().toByteArray())
             weakReferenceHandler.sendEmptyMessage(0)
         }
 
@@ -125,7 +125,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnTcpCo
     /**
      * 处理接收消息
      * */
-    override fun onMessageReceived(bytes: ByteArray?) {
+    override fun onReceivedData(bytes: ByteArray?) {
         tcpMessageArray.add(
             MessageModel(System.currentTimeMillis().timestampToTime(), bytes.contentToString())
         )

@@ -1,8 +1,8 @@
 package com.pengxh.kt.lite.utils.socket.tcp
 
-interface OnTcpConnectStateListener {
+interface OnStateChangedListener {
     fun onConnected()
     fun onDisconnected()
     fun onConnectFailed()
-    fun onMessageReceived(bytes: ByteArray?)
+    fun onReceivedData(bytes: ByteArray?)
 }
