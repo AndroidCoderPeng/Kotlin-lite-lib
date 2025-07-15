@@ -22,7 +22,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.net.InetSocketAddress
 
-class UdpClient(private val listener: OnUdpMessageListener) {
+class UdpClient(private val listener: OnDataReceivedListener) {
 
     companion object {
         // 默认缓冲区大小
@@ -45,7 +45,7 @@ class UdpClient(private val listener: OnUdpMessageListener) {
                         val byteArray = ByteArray(byteBuf.readableBytes()).apply {
                             byteBuf.readBytes(this)
                         }
-                        listener.onReceivedUdpMessage(byteArray)
+                        listener.onReceivedData(byteArray)
                     }
                 })
             }
@@ -84,19 +84,26 @@ class UdpClient(private val listener: OnUdpMessageListener) {
         }
     }
 
-    fun sendMessage(value: String) {
-        val byteBuf = Unpooled.copiedBuffer(value, CharsetUtil.UTF_8)
+    fun send(msg: Any) {
+        when (msg) {
+            is ByteArray -> {
+                val byteBuf = Unpooled.copiedBuffer(msg)
+                writeAndFlush(byteBuf)
+            }
+
+            is String -> {
+                val byteBuf = Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8)
+                writeAndFlush(byteBuf)
+            }
+
+            is ByteBuf -> writeAndFlush(msg)
+
+            else -> throw IllegalArgumentException("Unsupported message type: ${msg.javaClass.name}")
+        }
+    }
+
+    private fun writeAndFlush(byteBuf: ByteBuf) {
         val datagramPacket = DatagramPacket(byteBuf, socketAddress)
-        channel?.writeAndFlush(datagramPacket)
-    }
-
-    fun sendMessage(value: ByteArray) {
-        val datagramPacket = DatagramPacket(Unpooled.copiedBuffer(value), socketAddress)
-        channel?.writeAndFlush(datagramPacket)
-    }
-
-    fun sendMessage(value: ByteBuf) {
-        val datagramPacket = DatagramPacket(value, socketAddress)
         channel?.writeAndFlush(datagramPacket)
     }
 

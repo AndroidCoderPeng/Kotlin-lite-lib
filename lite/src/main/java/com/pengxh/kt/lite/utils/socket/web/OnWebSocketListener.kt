@@ -7,14 +7,13 @@ import okio.ByteString
 interface OnWebSocketListener {
     fun onOpen(webSocket: WebSocket, response: Response)
 
-    fun onMessageResponse(webSocket: WebSocket, message: String)
+    fun onDataReceived(webSocket: WebSocket, message: String)
 
-    fun onMessageResponse(webSocket: WebSocket, bytes: ByteString)
+    fun onDataReceived(webSocket: WebSocket, bytes: ByteString)
 
-    fun onServerDisconnected(webSocket: WebSocket, code: Int, reason: String)
+    fun onDisconnected(webSocket: WebSocket, code: Int, reason: String)
 
-    fun onClientDisconnected(webSocket: WebSocket, code: Int, reason: String)
+    fun onFailure(webSocket: WebSocket, t: Throwable)
 
-    fun onFailure(webSocket: WebSocket?, t: Throwable? = null)
     fun onMaxRetryReached()
 }

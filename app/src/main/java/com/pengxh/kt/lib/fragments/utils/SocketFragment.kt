@@ -13,7 +13,7 @@ import com.pengxh.kt.lite.extensions.timestampToTime
 import com.pengxh.kt.lite.utils.WeakReferenceHandler
 import com.pengxh.kt.lite.utils.socket.tcp.OnStateChangedListener
 import com.pengxh.kt.lite.utils.socket.tcp.TcpClient
-import com.pengxh.kt.lite.utils.socket.udp.OnUdpMessageListener
+import com.pengxh.kt.lite.utils.socket.udp.OnDataReceivedListener
 import com.pengxh.kt.lite.utils.socket.udp.UdpClient
 import com.pengxh.kt.lite.utils.socket.web.OnWebSocketListener
 import com.pengxh.kt.lite.utils.socket.web.WebSocketClient
@@ -22,10 +22,9 @@ import okhttp3.WebSocket
 import okio.ByteString
 
 class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnStateChangedListener,
-    OnUdpMessageListener, OnWebSocketListener, Handler.Callback {
+    OnWebSocketListener, Handler.Callback {
 
     private val kTag = "SocketFragment"
-    private val udpClient by lazy { UdpClient(this) }
     private val tcpClient by lazy { TcpClient(this) }
     private val webSocketClient by lazy { WebSocketClient(this) }
     private val tcpMessageArray: MutableList<MessageModel> = ArrayList()
@@ -33,6 +32,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnState
     private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
     private lateinit var tcpAdapter: MessageRecyclerAdapter
     private lateinit var udpAdapter: MessageRecyclerAdapter
+    private lateinit var udpClient: UdpClient
     private var type = 0
 
     override fun initViewBinding(
@@ -59,6 +59,17 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnState
         }
         val address = text.toString()
         val strings = address.split(":")
+        udpClient = UdpClient(object : OnDataReceivedListener {
+            override fun onReceivedData(data: ByteArray) {
+                udpMessageArray.add(
+                    MessageModel(
+                        System.currentTimeMillis().timestampToTime(),
+                        data.contentToString()
+                    )
+                )
+                weakReferenceHandler.sendEmptyMessage(1)
+            }
+        })
         udpClient.bind(strings[0], strings[1].toInt())
     }
 
@@ -105,7 +116,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnState
             udpMessageArray.add(
                 MessageModel(System.currentTimeMillis().timestampToTime(), message.toString())
             )
-            udpClient.sendMessage(message.toString())
+            udpClient.send(message.toString())
             weakReferenceHandler.sendEmptyMessage(1)
         }
 
@@ -122,16 +133,6 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnState
         }
     }
 
-    /**
-     * 处理接收消息
-     * */
-    override fun onReceivedData(bytes: ByteArray?) {
-        tcpMessageArray.add(
-            MessageModel(System.currentTimeMillis().timestampToTime(), bytes.contentToString())
-        )
-        weakReferenceHandler.sendEmptyMessage(0)
-    }
-
     override fun onConnected() {
         requireActivity().runOnUiThread { binding.socketButton.text = "断开" }
     }
@@ -144,23 +145,23 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnState
         requireActivity().runOnUiThread { binding.socketButton.text = "连接" }
     }
 
-    override fun onReceivedUdpMessage(data: ByteArray) {
-        udpMessageArray.add(
-            MessageModel(
-                System.currentTimeMillis().timestampToTime(),
-                data.contentToString()
-            )
+    /**
+     * 处理接收消息
+     * */
+    override fun onReceivedData(bytes: ByteArray?) {
+        tcpMessageArray.add(
+            MessageModel(System.currentTimeMillis().timestampToTime(), bytes.contentToString())
         )
-        weakReferenceHandler.sendEmptyMessage(1)
+        weakReferenceHandler.sendEmptyMessage(0)
     }
 
     override fun handleMessage(msg: Message): Boolean {
         if (msg.what == 0) {
             binding.tcpRecyclerView.scrollToPosition(tcpMessageArray.size - 1)
-            tcpAdapter.notifyDataSetChanged()
+            tcpAdapter.notifyItemRangeChanged(0, tcpMessageArray.size)
         } else if (msg.what == 1) {
             binding.udpRecyclerView.scrollToPosition(udpMessageArray.size - 1)
-            udpAdapter.notifyDataSetChanged()
+            udpAdapter.notifyItemRangeChanged(0, tcpMessageArray.size)
         }
         return true
     }
@@ -171,27 +172,21 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnState
         }
     }
 
-    override fun onMessageResponse(webSocket: WebSocket, message: String) {
+    override fun onDataReceived(webSocket: WebSocket, message: String) {
 
     }
 
-    override fun onMessageResponse(webSocket: WebSocket, bytes: ByteString) {
+    override fun onDataReceived(webSocket: WebSocket, bytes: ByteString) {
 
     }
 
-    override fun onServerDisconnected(webSocket: WebSocket, code: Int, reason: String) {
+    override fun onDisconnected(webSocket: WebSocket, code: Int, reason: String) {
         requireActivity().runOnUiThread {
             binding.connectWebsocketButton.text = "连接"
         }
     }
 
-    override fun onClientDisconnected(webSocket: WebSocket, code: Int, reason: String) {
-        requireActivity().runOnUiThread {
-            binding.connectWebsocketButton.text = "连接"
-        }
-    }
-
-    override fun onFailure(webSocket: WebSocket?, t: Throwable?) {
+    override fun onFailure(webSocket: WebSocket, t: Throwable) {
 
     }
 

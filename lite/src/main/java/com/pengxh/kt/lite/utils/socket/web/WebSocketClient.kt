@@ -22,8 +22,6 @@ class WebSocketClient(private val listener: OnWebSocketListener) {
     companion object {
         private const val MAX_RETRY_TIMES = 10
         private const val RECONNECT_DELAY_SECONDS = 15L
-        private const val NORMAL_CLOSE = 1000
-        private const val SERVER_CLOSE = 1001
     }
 
     private val kTag = "WebSocketClient"
@@ -67,53 +65,44 @@ class WebSocketClient(private val listener: OnWebSocketListener) {
             return
         }
 
-        try {
-            Log.d(kTag, "开始连接: $url")
-            val request = Request.Builder().url(url).build()
-            webSocket = httpClient.newWebSocket(request, object : WebSocketListener() {
-                override fun onOpen(webSocket: WebSocket, response: Response) {
-                    super.onOpen(webSocket, response)
-                    listener.onOpen(webSocket, response)
-                    isRunning.set(true)
-                    retryTimes.set(0)
-                }
+        Log.d(kTag, "开始连接: $url")
+        val request = Request.Builder().url(url).build()
+        webSocket = httpClient.newWebSocket(request, object : WebSocketListener() {
+            override fun onOpen(webSocket: WebSocket, response: Response) {
+                super.onOpen(webSocket, response)
+                listener.onOpen(webSocket, response)
+                isRunning.set(true)
+                retryTimes.set(0)
+            }
 
-                override fun onMessage(webSocket: WebSocket, text: String) {
-                    super.onMessage(webSocket, text)
-                    listener.onMessageResponse(webSocket, text)
-                }
+            override fun onMessage(webSocket: WebSocket, text: String) {
+                super.onMessage(webSocket, text)
+                listener.onDataReceived(webSocket, text)
+            }
 
-                override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-                    super.onMessage(webSocket, bytes)
-                    listener.onMessageResponse(webSocket, bytes)
-                }
+            override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+                super.onMessage(webSocket, bytes)
+                listener.onDataReceived(webSocket, bytes)
+            }
 
-                override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-                    super.onClosing(webSocket, code, reason)
-                    listener.onServerDisconnected(webSocket, code, reason)
-                    if (code == SERVER_CLOSE) {
-                        Log.d(kTag, "$code, $reason")
-                        reconnect()
-                    }
-                }
+            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+                super.onClosing(webSocket, code, reason)
+                listener.onDisconnected(webSocket, code, reason)
+            }
 
-                override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                    super.onClosed(webSocket, code, reason)
-                    Log.d(kTag, "$code, $reason")
-                    listener.onClientDisconnected(webSocket, code, reason)
-                    reconnect()
-                }
+            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                super.onClosed(webSocket, code, reason)
+                Log.d(kTag, "$code, $reason")
+                listener.onDisconnected(webSocket, code, reason)
+                reconnect()
+            }
 
-                override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                    super.onFailure(webSocket, t, response)
-                    listener.onFailure(webSocket)
-                    reconnect()
-                }
-            })
-        } catch (e: Exception) {
-            Log.e(kTag, "WebSocket 连接异常", e)
-            listener.onFailure(null)
-        }
+            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                super.onFailure(webSocket, t, response)
+                listener.onFailure(webSocket, t)
+                reconnect()
+            }
+        })
     }
 
     private fun reconnect() {
@@ -134,10 +123,13 @@ class WebSocketClient(private val listener: OnWebSocketListener) {
         }
     }
 
+    /**
+     * 1000 indicates a normal closure, meaning that the purpose for which the connection was established has been fulfilled
+     * */
     fun stop() {
         Log.d(kTag, "$url 断开连接")
         if (::webSocket.isInitialized) {
-            webSocket.close(NORMAL_CLOSE, "Application Request Close")
+            webSocket.close(1000, "Application Request Close")
         }
         isRunning.set(false)
     }
