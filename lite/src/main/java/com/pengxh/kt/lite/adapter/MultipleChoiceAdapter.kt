@@ -58,11 +58,12 @@ abstract class MultipleChoiceAdapter<T>(
      * */
     fun loadMore(newRows: MutableList<T>) {
         if (newRows.isEmpty()) {
+            Log.d(kTag, "loadMore: newRows isEmpty")
             return
         }
-        val startPosition = this.dataRows.size
+        val startPosition = dataRows.size
         val newSize = newRows.size
-        this.dataRows.addAll(newRows)
+        dataRows.addAll(newRows)
         notifyItemRangeInserted(startPosition, newSize)
     }
 
