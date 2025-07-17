@@ -5,6 +5,10 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * RecyclerView普通列表适配器
@@ -36,14 +40,16 @@ abstract class NormalRecyclerAdapter<T>(
     fun refresh(newRows: MutableList<T>, itemComparator: ItemComparator<T>? = null) {
         if (newRows.isEmpty()) return
         if (itemComparator != null) {
-            val diffCallback = object : DiffUtil.Callback() {
-                override fun getOldListSize() = dataRows.size
+            val oldDataSnapshot = ArrayList(dataRows) // 旧数据副本
+            val newDataSnapshot = ArrayList(newRows)  // 新数据副本
 
-                override fun getNewListSize() = newRows.size
+            val diffCallback = object : DiffUtil.Callback() {
+                override fun getOldListSize(): Int = oldDataSnapshot.size
+                override fun getNewListSize(): Int = newDataSnapshot.size
 
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                     return itemComparator.areItemsTheSame(
-                        dataRows[oldItemPosition], newRows[newItemPosition]
+                        oldDataSnapshot[oldItemPosition], newDataSnapshot[newItemPosition]
                     )
                 }
 
@@ -51,16 +57,22 @@ abstract class NormalRecyclerAdapter<T>(
                     oldItemPosition: Int, newItemPosition: Int
                 ): Boolean {
                     return itemComparator.areContentsTheSame(
-                        dataRows[oldItemPosition], newRows[newItemPosition]
+                        oldDataSnapshot[oldItemPosition], newDataSnapshot[newItemPosition]
                     )
                 }
             }
 
-            // 异步计算差异，避免阻塞主线程
-            DiffUtil.calculateDiff(diffCallback, true).also { result ->
-                dataRows.clear()
-                dataRows.addAll(newRows)
-                result.dispatchUpdatesTo(this)
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val result = DiffUtil.calculateDiff(diffCallback)
+                    withContext(Dispatchers.Main) {
+                        result.dispatchUpdatesTo(this@NormalRecyclerAdapter)
+                        dataRows.clear()
+                        dataRows.addAll(newDataSnapshot)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         } else {
             dataRows.clear()
