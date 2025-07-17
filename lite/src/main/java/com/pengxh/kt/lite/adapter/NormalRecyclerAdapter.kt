@@ -1,5 +1,6 @@
 package com.pengxh.kt.lite.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -38,7 +39,10 @@ abstract class NormalRecyclerAdapter<T>(
      * 刷新列表，局部刷新
      * */
     fun refresh(newRows: MutableList<T>, itemComparator: ItemComparator<T>? = null) {
-        if (newRows.isEmpty()) return
+        if (newRows.isEmpty()) {
+            Log.d(kTag, "refresh: newRows isEmpty")
+            return
+        }
 
         val oldSize = dataRows.size
 
@@ -95,11 +99,12 @@ abstract class NormalRecyclerAdapter<T>(
      * */
     fun loadMore(newRows: MutableList<T>) {
         if (newRows.isEmpty()) {
+            Log.d(kTag, "loadMore: newRows isEmpty")
             return
         }
-        val startPosition = this.dataRows.size
+        val startPosition = dataRows.size
         val newSize = newRows.size
-        this.dataRows.addAll(newRows)
+        dataRows.addAll(newRows)
         notifyItemRangeInserted(startPosition, newSize)
     }
 

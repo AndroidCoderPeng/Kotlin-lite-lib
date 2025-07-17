@@ -19,8 +19,10 @@ import kotlinx.coroutines.withContext
 
 class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRecyclerBinding>() {
 
+    data class ItemBean(var id: String, var title: String)
+
     private val kTag = "NormalRecyclerAdapterFragment"
-    private lateinit var normalAdapter: NormalRecyclerAdapter<String>
+    private lateinit var normalAdapter: NormalRecyclerAdapter<ItemBean>
     private var isRefresh = false
     private var isLoadMore = false
 
@@ -36,13 +38,18 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRe
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val items = ArrayList<String>()
+        val items = ArrayList<ItemBean>()
         for (i in 1..15) {
-            items.add("普通列表-${i}-${System.currentTimeMillis().timestampToCompleteDate()}")
+            items.add(
+                ItemBean(
+                    i.toString(),
+                    "普通列表-${i}-${System.currentTimeMillis().timestampToCompleteDate()}"
+                )
+            )
         }
-        normalAdapter = object : NormalRecyclerAdapter<String>(R.layout.item_normal_rv_l, items) {
-            override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
-                viewHolder.setText(R.id.textView, item)
+        normalAdapter = object : NormalRecyclerAdapter<ItemBean>(R.layout.item_normal_rv_l, items) {
+            override fun convertView(viewHolder: ViewHolder, position: Int, item: ItemBean) {
+                viewHolder.setText(R.id.textView, item.title)
             }
         }
         binding.recyclerView.addItemDecoration(
@@ -50,9 +57,9 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRe
         )
         binding.recyclerView.adapter = normalAdapter
         normalAdapter.setOnItemClickedListener(object :
-            NormalRecyclerAdapter.OnItemClickedListener<String> {
-            override fun onItemClicked(position: Int, item: String) {
-                item.show(requireContext())
+            NormalRecyclerAdapter.OnItemClickedListener<ItemBean> {
+            override fun onItemClicked(position: Int, item: ItemBean) {
+                item.title.show(requireContext())
             }
         })
     }
@@ -61,13 +68,13 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRe
 
     }
 
-    private val itemComparator = object : NormalRecyclerAdapter.ItemComparator<String> {
-        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
+    private val itemComparator = object : NormalRecyclerAdapter.ItemComparator<ItemBean> {
+        override fun areItemsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
+            return oldItem.id == newItem.id && oldItem.title == newItem.title
         }
 
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
+        override fun areContentsTheSame(oldItem: ItemBean, newItem: ItemBean): Boolean {
+            return oldItem.title == newItem.title
         }
     }
 
@@ -76,12 +83,15 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRe
             isRefresh = true
             lifecycleScope.launch(Dispatchers.Main) {
                 val result = withContext(Dispatchers.IO) {
-                    val items = ArrayList<String>()
+                    val items = ArrayList<ItemBean>()
                     for (i in 1..15) {
                         items.add(
-                            "刷新产生的数据-${i}-${
-                                System.currentTimeMillis().timestampToCompleteDate()
-                            }"
+                            ItemBean(
+                                i.toString(),
+                                "刷新的数据-${i}-${
+                                    System.currentTimeMillis().timestampToCompleteDate()
+                                }"
+                            )
                         )
                     }
                     return@withContext items
@@ -89,13 +99,32 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRe
                 delay(1500)
                 binding.refreshView.finishRefresh()
                 isRefresh = false
-                normalAdapter.refresh(result)
-//                normalAdapter.refresh(result, itemComparator)
+                normalAdapter.refresh(result, itemComparator)
             }
         }
 
         binding.refreshView.setOnLoadMoreListener {
             isLoadMore = true
+            lifecycleScope.launch(Dispatchers.Main) {
+                val result = withContext(Dispatchers.IO) {
+                    val items = ArrayList<ItemBean>()
+                    for (i in 1..5) {
+                        items.add(
+                            ItemBean(
+                                i.toString(),
+                                "加载的数据-${i}-${
+                                    System.currentTimeMillis().timestampToCompleteDate()
+                                }"
+                            )
+                        )
+                    }
+                    return@withContext items
+                }
+                delay(1500)
+                binding.refreshView.finishLoadMore()
+                isLoadMore = false
+                normalAdapter.loadMore(result)
+            }
         }
     }
 }
