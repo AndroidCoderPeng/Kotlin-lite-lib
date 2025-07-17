@@ -3,6 +3,7 @@ package com.pengxh.kt.lib.fragments.adapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentAdapterNormalRecyclerBinding
@@ -11,17 +12,17 @@ import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.extensions.timestampToCompleteDate
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRecyclerBinding>() {
 
     private val kTag = "NormalRecyclerAdapterFragment"
-    private val items: MutableList<String> = ArrayList()
-
-    init {
-        for (i in 1..20) {
-            items.add("普通列表-${System.currentTimeMillis().timestampToCompleteDate()}")
-        }
-    }
+    private lateinit var normalAdapter: NormalRecyclerAdapter<String>
+    private var isRefresh = false
+    private var isLoadMore = false
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -35,7 +36,11 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRe
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val normalAdapter = object : NormalRecyclerAdapter<String>(R.layout.item_normal_rv_l, items) {
+        val items = ArrayList<String>()
+        for (i in 1..15) {
+            items.add("普通列表-${i}-${System.currentTimeMillis().timestampToCompleteDate()}")
+        }
+        normalAdapter = object : NormalRecyclerAdapter<String>(R.layout.item_normal_rv_l, items) {
             override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
                 viewHolder.setText(R.id.textView, item)
             }
@@ -56,7 +61,41 @@ class NormalRecyclerAdapterFragment : KotlinBaseFragment<FragmentAdapterNormalRe
 
     }
 
-    override fun initEvent() {
+    private val itemComparator = object : NormalRecyclerAdapter.ItemComparator<String> {
+        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
+        }
 
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    override fun initEvent() {
+        binding.refreshView.setOnRefreshListener {
+            isRefresh = true
+            lifecycleScope.launch(Dispatchers.Main) {
+                val result = withContext(Dispatchers.IO) {
+                    val items = ArrayList<String>()
+                    for (i in 1..15) {
+                        items.add(
+                            "刷新产生的数据-${i}-${
+                                System.currentTimeMillis().timestampToCompleteDate()
+                            }"
+                        )
+                    }
+                    return@withContext items
+                }
+                delay(1500)
+                binding.refreshView.finishRefresh()
+                isRefresh = false
+                normalAdapter.refresh(result)
+//                normalAdapter.refresh(result, itemComparator)
+            }
+        }
+
+        binding.refreshView.setOnLoadMoreListener {
+            isLoadMore = true
+        }
     }
 }

@@ -39,6 +39,9 @@ abstract class NormalRecyclerAdapter<T>(
      * */
     fun refresh(newRows: MutableList<T>, itemComparator: ItemComparator<T>? = null) {
         if (newRows.isEmpty()) return
+
+        val oldSize = dataRows.size
+
         if (itemComparator != null) {
             val oldDataSnapshot = ArrayList(dataRows) // 旧数据副本
             val newDataSnapshot = ArrayList(newRows)  // 新数据副本
@@ -66,18 +69,24 @@ abstract class NormalRecyclerAdapter<T>(
                 try {
                     val result = DiffUtil.calculateDiff(diffCallback)
                     withContext(Dispatchers.Main) {
-                        result.dispatchUpdatesTo(this@NormalRecyclerAdapter)
                         dataRows.clear()
                         dataRows.addAll(newDataSnapshot)
+                        result.dispatchUpdatesTo(this@NormalRecyclerAdapter)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         } else {
+            val newSize = newRows.size
             dataRows.clear()
             dataRows.addAll(newRows)
-            notifyItemRangeChanged(0, dataRows.size)
+
+            // 新数据比旧数据少，需要通知删除部分 item ，否则会越界
+            if (newSize < oldSize) {
+                notifyItemRangeRemoved(newSize, oldSize - newSize)
+            }
+            notifyItemRangeChanged(0, newSize)
         }
     }
 
