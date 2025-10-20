@@ -14,8 +14,8 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.pengxh.kt.lib.databinding.FragmentUtilsWaterMarkerBinding
 import com.pengxh.kt.lib.utils.GlideLoadEngine
 import com.pengxh.kt.lib.view.BigImageActivity
-import com.pengxh.kt.lite.annotations.WaterMarkPosition
 import com.pengxh.kt.lite.base.KotlinBaseFragment
+import com.pengxh.kt.lite.enums.WaterMarkPosition
 import com.pengxh.kt.lite.extensions.createCompressImageDir
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.navigatePageTo

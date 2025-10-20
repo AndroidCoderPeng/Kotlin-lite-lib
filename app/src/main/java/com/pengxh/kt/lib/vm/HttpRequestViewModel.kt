@@ -7,7 +7,7 @@ import com.google.gson.JsonObject
 import com.pengxh.kt.lib.model.NewsListModel
 import com.pengxh.kt.lib.utils.RetrofitServiceManager
 import com.pengxh.kt.lite.extensions.launch
-import com.pengxh.kt.lite.extensions.unpackingResponse
+import com.pengxh.kt.lite.extensions.unpacking
 import com.pengxh.kt.lite.utils.HttpResponseState
 
 class HttpRequestViewModel : ViewModel() {
@@ -21,7 +21,7 @@ class HttpRequestViewModel : ViewModel() {
         val (code, message) = response.getResponseHeader()
         when (code) {
             0 -> newsListData.value = HttpResponseState.Success(
-                unpackingResponse<NewsListModel>(response)
+                response.unpacking<NewsListModel>()
             )
 
             else -> newsListData.value = HttpResponseState.Error(code, message)
@@ -35,8 +35,8 @@ class HttpRequestViewModel : ViewModel() {
             return Pair(404, "Invalid Response")
         }
         val jsonObject = gson.fromJson(this, JsonObject::class.java)
-        val code = jsonObject.get("code").asInt
-        val message = jsonObject.get("message").asString
+        val code = jsonObject.get("status").asInt
+        val message = jsonObject.get("msg").asString
         return Pair(code, message)
     }
 }

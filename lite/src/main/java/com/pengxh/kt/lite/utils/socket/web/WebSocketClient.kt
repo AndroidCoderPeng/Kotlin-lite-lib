@@ -49,8 +49,11 @@ class WebSocketClient(private val listener: OnWebSocketListener) {
         connect()
     }
 
-    fun start() {
-        connect()
+    fun start(url: String, force: Boolean) {
+        if (force) {
+            isRunning.set(false)
+        }
+        start(url)
     }
 
     @Synchronized

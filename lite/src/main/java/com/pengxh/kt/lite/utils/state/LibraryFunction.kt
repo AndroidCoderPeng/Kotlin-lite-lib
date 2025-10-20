@@ -1,5 +1,7 @@
 package com.pengxh.kt.lite.utils.state
 
+import com.pengxh.kt.lite.enums.HttpRequestState
+
 /**
  * 状态回调内联函数
  * */

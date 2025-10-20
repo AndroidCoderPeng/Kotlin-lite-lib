@@ -59,8 +59,11 @@ class TcpClient(private val listener: OnStateChangedListener) {
         connect()
     }
 
-    fun start() {
-        connect()
+    fun start(host: String, port: Int, force: Boolean) {
+        if (force) {
+            isRunning.set(false)
+        }
+        start(host, port)
     }
 
     private inner class SimpleChannelInitializer : ChannelInitializer<SocketChannel>() {

@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.text.TextPaint
-import com.pengxh.kt.lite.annotations.WaterMarkPosition
+import com.pengxh.kt.lite.enums.WaterMarkPosition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -76,7 +76,7 @@ class WaterMarkerEngine(builder: Builder) {
         /**
          * 设置水印文字位置
          * */
-        fun setMarkerPosition(@WaterMarkPosition position: Int): Builder {
+        fun setMarkerPosition(position: WaterMarkPosition): Builder {
             this.position = position
             return this
         }

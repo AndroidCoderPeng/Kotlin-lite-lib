@@ -1,7 +1,11 @@
 package com.pengxh.kt.lite.utils
 
-import android.os.Handler
-import android.os.Message
+import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -11,10 +15,14 @@ import java.io.File
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 
-class FileDownloadManager(builder: Builder) : Handler.Callback {
+class FileDownloadManager(builder: Builder) : CoroutineScope {
 
+    private val kTag = "FileDownloadManager"
     private val httpClient by lazy { OkHttpClient() }
-    private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
+
+    private val job = SupervisorJob()
+
+    override val coroutineContext = Dispatchers.Main + SupervisorJob()
 
     class Builder {
         lateinit var url: String
@@ -91,99 +99,67 @@ class FileDownloadManager(builder: Builder) : Handler.Callback {
         //异步下载文件
         newCall.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                weakReferenceHandler.apply {
-                    val message = obtainMessage()
-                    message.what = downloadFailedCode
-                    message.obj = e
-                    sendMessage(message)
+                launch {
+                    listener.onDownloadFailed(e)
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val body = response.body
-                if (body == null) {
-                    weakReferenceHandler.apply {
-                        val message = obtainMessage()
-                        message.what = downloadFailedCode
-                        message.obj = IOException("Response body is null")
-                        sendMessage(message)
-                    }
-                    throw IOException("Response body is null")
-                } else {
-                    val inputStream = body.byteStream()
-                    val fileSize = body.contentLength()
-                    if (fileSize <= 0) {
-                        weakReferenceHandler.apply {
-                            val message = obtainMessage()
-                            message.what = downloadFailedCode
-                            message.obj = IllegalArgumentException("Invalid file size")
-                            sendMessage(message)
+                launch(Dispatchers.IO) {
+                    val body = response.body
+                    if (body == null) {
+                        withContext(Dispatchers.Main) {
+                            listener.onDownloadFailed(IOException("Response body is null"))
                         }
-                        throw IllegalArgumentException("Invalid file size")
-                    }
-                    weakReferenceHandler.apply {
-                        val message = obtainMessage()
-                        message.what = downloadStartCode
-                        message.obj = fileSize
-                        sendMessage(message)
-                    }
+                        throw IOException("Response body is null")
+                    } else {
+                        val inputStream = body.byteStream()
+                        val fileSize = body.contentLength()
+                        if (fileSize <= 0) {
+                            withContext(Dispatchers.Main) {
+                                listener.onDownloadFailed(IllegalArgumentException("Invalid file size"))
+                            }
+                            throw IllegalArgumentException("Invalid file size")
+                        }
+                        withContext(Dispatchers.Main) {
+                            Log.d(kTag, "onDownloadStart: fileSize: $fileSize")
+                            listener.onDownloadStart(fileSize)
+                        }
 
-                    val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
-                    file.outputStream().use { fos ->
-                        val buffer = ByteArray(2048)
-                        var sum = 0L
-                        var read: Int
-                        while (inputStream.read(buffer).also { read = it } != -1) {
-                            fos.write(buffer, 0, read)
-                            sum += read.toLong()
-                            weakReferenceHandler.apply {
-                                val message = obtainMessage()
-                                message.what = progressChangedCode
-                                message.obj = sum
-                                sendMessage(message)
+                        // 将文件大小转为单精度，便于计算百分比
+                        val tempSize = fileSize.toFloat()
+                        val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
+                        file.outputStream().use { fos ->
+                            val buffer = ByteArray(2048)
+                            var sum = 0L
+                            var read: Int
+                            while (inputStream.read(buffer).also { read = it } != -1) {
+                                fos.write(buffer, 0, read)
+                                sum += read
+                                val progress = sum / tempSize
+                                withContext(Dispatchers.Main) {
+                                    Log.d(kTag, "onProgressChanged: download progress: $progress")
+                                    listener.onProgressChanged(progress)
+                                }
                             }
                         }
-                    }
-                    weakReferenceHandler.apply {
-                        val message = obtainMessage()
-                        message.what = downloadEndCode
-                        message.obj = file
-                        sendMessage(message)
+                        withContext(Dispatchers.Main) {
+                            Log.d(kTag, "onDownloadEnd: file ${file.absolutePath}")
+                            listener.onDownloadEnd(file)
+                        }
                     }
                 }
             }
         })
     }
 
-    private val downloadStartCode = 1
-    private val progressChangedCode = 2
-    private val downloadEndCode = 3
-    private val downloadFailedCode = 4
-
-    override fun handleMessage(msg: Message): Boolean {
-        when (msg.what) {
-            downloadStartCode -> {
-                listener.onDownloadStart(msg.obj as Long)
-            }
-
-            progressChangedCode -> {
-                listener.onProgressChanged(msg.obj as Long)
-            }
-
-            downloadEndCode -> {
-                listener.onDownloadEnd(msg.obj as File)
-            }
-
-            downloadFailedCode -> {
-                listener.onDownloadFailed(msg.obj as Exception)
-            }
-        }
-        return true
+    fun cancel() {
+        job.cancel()
     }
 
     interface OnFileDownloadListener {
         fun onDownloadStart(total: Long)
-        fun onProgressChanged(progress: Long)
+        fun onProgressChanged(progress: Float)
         fun onDownloadEnd(file: File)
         fun onDownloadFailed(t: Throwable)
     }

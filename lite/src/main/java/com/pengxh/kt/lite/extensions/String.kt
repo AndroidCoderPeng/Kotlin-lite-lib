@@ -204,3 +204,7 @@ val gson by lazy { Gson() }
 inline fun <reified T> unpackingResponse(response: String): T {
     return gson.fromJson(response, T::class.java)
 }
+
+inline fun <reified T> String.unpacking(): T {
+    return unpackingResponse(this)
+}

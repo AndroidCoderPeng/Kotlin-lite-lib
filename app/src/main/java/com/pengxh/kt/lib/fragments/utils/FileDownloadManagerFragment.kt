@@ -39,18 +39,17 @@ class FileDownloadManagerFragment : KotlinBaseFragment<FragmentUtilsFileDownload
                 return@setOnClickListener
             }
 
-            var totalSize = 0L
             FileDownloadManager.Builder()
                 .setDownloadFileSource(text.toString())
                 .setFileSuffix(".apk")
                 .setFileSaveDirectory(requireContext().createDownloadFileDir())
                 .setOnFileDownloadListener(object : FileDownloadManager.OnFileDownloadListener {
                     override fun onDownloadStart(total: Long) {
-                        totalSize = total
+
                     }
 
-                    override fun onProgressChanged(progress: Long) {
-                        binding.progressBar.progress = (progress / totalSize).toInt()
+                    override fun onProgressChanged(progress: Float) {
+                        binding.progressBar.progress = (progress * 100).toInt()
                         binding.startDownloadButton.isEnabled = false
                     }
 
