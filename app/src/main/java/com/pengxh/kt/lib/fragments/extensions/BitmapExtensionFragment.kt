@@ -1,6 +1,7 @@
 package com.pengxh.kt.lib.fragments.extensions
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
@@ -8,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
+import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentExtensionBitmapBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.createRoundDrawable
@@ -28,8 +29,6 @@ import java.util.Locale
 
 class BitmapExtensionFragment : KotlinBaseFragment<FragmentExtensionBitmapBinding>() {
 
-    private val imageUrl =
-        "https://p3-search.byteimg.com/obj/labis/454148a01600dc78269a68b08d440ede"
     private lateinit var originalBitmap: Bitmap
     private lateinit var base64File: File
 
@@ -53,11 +52,7 @@ class BitmapExtensionFragment : KotlinBaseFragment<FragmentExtensionBitmapBindin
 
         lifecycleScope.launch(Dispatchers.Main) {
             originalBitmap = withContext(Dispatchers.IO) {
-                Glide.with(requireContext())
-                    .asBitmap()
-                    .load(imageUrl)
-                    .submit()
-                    .get()
+                BitmapFactory.decodeResource(resources, R.mipmap.test)
             }
             binding.originalImageView.setImageBitmap(originalBitmap)
         }
