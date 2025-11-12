@@ -190,10 +190,6 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnState
 
     }
 
-    override fun onMaxRetryReached() {
-
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         tcpClient.stop(false)
