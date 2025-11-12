@@ -62,6 +62,7 @@ class TcpClient(private val listener: OnStateChangedListener) {
     fun start(host: String, port: Int, force: Boolean) {
         if (force) {
             isRunning.set(false)
+            channel?.close()
         }
         start(host, port)
     }

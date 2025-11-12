@@ -53,6 +53,7 @@ class WebSocketClient(private val listener: OnWebSocketListener) {
     fun start(url: String, force: Boolean) {
         if (force) {
             isRunning.set(false)
+            webSocket.close(1000, "")
         }
         start(url)
     }
