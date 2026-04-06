@@ -21,7 +21,7 @@ fun ImageProxy.toBitmap(): Bitmap? {
         .build()
     image?.apply {
         val nv21Buffer = ImageProxyManager
-            .yuv420ThreePlanesToNV21(this.planes, width, height) ?: return@apply
+            .yuv420ThreePlanesToNV21(planes, width, height) ?: return@apply
         return ImageProxyManager.getBitmap(nv21Buffer, frameMetadata);
     }
     return null

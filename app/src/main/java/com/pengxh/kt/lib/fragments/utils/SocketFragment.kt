@@ -122,7 +122,7 @@ class SocketFragment : KotlinBaseFragment<FragmentUtilsSocketBinding>(), OnState
 
         binding.connectWebsocketButton.setOnClickListener {
             if (webSocketClient.isRunning()) {
-                webSocketClient.stop()
+                webSocketClient.stop(false)
             } else {
                 val url = binding.websocketInputView.text
                 if (url.isNullOrBlank()) {

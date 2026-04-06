@@ -2,34 +2,59 @@ package com.pengxh.kt.lite.utils
 
 import android.app.Activity
 import android.app.ProgressDialog
-import android.view.WindowManager
 
 object LoadingDialog {
-    private lateinit var loadingDialog: ProgressDialog
+    private var loadingDialog: ProgressDialog? = null
 
+    /**
+     * 显示加载对话框
+     * @param activity 上下文Activity
+     * @param message 提示消息
+     */
     fun show(activity: Activity, message: String) {
-        if (!activity.isDestroyed) {
+        dismiss() // 先关闭已有的dialog
+        if (!activity.isDestroyed && !activity.isFinishing) {
             try {
-                loadingDialog = ProgressDialog.show(activity, "", message)
-            } catch (e: WindowManager.BadTokenException) {
+                loadingDialog = ProgressDialog(activity).apply {
+                    setMessage(message)
+                    setCancelable(false)
+                    setCanceledOnTouchOutside(false)
+                    show()
+                }
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
+    /**
+     * 显示带标题的加载对话框
+     * @param activity 上下文Activity
+     * @param title 标题
+     * @param message 提示消息
+     */
     fun show(activity: Activity, title: String, message: String) {
-        if (!activity.isDestroyed) {
+        dismiss() // 先关闭已有的dialog
+        if (!activity.isDestroyed && !activity.isFinishing) {
             try {
-                loadingDialog = ProgressDialog.show(activity, title, message)
-            } catch (e: WindowManager.BadTokenException) {
+                loadingDialog = ProgressDialog(activity).apply {
+                    setTitle(title)
+                    setMessage(message)
+                    setCancelable(false)
+                    setCanceledOnTouchOutside(false)
+                    show()
+                }
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
+    /**
+     * 关闭加载对话框
+     */
     fun dismiss() {
-        if (loadingDialog.isShowing) {
-            loadingDialog.dismiss()
-        }
+        loadingDialog?.takeIf { it.isShowing }?.dismiss()
+        loadingDialog = null
     }
 }

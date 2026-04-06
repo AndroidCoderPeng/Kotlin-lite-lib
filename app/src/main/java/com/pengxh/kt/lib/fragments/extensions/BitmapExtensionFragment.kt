@@ -2,7 +2,6 @@ package com.pengxh.kt.lib.fragments.extensions
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentExtensionBitmapBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.extensions.createRoundDrawable
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.getScreenWidth
 import com.pengxh.kt.lite.extensions.rotateImage
@@ -78,13 +76,6 @@ class BitmapExtensionFragment : KotlinBaseFragment<FragmentExtensionBitmapBindin
             base64.writeToFile(base64File)
 
             binding.base64View.text = "Base64编码文件路径：${base64File.absolutePath}"
-        }
-
-        binding.createRoundImageButton.setOnClickListener {
-            val roundDrawable = originalBitmap.createRoundDrawable(
-                requireContext(), 5f, Color.RED
-            )
-            binding.roundImageView.setImageBitmap(roundDrawable)
         }
     }
 

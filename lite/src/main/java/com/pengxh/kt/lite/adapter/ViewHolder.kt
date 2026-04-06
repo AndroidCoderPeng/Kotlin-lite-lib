@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.SparseArray
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -16,7 +15,6 @@ import com.bumptech.glide.Glide
  * 通用的 ViewHolder
  * */
 class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val convertView: View = itemView
     private val views: SparseArray<View> = SparseArray()
 
     companion object {
@@ -40,7 +38,10 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun <T : View> getView(@IdRes res: Int): T {
         var view = views[res]
         if (view == null) {
-            view = convertView.findViewById(res)
+            view = itemView.findViewById(res)
+            if (view == null) {
+                throw IllegalArgumentException("No view found with id: $res")
+            }
             views.put(res, view)
         }
         return view as T
@@ -48,6 +49,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     /**
      * 提供TextView和Button设置文本简化操作
+     * 注意: Button继承自TextView,无需单独判断
      *
      * @param idRes        控件ID
      * @param charSequence 字符串
@@ -57,14 +59,13 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val view = getView<View>(idRes)
         if (view is TextView) {
             view.text = charSequence
-        } else if (view is Button) {
-            view.text = charSequence
         }
         return this
     }
 
     /**
      * 提供TextView和Button设置文本颜色简化操作
+     * 注意: Button继承自TextView,无需单独判断
      *
      * @param idRes 控件ID
      * @param color 颜色
@@ -73,8 +74,6 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun setTextColor(@IdRes idRes: Int, color: Int): ViewHolder {
         val view = getView<View>(idRes)
         if (view is TextView) {
-            view.setTextColor(color)
-        } else if (view is Button) {
             view.setTextColor(color)
         }
         return this
@@ -100,7 +99,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @param visibility 可见度
      * @return holder
      */
-    fun setVisibility(@IdRes idRes: Int, @DrawableRes visibility: Int): ViewHolder {
+    fun setVisibility(@IdRes idRes: Int, visibility: Int): ViewHolder {
         val view = getView<View>(idRes)
         view.visibility = visibility
         return this
@@ -114,7 +113,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, @DrawableRes resource: Int): ViewHolder {
-        setImageInternal(idRes) { it.setImageResource(resource) }
+        internalSetImage(idRes) { it.setImageResource(resource) }
         return this
     }
 
@@ -126,7 +125,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, bitmap: Bitmap): ViewHolder {
-        setImageInternal(idRes) { it.setImageBitmap(bitmap) }
+        internalSetImage(idRes) { it.setImageBitmap(bitmap) }
         return this
     }
 
@@ -138,7 +137,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, drawable: Drawable): ViewHolder {
-        setImageInternal(idRes) { it.setImageDrawable(drawable) }
+        internalSetImage(idRes) { it.setImageDrawable(drawable) }
         return this
     }
 
@@ -150,14 +149,15 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @return holder
      */
     fun setImageResource(@IdRes idRes: Int, imageUrl: String): ViewHolder {
-        setImageInternal(idRes) { Glide.with(convertView).load(imageUrl).into(it) }
+        internalSetImage(idRes) {
+            Glide.with(itemView.context.applicationContext).load(imageUrl).into(it)
+        }
         return this
     }
 
-    private fun setImageInternal(@IdRes idRes: Int, action: (ImageView) -> Unit): Boolean {
+    private fun internalSetImage(@IdRes idRes: Int, action: (ImageView) -> Unit) {
         val imageView = getView<ImageView>(idRes)
         action(imageView)
-        return true
     }
 
     /**
@@ -205,7 +205,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * @param idRes 控件ID
      * @return holder
      */
-    fun getTag(@IdRes idRes: Int): Any {
+    fun getTag(@IdRes idRes: Int): Any? {
         val view = getView<View>(idRes)
         return view.tag
     }

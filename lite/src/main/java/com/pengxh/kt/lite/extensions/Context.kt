@@ -2,6 +2,7 @@ package com.pengxh.kt.lite.extensions
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -21,17 +22,27 @@ import java.util.Locale
  * @return
  */
 fun Context.isNetworkConnected(): Boolean {
-    val manager = this.getSystemService<ConnectivityManager>()
+    val manager = getSystemService(ConnectivityManager::class.java)
     val network = manager?.activeNetwork ?: return false
     val networkCapabilities = manager.getNetworkCapabilities(network) ?: return false
     return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
 
 /**
- * Context内联函数-扩展函数
- * */
-inline fun <reified T> Context.getSystemService(): T? {
-    return this.getSystemService(T::class.java)
+ * 判断指定包名的应用是否存在
+ */
+fun Context.isApplicationExist(packageName: String): Boolean {
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            packageManager.getPackageInfo(packageName, 0)
+        }
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        false
+    }
 }
 
 inline fun <reified T> Context.navigatePageTo() {
@@ -67,7 +78,7 @@ inline fun <reified T> Context.navigatePageTo(index: Int, imageList: ArrayList<S
 fun Context.readAssetsFile(fileName: String?): String {
     if (fileName.isNullOrBlank()) return ""
     return try {
-        this.assets.open(fileName).use { inputStream ->
+        assets.open(fileName).use { inputStream ->
             inputStream.bufferedReader().use { bufferedReader ->
                 bufferedReader.useLines { lines -> lines.joinToString(separator = "") }
             }
@@ -84,14 +95,14 @@ fun Context.readAssetsFile(fileName: String?): String {
  * @return
  */
 fun Context.getScreenWidth(): Int {
-    return this.resources.displayMetrics.widthPixels
+    return resources.displayMetrics.widthPixels
 }
 
 /**
  * 获取屏幕高度，兼容Android 11+
  */
 fun Context.getScreenHeight(): Int {
-    return this.resources.displayMetrics.heightPixels + getStatusBarHeight()
+    return resources.displayMetrics.heightPixels + getStatusBarHeight()
 }
 
 /**
@@ -99,7 +110,7 @@ fun Context.getScreenHeight(): Int {
  * */
 fun Context.getStatusBarHeight(): Int {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val windowManager = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val windowMetrics = windowManager.currentWindowMetrics
         val windowInsets = windowMetrics.windowInsets
 
@@ -107,9 +118,9 @@ fun Context.getStatusBarHeight(): Int {
         return insets.top
     } else {
         if (Build.MANUFACTURER.equals("xiaomi", ignoreCase = true)) {
-            val resourceId = this.resources.getIdentifier("status_bar_height", "dimen", "android")
+            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
             return if (resourceId > 0) {
-                this.resources.getDimensionPixelSize(resourceId)
+                resources.getDimensionPixelSize(resourceId)
             } else {
                 0
             }
@@ -120,7 +131,7 @@ fun Context.getStatusBarHeight(): Int {
                 val field = clazz.getField("status_bar_height")
                 val resIdValue = field[obj]?.toString()?.toIntOrNull()
                 if (resIdValue != null && resIdValue > 0) {
-                    return this.resources.getDimensionPixelSize(resIdValue)
+                    return resources.getDimensionPixelSize(resIdValue)
                 }
             } catch (e: ClassNotFoundException) {
                 e.printStackTrace()
@@ -140,10 +151,10 @@ fun Context.getStatusBarHeight(): Int {
  * 获取屏幕密度比值
  */
 fun Context.getScreenDensity(): Float {
-    val windowManager = this.getSystemService<WindowManager>()!!
+    val windowManager = getSystemService(WindowManager::class.java)
     val displayMetrics = DisplayMetrics()
     val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        this.display
+        display
     } else {
         windowManager.defaultDisplay
     }
@@ -151,7 +162,7 @@ fun Context.getScreenDensity(): Float {
         return 1f
     }
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        this.resources.displayMetrics.density
+        resources.displayMetrics.density
     } else {
         display.getMetrics(displayMetrics)
         displayMetrics.density
@@ -160,7 +171,7 @@ fun Context.getScreenDensity(): Float {
 
 
 fun Context.createLogFile(): File {
-    val documentDir = File(this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "")
+    val documentDir = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "")
     val timeStamp = SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(Date())
     val logFile = File(documentDir.toString() + File.separator + "Log_" + timeStamp + ".txt")
     if (!logFile.exists()) {
@@ -179,7 +190,7 @@ fun Context.createLogFile(): File {
  * 音频文件格式：.amr
  * */
 fun Context.createAudioFile(): File {
-    val audioDir = File(this.getExternalFilesDir(Environment.DIRECTORY_MUSIC), "")
+    val audioDir = File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "")
     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(Date())
     val audioFile = File(audioDir.toString() + File.separator + "AUD_" + timeStamp + ".amr")
     if (!audioFile.exists()) {
@@ -193,7 +204,7 @@ fun Context.createAudioFile(): File {
 }
 
 fun Context.createVideoFileDir(): File {
-    val videoDir = File(this.getExternalFilesDir(Environment.DIRECTORY_MOVIES), "")
+    val videoDir = File(getExternalFilesDir(Environment.DIRECTORY_MOVIES), "")
     if (!videoDir.exists()) {
         videoDir.mkdir()
     }
@@ -202,7 +213,7 @@ fun Context.createVideoFileDir(): File {
 
 
 fun Context.createDownloadFileDir(): File {
-    val downloadDir = File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "")
+    val downloadDir = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "")
     if (!downloadDir.exists()) {
         downloadDir.mkdir()
     }
@@ -210,7 +221,7 @@ fun Context.createDownloadFileDir(): File {
 }
 
 fun Context.createImageFileDir(): File {
-    val imageDir = File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "")
+    val imageDir = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "")
     if (!imageDir.exists()) {
         imageDir.mkdir()
     }
@@ -218,7 +229,7 @@ fun Context.createImageFileDir(): File {
 }
 
 fun Context.createCompressImageDir(): File {
-    val imageDir = File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "CompressImage")
+    val imageDir = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "CompressImage")
     if (!imageDir.exists()) {
         imageDir.mkdir()
     }

@@ -25,7 +25,6 @@ import com.pengxh.kt.lite.extensions.getScreenDensity
 import com.pengxh.kt.lite.extensions.getScreenHeight
 import com.pengxh.kt.lite.extensions.getScreenWidth
 import com.pengxh.kt.lite.extensions.getStatusBarHeight
-import com.pengxh.kt.lite.extensions.getSystemService
 import com.pengxh.kt.lite.extensions.isNetworkConnected
 import com.pengxh.kt.lite.extensions.navigatePageTo
 import com.pengxh.kt.lite.extensions.readAssetsFile
@@ -74,7 +73,7 @@ class ContextExtensionFragment : KotlinBaseFragment<FragmentExtensionContextBind
 
     override fun initEvent() {
         binding.getSystemServiceButton.setOnClickListener {
-            val wifiManager = requireContext().getSystemService<WifiManager>()
+            val wifiManager = requireContext().getSystemService(WifiManager::class.java)
             wifiManager?.apply {
                 if (ActivityCompat.checkSelfPermission(
                         requireContext(), Manifest.permission.ACCESS_FINE_LOCATION

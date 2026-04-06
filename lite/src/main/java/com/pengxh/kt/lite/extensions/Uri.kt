@@ -13,11 +13,9 @@ import java.io.FileOutputStream
 //将content路径转为path
 fun Uri.realFilePath(context: Context): String {
     var path = ""
-    when (this.scheme) {
+    when (scheme) {
         ContentResolver.SCHEME_FILE -> {
-            this.path?.let {
-                path = File(it).absolutePath
-            }
+            path = File(path).absolutePath
         }
 
         ContentResolver.SCHEME_CONTENT -> {
@@ -52,7 +50,7 @@ fun Uri.realFilePath(context: Context): String {
             } ?: throw IllegalStateException("Cursor is null")
         }
 
-        else -> throw IllegalArgumentException("Unsupported scheme: ${this.scheme}")
+        else -> throw IllegalArgumentException("Unsupported scheme: $scheme")
     }
     return path
 }

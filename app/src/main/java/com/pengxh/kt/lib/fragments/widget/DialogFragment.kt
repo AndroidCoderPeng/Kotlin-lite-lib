@@ -173,7 +173,7 @@ class DialogFragment : KotlinBaseFragment<FragmentWidgetDialogBinding>() {
                         progressDialog.dismiss()
                     }
 
-                    override fun onProgressChanged(progress: Long) {
+                    override fun onProgressChanged(progress: Float) {
                         progressDialog.updateProgress(progress)
                     }
                 }).build().start()

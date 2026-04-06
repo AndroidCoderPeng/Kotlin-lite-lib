@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentWidgetPackageBinding
 import com.pengxh.kt.lib.fragments.widget.AirDashBoardViewFragment
-import com.pengxh.kt.lib.fragments.widget.AudioFragment
 import com.pengxh.kt.lib.fragments.widget.CircleProgressBarFragment
 import com.pengxh.kt.lib.fragments.widget.DeleteEditTextFragment
 import com.pengxh.kt.lib.fragments.widget.DialogFragment
@@ -25,7 +24,6 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>() {
 
     private val itemTitles = arrayOf(
-        "音频录制及播放",
         "对话框",
         "空气指数表盘",
         "圆形进度条",
@@ -44,17 +42,16 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
             return fragmentPages[position]
         }
         val fragment = when (position) {
-            0 -> AudioFragment()
-            1 -> DialogFragment()
-            2 -> AirDashBoardViewFragment()
-            3 -> CircleProgressBarFragment()
-            4 -> DeleteEditTextFragment()
-            5 -> EasyPopupWindowFragment()
-            6 -> EmptyViewFragment()
-            7 -> KeyBoardViewFragment()
-            8 -> SlideBarViewFragment()
-            9 -> SteeringWheelViewFragment()
-            10 -> TitleBarViewFragment()
+            0 -> DialogFragment()
+            1 -> AirDashBoardViewFragment()
+            2 -> CircleProgressBarFragment()
+            3 -> DeleteEditTextFragment()
+            4 -> EasyPopupWindowFragment()
+            5 -> EmptyViewFragment()
+            6 -> KeyBoardViewFragment()
+            7 -> SlideBarViewFragment()
+            8 -> SteeringWheelViewFragment()
+            9 -> TitleBarViewFragment()
             else -> throw IllegalArgumentException("Invalid position")
         }
         fragmentPages.add(fragment)

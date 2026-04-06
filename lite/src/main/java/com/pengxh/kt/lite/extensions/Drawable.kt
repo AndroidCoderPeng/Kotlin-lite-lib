@@ -21,7 +21,7 @@ private const val MAX_BLUR_RADIUS = 25f
  * 取值区间[0,25]
  * */
 fun Drawable.toBlurBitmap(context: Context, radius: Float): Bitmap {
-    val originalBitmap = this.toBitmap()
+    val originalBitmap = toBitmap()
     if (originalBitmap.isRecycled) throw IllegalStateException("Bitmap is already recycled")
 
     // 计算图片缩小后的长宽

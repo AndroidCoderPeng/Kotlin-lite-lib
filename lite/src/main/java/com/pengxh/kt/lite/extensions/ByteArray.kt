@@ -17,9 +17,9 @@ fun ByteArray.toHex(): String {
 /**
  * ByteArray转ASCII
  * */
-fun ByteArray.toAsciiCode(): String {
+fun ByteArray.toAscIICode(): String {
     val builder = StringBuilder()
-    this.forEach {
+    forEach {
         builder.append(Char(it.toInt()))
     }
     return builder.toString()

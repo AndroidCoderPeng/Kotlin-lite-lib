@@ -15,14 +15,14 @@ import java.io.ByteArrayOutputStream
  */
 fun Image.toBitmap(format: Int): Bitmap? {
     if (format == ImageFormat.JPEG) {
-        val buffer = this.planes[0].buffer
+        val buffer = planes[0].buffer
         val bytes = ByteArray(buffer.capacity())
         buffer.get(bytes)
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, null)
     } else if (format == ImageFormat.YUV_420_888) {
-        val yBuffer = this.planes[0].buffer
-        val uBuffer = this.planes[1].buffer
-        val vBuffer = this.planes[2].buffer
+        val yBuffer = planes[0].buffer
+        val uBuffer = planes[1].buffer
+        val vBuffer = planes[2].buffer
 
         val ySize = yBuffer.remaining()
         val uSize = uBuffer.remaining()
@@ -33,7 +33,7 @@ fun Image.toBitmap(format: Int): Bitmap? {
         vBuffer.get(nv21, ySize, vSize)
         uBuffer.get(nv21, ySize + vSize, uSize)
 
-        val yuvImage = YuvImage(nv21, ImageFormat.NV21, this.width, this.height, null)
+        val yuvImage = YuvImage(nv21, ImageFormat.NV21, width, height, null)
         val out = ByteArrayOutputStream()
         yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 100, out)
 

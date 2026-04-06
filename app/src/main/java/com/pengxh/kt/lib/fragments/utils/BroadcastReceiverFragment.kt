@@ -16,7 +16,6 @@ class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBindi
 
     private val kTag = "BroadcastReceiverFragment"
     private val ACTION_AP_WIFI_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED"
-    private val broadcastManager by lazy { BroadcastManager(requireContext()) }
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -30,7 +29,9 @@ class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBindi
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        broadcastManager.addAction(
+        BroadcastManager.getDefault().registerReceiver(
+            requireContext(),
+            BluetoothAdapter.ACTION_STATE_CHANGED,
             object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     val action = intent?.action
@@ -48,10 +49,16 @@ class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBindi
                         }
                     }
                 }
-            }, BluetoothAdapter.ACTION_STATE_CHANGED
+            }
         )
 
-        broadcastManager.addAction(
+        BroadcastManager.getDefault().registerReceivers(
+            requireContext(),
+            listOf(
+                ACTION_AP_WIFI_CHANGED,
+                Intent.ACTION_POWER_CONNECTED,
+                Intent.ACTION_POWER_DISCONNECTED
+            ),
             object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     val action = intent?.action
@@ -74,10 +81,7 @@ class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBindi
                         }
                     }
                 }
-            },
-            ACTION_AP_WIFI_CHANGED,
-            Intent.ACTION_POWER_CONNECTED,
-            Intent.ACTION_POWER_DISCONNECTED
+            }
         )
     }
 
@@ -91,11 +95,6 @@ class BroadcastReceiverFragment : KotlinBaseFragment<FragmentUtilsBroadcastBindi
 
     override fun onDestroy() {
         super.onDestroy()
-        broadcastManager.destroy(
-            BluetoothAdapter.ACTION_STATE_CHANGED,
-            ACTION_AP_WIFI_CHANGED,
-            Intent.ACTION_POWER_CONNECTED,
-            Intent.ACTION_POWER_DISCONNECTED
-        )
+        BroadcastManager.getDefault().unregisterAll(requireContext())
     }
 }

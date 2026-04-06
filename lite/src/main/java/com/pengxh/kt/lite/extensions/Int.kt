@@ -53,7 +53,7 @@ fun Int.dp2px(context: Context): Int {
  */
 fun Int.sp2px(context: Context): Int {
     val floatValue = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP, this.toFloat(), context.resources.displayMetrics
+        TypedValue.COMPLEX_UNIT_SP, toFloat(), context.resources.displayMetrics
     )
     decimalFormat.roundingMode = RoundingMode.CEILING
     val result = decimalFormat.format(floatValue)

@@ -90,37 +90,4 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/titleViewHeight"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="圆形图片"
-                android:textColor="@color/mainColor"
-                android:textSize="@dimen/sp_16" />
-
-            <Button
-                android:id="@+id/createRoundImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="生成" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/roundImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
 </LinearLayout>

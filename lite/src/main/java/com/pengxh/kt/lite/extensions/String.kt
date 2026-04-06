@@ -23,7 +23,7 @@ import kotlin.math.abs
  */
 fun String.getHanYuPinyin(): String {
     val pinyinStr = StringBuilder()
-    val newChar = this.toCharArray()
+    val newChar = toCharArray()
     val defaultFormat = HanyuPinyinOutputFormat()
     defaultFormat.caseType = HanyuPinyinCaseType.UPPERCASE
     defaultFormat.toneType = HanyuPinyinToneType.WITHOUT_TONE
@@ -54,20 +54,16 @@ fun String.wrapLine(length: Int): String {
         length
     }
 
-    if (this.isBlank()) {
-        return this
-    }
-
-    if (this.length <= step) {
+    if (isBlank()) {
         return this
     }
 
     val builder = StringBuilder()
     var start = 0
-    while (start < this.length) {
-        val end = minOf(start + step, this.length)
-        builder.append(this.substring(start, end))
-        if (end < this.length) {
+    while (start < length) {
+        val end = minOf(step, length)
+        builder.append(substring(start, end))
+        if (end < length) {
             builder.append("\r\n")
         }
         start += step
@@ -94,7 +90,7 @@ fun String.dateToTimestamp(): Long {
  * 判断是否已过时
  * */
 fun String.isEarlierThenCurrent(): Boolean {
-    val t1 = this.dateToTimestamp()
+    val t1 = dateToTimestamp()
     val t2 = System.currentTimeMillis()
     return (t1 - t2) < 0
 }
@@ -103,7 +99,7 @@ fun String.isEarlierThenCurrent(): Boolean {
  * 时间差-小时
  * */
 fun String.diffCurrentTime(): Int {
-    if (this.isBlank()) {
+    if (isBlank()) {
         return 0
     }
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
@@ -116,7 +112,7 @@ fun String.diffCurrentTime(): Int {
  * yyyy-MM-dd HH:mm:ss 转 yyyy-MM-dd
  * */
 fun String.formatToYearMonthDay(): String {
-    if (this.isBlank()) {
+    if (isBlank()) {
         return this
     }
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
@@ -132,7 +128,7 @@ fun String.formatToYearMonthDay(): String {
  */
 fun String.isNumber(): Boolean {
     val regex = Regex("([-+])?\\d+(\\.\\d+)?")
-    return this.matches(regex)
+    return matches(regex)
 }
 
 /**
@@ -141,7 +137,7 @@ fun String.isNumber(): Boolean {
 fun String.isLetterAndDigit(): Boolean {
     var isDigit = false
     var isLetter = false
-    for (i in this.indices) {
+    for (i in indices) {
         if (Character.isDigit(this[i])) {
             isDigit = true
         } else if (Character.isLetter(this[i])) {
@@ -155,30 +151,30 @@ fun String.isLetterAndDigit(): Boolean {
  * 判断是否为汉字
  */
 fun String.isChinese(): Boolean {
-    if (this.isNotEmpty()) {
+    if (isNotEmpty()) {
         val regex = Regex("[\\u4e00-\\u9fa5]+")
-        return this.matches(regex)
+        return matches(regex)
     }
     return false
 }
 
 
 fun String.isPhoneNumber(): Boolean {
-    if (this.isBlank()) return false
+    if (isBlank()) return false
     val regex = Regex("^1[3-9]\\d{9}\$")
-    return this.length == 11 && this.matches(regex)
+    return length == 11 && matches(regex)
 }
 
 /**
  * 匹配邮箱地址
  */
 fun String.isEmail(): Boolean {
-    return if (this.isBlank()) {
+    return if (isBlank()) {
         false
     } else {
         val regExp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$"
         val regex = Regex(regExp)
-        this.matches(regex)
+        matches(regex)
     }
 }
 

@@ -123,8 +123,8 @@ fun Long.formatFileSize(): String {
     return when {
         this < 0 -> "Invalid size"
         this < KB -> "${FILE_SIZE_DF.format(this)} B"
-        this < MB -> "${FILE_SIZE_DF.format(this.toDouble() / KB)} KB"
-        this < GB -> "${FILE_SIZE_DF.format(this.toDouble() / MB)} MB"
-        else -> "${FILE_SIZE_DF.format(this.toDouble() / GB)} GB"
+        this < MB -> "${FILE_SIZE_DF.format(toDouble() / KB)} KB"
+        this < GB -> "${FILE_SIZE_DF.format(toDouble() / MB)} MB"
+        else -> "${FILE_SIZE_DF.format(toDouble() / GB)} GB"
     }
 }

@@ -11,16 +11,16 @@ import androidx.core.graphics.drawable.toDrawable
 fun ImageView.switchBackground(blurBitmap: Bitmap?) {
     if (blurBitmap == null) return
 
-    val lastDrawable: Drawable = when (this.drawable) {
-        is TransitionDrawable -> (this.drawable as TransitionDrawable).getDrawable(1) ?: Color.TRANSPARENT.toDrawable()
-        is BitmapDrawable -> this.drawable
+    val lastDrawable: Drawable = when (drawable) {
+        is TransitionDrawable -> (drawable as TransitionDrawable).getDrawable(1) ?: Color.TRANSPARENT.toDrawable()
+        is BitmapDrawable -> drawable
         null -> Color.TRANSPARENT.toDrawable()
         else -> Color.TRANSPARENT.toDrawable()
     }
 
     val newDrawable = blurBitmap.toDrawable(resources)
 
-    val transitionDrawable = this.drawable as? TransitionDrawable ?: run {
+    val transitionDrawable = drawable as? TransitionDrawable ?: run {
         TransitionDrawable(arrayOf(lastDrawable, newDrawable)).apply {
             setIds()
             isCrossFadeEnabled = true
