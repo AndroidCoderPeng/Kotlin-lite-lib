@@ -76,53 +76,64 @@ class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizabl
     }
 
     private fun selectPicture() {
-        PictureSelector.create(this).openGallery(SelectMimeType.ofImage()).isGif(false)
-            .isMaxSelectEnabledMask(true).setFilterMinFileSize(100).setMaxSelectNum(9)
-            .isDisplayCamera(false).setImageEngine(GlideLoadEngine.get)
+        PictureSelector.create(this)
+            .openGallery(SelectMimeType.ofImage())
+            .isGif(false)
+            .isMaxSelectEnabledMask(true)
+            .setFilterMinFileSize(100)
+            .setMaxSelectNum(9)
+            .isDisplayCamera(false)
+            .setImageEngine(GlideLoadEngine.get)
             .setSelectedData(selectedImages)
             .forResult(object : OnResultCallbackListener<LocalMedia> {
                 override fun onResult(result: ArrayList<LocalMedia>) {
-                    //因为设置了selectedImages，每次选择数据都会发生变化，所以需要清空之前的缓存
-                    selectedImages.clear()
-                    imageAdapter.clear()
-
-                    //数据链处理已选的图片
                     lifecycleScope.launch {
                         flow {
                             result.forEach {
                                 emit(it)
+                            }
+                        }.collect { image ->
+                            // 对比现有的图片和新选的图片，只新增不存在的图片
+                            val isSelected = selectedImages.any { it.realPath == image.realPath }
+                            if (!isSelected) {
+                                selectedImages.add(image)
+
+                                // 压缩图片并上传
+                                zipImage(image)
+
+                                // 控制处理频率，避免并发过多
                                 delay(1000)
                             }
-                        }.collect {
-                            selectedImages.add(it)
-                            //压缩图片并上传
-                            Luban.with(context).load(it.realPath).ignoreBy(100)
-                                .setTargetDir(requireContext().createCompressImageDir().toString())
-                                .setCompressListener(object : OnCompressListener {
-                                    override fun onStart() {
-
-                                    }
-
-                                    override fun onSuccess(file: File) {
-                                        //模拟上传图片
-                                        val message = weakReferenceHandler.obtainMessage()
-                                        message.what = 2024042301
-                                        message.obj = file
-                                        weakReferenceHandler.sendMessageDelayed(message, 500)
-                                    }
-
-                                    override fun onError(e: Throwable) {
-                                        e.printStackTrace()
-                                    }
-                                }).launch()
                         }
                     }
-
-
                 }
 
                 override fun onCancel() {}
             })
+    }
+
+    private fun zipImage(image: LocalMedia) {
+        Luban.with(requireContext())
+            .load(image.realPath)
+            .ignoreBy(100)
+            .setTargetDir(requireContext().createCompressImageDir().toString())
+            .setCompressListener(object : OnCompressListener {
+                override fun onStart() {
+
+                }
+
+                override fun onSuccess(file: File) {
+                    //模拟上传图片
+                    val message = weakReferenceHandler.obtainMessage()
+                    message.what = 2024042301
+                    message.obj = file
+                    weakReferenceHandler.sendMessageDelayed(message, 500)
+                }
+
+                override fun onError(e: Throwable) {
+                    e.printStackTrace()
+                }
+            }).launch()
     }
 
     override fun handleMessage(msg: Message): Boolean {
