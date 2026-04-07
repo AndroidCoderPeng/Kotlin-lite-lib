@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import com.pengxh.kt.lib.databinding.FragmentAdapterGridviewImageBinding
 import com.pengxh.kt.lite.adapter.GridViewImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
+import com.pengxh.kt.lite.extensions.dp2px
+import com.pengxh.kt.lite.extensions.getScreenWidth
 
 class GridViewImageAdapterFragment : KotlinBaseFragment<FragmentAdapterGridviewImageBinding>() {
 
@@ -34,7 +36,8 @@ class GridViewImageAdapterFragment : KotlinBaseFragment<FragmentAdapterGridviewI
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        binding.gridView.adapter = GridViewImageAdapter(requireContext(), images)
+        val viewWidth = requireContext().getScreenWidth() - 10.dp2px(requireContext())
+        binding.gridView.adapter = GridViewImageAdapter(requireContext(), images, viewWidth)
     }
 
     override fun observeRequestState() {

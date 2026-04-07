@@ -10,16 +10,18 @@ import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.getScreenWidth
 
 /**
  * 九宫格图片适配器，不可编辑
  * 仅支持 [android.widget.GridView]
  */
-class GridViewImageAdapter(private val context: Context, private val images: List<String>) :
-    BaseAdapter() {
+class GridViewImageAdapter(
+    private val context: Context,
+    private val images: List<String>,
+    private val viewWidth: Int
+) : BaseAdapter() {
 
-    private val screenWidth by lazy { context.getScreenWidth() }
+    private val spanCount = 3
 
     override fun getItemId(position: Int): Long = position.toLong()
 
@@ -50,8 +52,7 @@ class GridViewImageAdapter(private val context: Context, private val images: Lis
             .into(holder.imageView)
 
         //动态设置图片高度，和图片宽度保持一致
-        val padding = (view.paddingLeft + view.paddingRight) * 3
-        val imageSize = (screenWidth - padding) / 3
+        val imageSize = viewWidth / spanCount
         if (holder.cachedLayoutParams == null) {
             holder.cachedLayoutParams = LinearLayout.LayoutParams(imageSize, imageSize)
         } else {

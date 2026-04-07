@@ -20,7 +20,7 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>() {
 
     private val itemTitles = arrayOf(
-        "可变适配器", "多选适配器", "普通适配器", "宫格适配器", "单选适配器"
+        "宫格适配器", "多选适配器", "普通适配器", "可变适配器", "单选适配器"
     )
     private val fragmentPages = mutableListOf<Fragment>()
 
@@ -29,10 +29,10 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
             return fragmentPages[position]
         }
         val fragment = when (position) {
-            0 -> ResizableImageAdapterFragment()
+            0 -> GridViewImageAdapterFragment()
             1 -> MultipleChoiceAdapterFragment()
             2 -> NormalRecyclerAdapterFragment()
-            3 -> GridViewImageAdapterFragment()
+            3 -> ResizableImageAdapterFragment()
             4 -> SingleChoiceAdapterFragment()
             else -> throw IllegalArgumentException("Invalid position")
         }
