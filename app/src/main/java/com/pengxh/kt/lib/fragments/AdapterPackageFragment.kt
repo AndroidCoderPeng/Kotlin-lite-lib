@@ -20,7 +20,7 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>() {
 
     private val itemTitles = arrayOf(
-        "宫格适配器", "多选适配器", "普通适配器", "可变适配器", "单选适配器"
+        "宫格适配器", "多选适配器", "普通适配器", "数量可变适配器", "单选适配器"
     )
     private val fragmentPages = mutableListOf<Fragment>()
 

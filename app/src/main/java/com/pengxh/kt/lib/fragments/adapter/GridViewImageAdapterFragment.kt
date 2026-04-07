@@ -37,7 +37,7 @@ class GridViewImageAdapterFragment : KotlinBaseFragment<FragmentAdapterGridviewI
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val viewWidth = requireContext().getScreenWidth() - 10.dp2px(requireContext())
-        binding.gridView.adapter = GridViewImageAdapter(requireContext(), images, viewWidth)
+        binding.gridView.adapter = GridViewImageAdapter(images, viewWidth)
     }
 
     override fun observeRequestState() {

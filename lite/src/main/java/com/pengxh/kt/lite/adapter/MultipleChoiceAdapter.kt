@@ -3,7 +3,6 @@ package com.pengxh.kt.lite.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -12,7 +11,8 @@ import java.util.concurrent.CopyOnWriteArrayList
  * RecyclerView多选适配器
  */
 abstract class MultipleChoiceAdapter<T>(
-    @LayoutRes private val xmlResource: Int, private val dataRows: MutableList<T>
+    private val xmlResource: Int,
+    private val dataRows: MutableList<T>
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     private val kTag = "MultipleChoiceAdapter"

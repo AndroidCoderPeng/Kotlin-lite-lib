@@ -47,7 +47,7 @@ class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizabl
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val viewWidth = requireContext().getScreenWidth() - 20.dp2px(requireContext())
-        imageAdapter = ResizableImageAdapter(requireContext(), mutableListOf(), viewWidth)
+        imageAdapter = ResizableImageAdapter(mutableListOf(), viewWidth)
         binding.recyclerView.addItemDecoration(
             RecyclerViewItemOffsets(marginOffset, marginOffset, marginOffset, marginOffset)
         )

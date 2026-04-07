@@ -1,6 +1,5 @@
 package com.pengxh.kt.lite.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,6 @@ import com.pengxh.kt.lite.R
  * @param viewWidth RecyclerView实际宽度，一般情况下就是屏幕宽度，但是如果有其他控件和它在同一行，需要计算实际宽度，不然无法正确显示RecyclerView item的布局
  * */
 class ResizableImageAdapter(
-    private val context: Context,
     private val images: MutableList<String>,
     private val viewWidth: Int
 ) : RecyclerView.Adapter<ViewHolder>() {
@@ -29,7 +27,9 @@ class ResizableImageAdapter(
     private var showAddButton: Boolean = images.size < limit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_editable_rv_g, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(
+            R.layout.item_editable_rv_g, parent, false
+        )
         val imageSize = viewWidth / spanCount
         val params = LinearLayout.LayoutParams(imageSize, imageSize)
         view.findViewById<ImageView>(R.id.imageView).layoutParams = params
