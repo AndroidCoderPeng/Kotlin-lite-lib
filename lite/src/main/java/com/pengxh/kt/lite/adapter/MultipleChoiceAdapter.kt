@@ -4,20 +4,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CopyOnWriteArrayList
+import java.util.Collections
 
 /**
  * RecyclerView多选适配器
+ *
+ * 注意：此方案要求 T 正确实现 equals() 和 hashCode()。如果 T 是数据类（data class），Kotlin 已自动生成。
  */
 abstract class MultipleChoiceAdapter<T>(
     private val xmlResource: Int,
-    private val dataRows: MutableList<T>
+    dataRows: MutableList<T>
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     private val kTag = "MultipleChoiceAdapter"
-    private var multipleSelected = ConcurrentHashMap<Int, Boolean>()
-    private var selectedItems = CopyOnWriteArrayList<T>()
+    private val dataRows = Collections.synchronizedList(dataRows)
+
+    // 使用 item 作为 key，而非 position
+    private val selectedItems = Collections.synchronizedSet(HashSet<T>())
 
     override fun getItemCount(): Int = dataRows.size
 
@@ -28,27 +31,23 @@ abstract class MultipleChoiceAdapter<T>(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position < 0 || position >= dataRows.size) {
-            Log.d(kTag, "Invalid position: $position")
-            return
-        }
+        val item = dataRows[position]
+        convertView(holder, position, item)
 
-        convertView(holder, position, dataRows[position])
-
-        holder.itemView.isSelected = multipleSelected.containsKey(position)
+        holder.itemView.isSelected = selectedItems.contains(item)
         holder.itemView.setOnClickListener {
-            if (multipleSelected.containsKey(position)) {
-                multipleSelected.remove(position)
-                selectedItems.removeIf { it == dataRows[position] }
-                holder.itemView.isSelected = false
-            } else {
-                multipleSelected[position] = true
-                selectedItems.add(dataRows[position])
-                holder.itemView.isSelected = true
+            synchronized(selectedItems) {
+                if (selectedItems.contains(item)) {
+                    selectedItems.remove(item)
+                    holder.itemView.isSelected = false
+                } else {
+                    selectedItems.add(item)
+                    holder.itemView.isSelected = true
+                }
             }
 
-            itemCheckedListener?.onItemChecked(selectedItems) ?: run {
-                Log.d(kTag, "No listener set for item checked events")
+            itemCheckedListener?.onItemChecked(ArrayList(selectedItems)) ?: run {
+                Log.w(kTag, "No listener set for item checked events")
             }
         }
     }
@@ -63,7 +62,9 @@ abstract class MultipleChoiceAdapter<T>(
         }
         val startPosition = dataRows.size
         val newSize = newRows.size
-        dataRows.addAll(newRows)
+        synchronized(dataRows) {
+            dataRows.addAll(newRows)
+        }
         notifyItemRangeInserted(startPosition, newSize)
     }
 
