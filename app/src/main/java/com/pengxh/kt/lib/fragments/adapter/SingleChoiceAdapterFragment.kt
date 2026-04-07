@@ -5,21 +5,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentAdapterSingleChoiceBinding
 import com.pengxh.kt.lite.adapter.SingleChoiceAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.extensions.timestampToCompleteDate
+import com.pengxh.kt.lite.extensions.toJson
 
 class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentAdapterSingleChoiceBinding>() {
 
     private val kTag = "SingleChoiceAdapterFragment"
-    private val items: MutableList<String> = ArrayList()
+
+    data class Item(
+        val id: Int,           // 稳定的唯一标识
+        val title: String,     // 显示文本
+        val createTime: String // 时间戳（仅显示用）
+    )
+
+    private val items: MutableList<Item> = ArrayList()
+    private lateinit var selectedAdapter: SingleChoiceAdapter<Item>
+    private var isLoading = false
 
     init {
         for (i in 1..20) {
-            items.add("单选列表-${System.currentTimeMillis().timestampToCompleteDate()}")
+            items.add(Item(i, "单选列表", System.currentTimeMillis().toString()))
         }
     }
 
@@ -35,11 +46,11 @@ class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentAdapterSingleChoi
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-        val selectedAdapter = object : SingleChoiceAdapter<String>(
+        selectedAdapter = object : SingleChoiceAdapter<Item>(
             R.layout.item_single_choice_rv_l, items
         ) {
-            override fun convertView(viewHolder: ViewHolder, position: Int, item: String) {
-                viewHolder.setText(R.id.textView, item)
+            override fun convertView(viewHolder: ViewHolder, position: Int, item: Item) {
+                viewHolder.setText(R.id.textView, "${item.title} ${item.createTime}")
             }
         }
         binding.recyclerView.addItemDecoration(
@@ -47,9 +58,9 @@ class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentAdapterSingleChoi
         )
         binding.recyclerView.adapter = selectedAdapter
         selectedAdapter.setOnItemCheckedListener(object :
-            SingleChoiceAdapter.OnItemCheckedListener<String> {
-            override fun onItemChecked(position: Int, item: String) {
-                Log.d(kTag, "onItemChecked => $item")
+            SingleChoiceAdapter.OnItemCheckedListener<Item> {
+            override fun onItemChecked(position: Int, item: Item) {
+                Log.d(kTag, "onItemChecked => ${item.toJson()}")
             }
         })
     }
@@ -59,6 +70,30 @@ class SingleChoiceAdapterFragment : KotlinBaseFragment<FragmentAdapterSingleChoi
     }
 
     override fun initEvent() {
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
 
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+
+                // 滑到底部且未在加载中
+                if (!isLoading && lastVisiblePosition >= totalItemCount - 1) {
+                    loadMore()
+                }
+            }
+        })
+    }
+
+    private fun loadMore() {
+        isLoading = true
+        val startId = items.size + 1
+        val newItems = ArrayList<Item>()
+        for (i in startId until startId + 20) {
+            newItems.add(Item(i, "单选列表", System.currentTimeMillis().toString()))
+        }
+        selectedAdapter.loadMore(newItems)
+        isLoading = false
     }
 }
