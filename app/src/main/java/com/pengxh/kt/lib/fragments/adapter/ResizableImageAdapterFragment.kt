@@ -33,7 +33,6 @@ class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizabl
     private lateinit var imageAdapter: ResizableImageAdapter
     private val marginOffset by lazy { 1.dp2px(requireContext()) }
     private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
-    private val recyclerViewImages = ArrayList<String>()
     private val selectedImages = ArrayList<LocalMedia>()
 
     override fun initViewBinding(
@@ -48,7 +47,7 @@ class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizabl
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val viewWidth = requireContext().getScreenWidth() - 20.dp2px(requireContext())
-        imageAdapter = ResizableImageAdapter(requireContext(), recyclerViewImages, viewWidth)
+        imageAdapter = ResizableImageAdapter(requireContext(), mutableListOf(), viewWidth)
         binding.recyclerView.addItemDecoration(
             RecyclerViewItemOffsets(marginOffset, marginOffset, marginOffset, marginOffset)
         )
@@ -71,8 +70,7 @@ class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizabl
 
             override fun onItemLongClick(view: View?, position: Int) {
                 selectedImages.removeAt(position)
-                recyclerViewImages.removeAt(position)
-                imageAdapter.notifyDataSetChanged()
+                imageAdapter.removeItem(position)
             }
         })
     }
@@ -86,7 +84,7 @@ class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizabl
                 override fun onResult(result: ArrayList<LocalMedia>) {
                     //因为设置了selectedImages，每次选择数据都会发生变化，所以需要清空之前的缓存
                     selectedImages.clear()
-                    recyclerViewImages.clear()
+                    imageAdapter.clear()
 
                     //数据链处理已选的图片
                     lifecycleScope.launch {
@@ -130,9 +128,7 @@ class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizabl
     override fun handleMessage(msg: Message): Boolean {
         if (msg.what == 2024042301) {
             val file = msg.obj as File
-
-            recyclerViewImages.add(file.absolutePath)
-            imageAdapter.notifyDataSetChanged()
+            imageAdapter.addItem(file.absolutePath)
         }
         return true
     }

@@ -20,12 +20,24 @@ import com.pengxh.kt.lite.R
  * */
 class ResizableImageAdapter(
     private val context: Context,
-    private val images: ArrayList<String>,
+    private val images: MutableList<String>,
     private val viewWidth: Int
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     private val limit = 9
     private val spanCount = 3
+    private var showAddButton: Boolean = images.size < limit
+    private var recyclerView: RecyclerView? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        this.recyclerView = null
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_editable_rv_g, parent, false)
@@ -55,7 +67,7 @@ class ResizableImageAdapter(
         }
     }
 
-    override fun getItemCount(): Int = minOf(limit, images.size + 1)
+    override fun getItemCount(): Int = images.size + if (showAddButton) 1 else 0
 
     private var itemClickListener: OnItemClickListener? = null
 
@@ -69,5 +81,46 @@ class ResizableImageAdapter(
         fun onItemClick(position: Int)
 
         fun onItemLongClick(view: View?, position: Int)
+    }
+
+    fun addItem(imagePath: String) {
+        if (images.size >= limit) return
+        images.add(imagePath)
+        val insertedPosition = images.size - 1  // 新图片的位置
+        if (images.size == limit) {
+            // 加到第9张：加号按钮消失，先通知 removed，再通知图片 inserted
+            showAddButton = false
+            notifyItemRemoved(insertedPosition)   // 加号按钮消失
+            notifyItemInserted(insertedPosition)  // 第9张图片出现（同一位置，RecyclerView 会正确处理）
+        } else {
+            // 普通插入：加号按钮往后移动一格
+            notifyItemInserted(insertedPosition)
+        }
+    }
+
+    fun removeItem(position: Int) {
+        if (position < 0 || position >= images.size) return
+        val wasAtLimit = images.size == limit
+        images.removeAt(position)
+        if (wasAtLimit) {
+            // 从9张删到8张：加号按钮重新出现
+            showAddButton = true
+            notifyItemRemoved(position)
+            notifyItemInserted(images.size)  // 加号按钮在末尾出现
+        } else {
+            notifyItemRemoved(position)
+        }
+    }
+
+    fun clear() {
+        val oldCount = itemCount
+        images.clear()
+        showAddButton = true  // 清空后加号按钮重新显示
+        notifyItemRangeRemoved(0, oldCount)
+    }
+
+
+    fun getImages(): List<String> {
+        return images
     }
 }
