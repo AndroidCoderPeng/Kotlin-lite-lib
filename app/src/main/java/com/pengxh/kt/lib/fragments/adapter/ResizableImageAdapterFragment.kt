@@ -11,9 +11,9 @@ import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
-import com.pengxh.kt.lib.databinding.FragmentAdapterEditableImageBinding
+import com.pengxh.kt.lib.databinding.FragmentAdapterResizableImageBinding
 import com.pengxh.kt.lib.utils.GlideLoadEngine
-import com.pengxh.kt.lite.adapter.EditableImageAdapter
+import com.pengxh.kt.lite.adapter.ResizableImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.divider.RecyclerViewItemOffsets
 import com.pengxh.kt.lite.extensions.createCompressImageDir
@@ -27,10 +27,10 @@ import top.zibin.luban.Luban
 import top.zibin.luban.OnCompressListener
 import java.io.File
 
-class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableImageBinding>(),
+class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizableImageBinding>(),
     Handler.Callback {
 
-    private lateinit var imageAdapter: EditableImageAdapter
+    private lateinit var imageAdapter: ResizableImageAdapter
     private val marginOffset by lazy { 1.dp2px(requireContext()) }
     private val weakReferenceHandler by lazy { WeakReferenceHandler(this) }
     private val recyclerViewImages = ArrayList<String>()
@@ -38,8 +38,8 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
 
     override fun initViewBinding(
         inflater: LayoutInflater, container: ViewGroup?
-    ): FragmentAdapterEditableImageBinding {
-        return FragmentAdapterEditableImageBinding.inflate(inflater, container, false)
+    ): FragmentAdapterResizableImageBinding {
+        return FragmentAdapterResizableImageBinding.inflate(inflater, container, false)
     }
 
     override fun setupTopBarLayout() {
@@ -48,7 +48,7 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
         val viewWidth = requireContext().getScreenWidth() - 20.dp2px(requireContext())
-        imageAdapter = EditableImageAdapter(requireContext(), recyclerViewImages, viewWidth, 9, 3)
+        imageAdapter = ResizableImageAdapter(requireContext(), recyclerViewImages, viewWidth)
         binding.recyclerView.addItemDecoration(
             RecyclerViewItemOffsets(marginOffset, marginOffset, marginOffset, marginOffset)
         )
@@ -60,7 +60,7 @@ class EditableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterEditableI
     }
 
     override fun initEvent() {
-        imageAdapter.setOnItemClickListener(object : EditableImageAdapter.OnItemClickListener {
+        imageAdapter.setOnItemClickListener(object : ResizableImageAdapter.OnItemClickListener {
             override fun onAddImageClick() {
                 selectPicture()
             }

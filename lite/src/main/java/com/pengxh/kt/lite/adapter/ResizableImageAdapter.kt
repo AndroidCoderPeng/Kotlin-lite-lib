@@ -12,21 +12,20 @@ import com.pengxh.kt.lite.R
 
 
 /**
- * 数量可编辑图片适配器
+ * 可调整数量的图片适配器，做多9张图片，每行3张
  *
  * @param context 使用适配的上下文
  * @param images RecyclerView内数据
  * @param viewWidth RecyclerView实际宽度，一般情况下就是屏幕宽度，但是如果有其他控件和它在同一行，需要计算实际宽度，不然无法正确显示RecyclerView item的布局
- * @param imageCountLimit 最多显示的图片数目
- * @param spanCount 每行显示的图片数目
  * */
-class EditableImageAdapter(
+class ResizableImageAdapter(
     private val context: Context,
     private val images: ArrayList<String>,
-    private val viewWidth: Int,
-    private val imageCountLimit: Int,
-    private val spanCount: Int
+    private val viewWidth: Int
 ) : RecyclerView.Adapter<ViewHolder>() {
+
+    private val limit = 9
+    private val spanCount = 3
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_editable_rv_g, parent, false)
@@ -38,7 +37,7 @@ class EditableImageAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imageView = holder.getView<ImageView>(R.id.imageView)
-        if (position == itemCount - 1 && images.size < imageCountLimit) {
+        if (position == itemCount - 1 && images.size < limit) {
             imageView.setImageResource(R.drawable.ic_add_pic)
             imageView.setOnClickListener { //添加图片
                 itemClickListener?.onAddImageClick()
@@ -56,7 +55,7 @@ class EditableImageAdapter(
         }
     }
 
-    override fun getItemCount(): Int = minOf(imageCountLimit, images.size + 1)
+    override fun getItemCount(): Int = minOf(limit, images.size + 1)
 
     private var itemClickListener: OnItemClickListener? = null
 

@@ -9,10 +9,10 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentAdapterPackageBinding
-import com.pengxh.kt.lib.fragments.adapter.EditableImageAdapterFragment
 import com.pengxh.kt.lib.fragments.adapter.GridViewImageAdapterFragment
 import com.pengxh.kt.lib.fragments.adapter.MultipleChoiceAdapterFragment
 import com.pengxh.kt.lib.fragments.adapter.NormalRecyclerAdapterFragment
+import com.pengxh.kt.lib.fragments.adapter.ResizableImageAdapterFragment
 import com.pengxh.kt.lib.fragments.adapter.SingleChoiceAdapterFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
@@ -29,7 +29,7 @@ class AdapterPackageFragment : KotlinBaseFragment<FragmentAdapterPackageBinding>
             return fragmentPages[position]
         }
         val fragment = when (position) {
-            0 -> EditableImageAdapterFragment()
+            0 -> ResizableImageAdapterFragment()
             1 -> MultipleChoiceAdapterFragment()
             2 -> NormalRecyclerAdapterFragment()
             3 -> GridViewImageAdapterFragment()
