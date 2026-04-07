@@ -15,7 +15,6 @@ import com.pengxh.kt.lib.fragments.utils.GalleryScaleHelperFragment
 import com.pengxh.kt.lib.fragments.utils.HtmlRenderEngineFragment
 import com.pengxh.kt.lib.fragments.utils.HttpRequestFragment
 import com.pengxh.kt.lib.fragments.utils.LoadingDialogFragment
-import com.pengxh.kt.lib.fragments.utils.OverlayCreatorFragment
 import com.pengxh.kt.lib.fragments.utils.RetrofitFactoryFragment
 import com.pengxh.kt.lib.fragments.utils.SaveKeyValuesFragment
 import com.pengxh.kt.lib.fragments.utils.SocketFragment
@@ -30,7 +29,6 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
         "模糊背景画廊",
         "HTML富文本渲染",
         "Http请求",
-        "添加水印",
         "加载对话框",
         "Retrofit构造器",
         "SharedPreferences"
@@ -48,10 +46,9 @@ class UtilsPackageFragment : KotlinBaseFragment<FragmentUtilsPackageBinding>() {
             3 -> GalleryScaleHelperFragment()
             4 -> HtmlRenderEngineFragment()
             5 -> HttpRequestFragment()
-            6 -> OverlayCreatorFragment()
-            7 -> LoadingDialogFragment()
-            8 -> RetrofitFactoryFragment()
-            9 -> SaveKeyValuesFragment()
+            6 -> LoadingDialogFragment()
+            7 -> RetrofitFactoryFragment()
+            8 -> SaveKeyValuesFragment()
             else -> throw IllegalArgumentException("Invalid position")
         }
         fragmentPages.add(fragment)

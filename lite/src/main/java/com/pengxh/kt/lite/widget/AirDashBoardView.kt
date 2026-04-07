@@ -85,7 +85,7 @@ class AirDashBoardView(context: Context, attrs: AttributeSet) : View(context, at
         )
 
         centerTextSize = type.getDimensionPixelSize(
-            R.styleable.AirDashBoardView_air_center_text_size, 20.sp2px(context)
+            R.styleable.AirDashBoardView_air_center_text_size, 20f.sp2px(context).toInt()
         )
         centerTextColor = type.getColor(
             R.styleable.AirDashBoardView_air_center_text_color, Color.BLUE

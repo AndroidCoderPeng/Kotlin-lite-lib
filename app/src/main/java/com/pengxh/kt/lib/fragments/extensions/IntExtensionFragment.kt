@@ -48,9 +48,9 @@ class IntExtensionFragment : KotlinBaseFragment<FragmentExtensionIntBinding>() {
             }
 
             val sp = if (binding.spInputView.text.isNullOrBlank()) {
-                0
+                0f
             } else {
-                binding.spInputView.text.toString().toInt()
+                binding.spInputView.text.toString().toFloat()
             }
 
             binding.pxResultView.text = px.px2dp(requireContext()).toString()
