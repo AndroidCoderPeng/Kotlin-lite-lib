@@ -1,24 +1,31 @@
 package com.pengxh.kt.lite.adapter
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.util.Collections
 
 /**
  * RecyclerView普通列表适配器
  */
 abstract class NormalRecyclerAdapter<T>(
-    @LayoutRes private val xmlResource: Int, private val dataRows: MutableList<T>
+    private val xmlResource: Int,
+    dataRows: MutableList<T>
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     private val kTag = "NormalRecyclerAdapter"
+    private val dataRows = Collections.synchronizedList(dataRows)
+
+    private var coroutineScope: LifecycleCoroutineScope? = null
+
+    fun setCoroutineScope(scope: LifecycleCoroutineScope) {
+        this.coroutineScope = scope
+    }
 
     override fun getItemCount(): Int = dataRows.size
 
@@ -29,15 +36,25 @@ abstract class NormalRecyclerAdapter<T>(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        convertView(holder, position, dataRows[position])
+        if (position < 0 || position >= dataRows.size) {
+            Log.w(kTag, "onBindViewHolder: invalid position=$position, size=${dataRows.size}")
+            return
+        }
+        val item = dataRows[position]
+        convertView(holder, position, item)
         holder.itemView.setOnClickListener {
-            itemClickedListener?.onItemClicked(position, dataRows[position])
+            // 点击时重新获取当前 position 对应的 item
+            val currentPosition = holder.bindingAdapterPosition
+            if (currentPosition != RecyclerView.NO_POSITION && currentPosition < dataRows.size) {
+                itemClickedListener?.onItemClicked(currentPosition, dataRows[currentPosition])
+            }
         }
     }
 
     /**
      * 刷新列表，局部刷新
      * */
+    @SuppressLint("NotifyDataSetChanged")
     fun refresh(newRows: MutableList<T>, itemComparator: ItemComparator<T>? = null) {
         if (newRows.isEmpty()) {
             Log.d(kTag, "refresh: newRows isEmpty")
@@ -46,7 +63,7 @@ abstract class NormalRecyclerAdapter<T>(
 
         val oldSize = dataRows.size
 
-        if (itemComparator != null) {
+        if (itemComparator != null && coroutineScope != null) {
             val oldDataSnapshot = ArrayList(dataRows) // 旧数据副本
             val newDataSnapshot = ArrayList(newRows)  // 新数据副本
 
@@ -69,22 +86,30 @@ abstract class NormalRecyclerAdapter<T>(
                 }
             }
 
-            CoroutineScope(Dispatchers.IO).launch {
+            coroutineScope?.launch {
                 try {
                     val result = DiffUtil.calculateDiff(diffCallback)
-                    withContext(Dispatchers.Main) {
+                    synchronized(dataRows) {
                         dataRows.clear()
                         dataRows.addAll(newDataSnapshot)
-                        result.dispatchUpdatesTo(this@NormalRecyclerAdapter)
                     }
+                    result.dispatchUpdatesTo(this@NormalRecyclerAdapter)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    // 回退到全量刷新
+                    synchronized(dataRows) {
+                        dataRows.clear()
+                        dataRows.addAll(newDataSnapshot)
+                    }
+                    notifyDataSetChanged()
                 }
             }
         } else {
             val newSize = newRows.size
-            dataRows.clear()
-            dataRows.addAll(newRows)
+            synchronized(dataRows) {
+                dataRows.clear()
+                dataRows.addAll(newRows)
+            }
 
             // 新数据比旧数据少，需要通知删除部分 item ，否则会越界
             if (newSize < oldSize) {
@@ -104,7 +129,9 @@ abstract class NormalRecyclerAdapter<T>(
         }
         val startPosition = dataRows.size
         val newSize = newRows.size
-        dataRows.addAll(newRows)
+        synchronized(dataRows) {
+            dataRows.addAll(newRows)
+        }
         notifyItemRangeInserted(startPosition, newSize)
     }
 
