@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.databinding.DialogInputBinding
 import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
@@ -13,9 +12,7 @@ import com.pengxh.kt.lite.extensions.show
 /**
  * 输入对话框
  */
-class AlertInputDialog private constructor(builder: Builder) : Dialog(
-    builder.context, R.style.UserDefinedDialogStyle
-) {
+class AlertInputDialog private constructor(builder: Builder) : Dialog(builder.context) {
     private val ctx = builder.context
     private val title = builder.title
     private val hint = builder.hint

@@ -3,12 +3,11 @@ package com.pengxh.kt.lite.widget.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.databinding.DialogProgressBinding
 import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 
-class ProgressDialog(context: Context) : Dialog(context, R.style.UserDefinedDialogStyle) {
+class ProgressDialog(context: Context) : Dialog(context) {
 
     private val binding: DialogProgressBinding by binding()
 

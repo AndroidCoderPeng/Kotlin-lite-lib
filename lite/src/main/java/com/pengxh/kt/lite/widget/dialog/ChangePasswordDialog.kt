@@ -4,16 +4,13 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.databinding.DialogChangePwdBinding
 import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 import com.pengxh.kt.lite.extensions.isLetterAndDigit
 import com.pengxh.kt.lite.extensions.show
 
-class ChangePasswordDialog private constructor(builder: Builder) : Dialog(
-    builder.context, R.style.UserDefinedDialogStyle
-) {
+class ChangePasswordDialog private constructor(builder: Builder) : Dialog(builder.context) {
     private val ctx: Context = builder.context
     private val listener: OnDialogButtonClickListener = builder.listener
 

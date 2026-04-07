@@ -10,7 +10,7 @@ import com.pengxh.kt.lite.databinding.DialogUpdateBinding
 import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 
-class UpdateDialog(builder: Builder) : Dialog(builder.context, R.style.UserDefinedDialogStyle) {
+class UpdateDialog(builder: Builder) : Dialog(builder.context) {
 
     private val kTag = "UpdateDialog"
     private val message = builder.message

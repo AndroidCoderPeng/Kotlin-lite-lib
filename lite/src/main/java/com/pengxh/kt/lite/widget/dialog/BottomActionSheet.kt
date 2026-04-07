@@ -22,9 +22,7 @@ import com.pengxh.kt.lite.extensions.resetParams
 /**
  * 底部列表Sheet
  */
-class BottomActionSheet private constructor(builder: Builder) : Dialog(
-    builder.context, R.style.UserDefinedActionStyle
-) {
+class BottomActionSheet private constructor(builder: Builder) : Dialog(builder.context) {
     private val ctx: Context = builder.context
     private val sheetItems: List<String> = builder.actionItems
     private val itemTextColor: Int = builder.color

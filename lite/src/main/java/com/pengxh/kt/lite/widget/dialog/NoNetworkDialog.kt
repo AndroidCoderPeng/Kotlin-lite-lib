@@ -9,9 +9,7 @@ import com.pengxh.kt.lite.databinding.DialogNoNetworkBinding
 import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.resetParams
 
-class NoNetworkDialog private constructor(builder: Builder) : Dialog(
-    builder.context, R.style.UserDefinedDialogStyle
-) {
+class NoNetworkDialog private constructor(builder: Builder) : Dialog(builder.context) {
     private val listener: OnDialogButtonClickListener = builder.listener
 
     class Builder {

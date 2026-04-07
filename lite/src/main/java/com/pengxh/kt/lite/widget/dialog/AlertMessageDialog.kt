@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
-import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.databinding.DialogMessageBinding
 import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
@@ -12,9 +11,7 @@ import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 /**
  * 普通提示对话框对话框
  */
-class AlertMessageDialog private constructor(builder: Builder) : Dialog(
-    builder.context, R.style.UserDefinedDialogStyle
-) {
+class AlertMessageDialog private constructor(builder: Builder) : Dialog(builder.context) {
     private val title = builder.title
     private val message = builder.message
     private val positiveBtn = builder.positiveBtn

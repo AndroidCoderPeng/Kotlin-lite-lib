@@ -3,7 +3,6 @@ package com.pengxh.kt.lite.widget.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.databinding.DialogAlertBinding
 import com.pengxh.kt.lite.extensions.binding
 import com.pengxh.kt.lite.extensions.initDialogLayoutParams
@@ -11,9 +10,7 @@ import com.pengxh.kt.lite.extensions.initDialogLayoutParams
 /**
  * 取消/确定对话框
  */
-class AlertControlDialog private constructor(builder: Builder) : Dialog(
-    builder.context, R.style.UserDefinedDialogStyle
-) {
+class AlertControlDialog private constructor(builder: Builder) : Dialog(builder.context) {
     private val title = builder.title
     private val message = builder.message
     private val positiveBtn = builder.positiveBtn

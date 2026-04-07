@@ -129,7 +129,7 @@ class AirDashBoardView(context: Context, attrs: AttributeSet) : View(context, at
         forePaint.strokeWidth = ringStroke.toFloat()
         forePaint.isAntiAlias = true
         //设置背景光晕
-        forePaint.maskFilter = BlurMaskFilter(15f, BlurMaskFilter.Blur.SOLID)
+        forePaint.maskFilter = BlurMaskFilter(10f, BlurMaskFilter.Blur.SOLID)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
