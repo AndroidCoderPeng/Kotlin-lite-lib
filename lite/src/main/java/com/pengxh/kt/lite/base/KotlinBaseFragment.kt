@@ -9,15 +9,22 @@ import androidx.viewbinding.ViewBinding
 
 abstract class KotlinBaseFragment<VB : ViewBinding> : Fragment() {
 
-    private lateinit var _binding: VB
+    private var _binding: VB? = null
 
-    protected val binding get() = _binding
+    protected val binding: VB
+        get() = _binding ?: throw IllegalStateException(
+            "Binding is only valid between onCreateView and onDestroyView"
+        )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        _binding = initViewBinding(inflater, container)
-        return _binding.root
+        _binding = try {
+            initViewBinding(inflater, container)
+        } catch (e: Exception) {
+            throw IllegalStateException("Failed to initialize ViewBinding", e)
+        }
+        return _binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,4 +56,9 @@ abstract class KotlinBaseFragment<VB : ViewBinding> : Fragment() {
      * 业务逻辑，按钮等事件
      */
     abstract fun initEvent()
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

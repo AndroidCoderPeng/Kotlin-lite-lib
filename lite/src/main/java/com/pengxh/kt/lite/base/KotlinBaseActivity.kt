@@ -6,16 +6,27 @@ import androidx.viewbinding.ViewBinding
 
 abstract class KotlinBaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
-    protected lateinit var binding: VB
+    private var _binding: VB? = null
+
+    protected val binding: VB
+        get() = _binding ?: throw IllegalStateException(
+            "Binding is only valid between onCreate and onDestroy"
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = initViewBinding()
-        setContentView(binding.root)
-        setupTopBarLayout()
-        initOnCreate(savedInstanceState)
-        observeRequestState()
-        initEvent()
+        try {
+            _binding = initViewBinding()
+            setContentView(binding.root)
+            setupTopBarLayout()
+            observeRequestState()
+            initOnCreate(savedInstanceState)
+            initEvent()
+        } catch (e: Exception) {
+            // 初始化失败，安全退出
+            finish()
+            throw e
+        }
     }
 
     /**
@@ -42,4 +53,9 @@ abstract class KotlinBaseActivity<VB : ViewBinding> : AppCompatActivity() {
      * 初始化业务逻辑
      */
     abstract fun initEvent()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

@@ -9,15 +9,14 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentDividerPackageBinding
-import com.pengxh.kt.lib.fragments.divider.RecyclerStickDecorationFragment
+import com.pengxh.kt.lib.fragments.divider.RecyclerViewItemBorderFragment
 import com.pengxh.kt.lib.fragments.divider.RecyclerViewItemDividerFragment
-import com.pengxh.kt.lib.fragments.divider.RecyclerViewItemOffsetsFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class DividerPackageFragment : KotlinBaseFragment<FragmentDividerPackageBinding>() {
 
     private val itemTitles = arrayOf(
-        "吸顶分割线", "普通分割线", "四周边框线"
+        "四周边框线", "普通分割线"
     )
     private val fragmentPages = mutableListOf<Fragment>()
 
@@ -26,9 +25,8 @@ class DividerPackageFragment : KotlinBaseFragment<FragmentDividerPackageBinding>
             return fragmentPages[position]
         }
         val fragment = when (position) {
-            0 -> RecyclerStickDecorationFragment()
+            0 -> RecyclerViewItemBorderFragment()
             1 -> RecyclerViewItemDividerFragment()
-            2 -> RecyclerViewItemOffsetsFragment()
             else -> throw IllegalArgumentException("Invalid position")
         }
         fragmentPages.add(fragment)

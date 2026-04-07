@@ -15,7 +15,7 @@ import com.pengxh.kt.lib.databinding.FragmentAdapterResizableImageBinding
 import com.pengxh.kt.lib.utils.GlideLoadEngine
 import com.pengxh.kt.lite.adapter.ResizableImageAdapter
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.divider.RecyclerViewItemOffsets
+import com.pengxh.kt.lite.divider.RecyclerViewItemBorder
 import com.pengxh.kt.lite.extensions.createCompressImageDir
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.getScreenWidth
@@ -49,7 +49,7 @@ class ResizableImageAdapterFragment : KotlinBaseFragment<FragmentAdapterResizabl
         val viewWidth = requireContext().getScreenWidth() - 20.dp2px(requireContext())
         imageAdapter = ResizableImageAdapter(mutableListOf(), viewWidth)
         binding.recyclerView.addItemDecoration(
-            RecyclerViewItemOffsets(marginOffset, marginOffset, marginOffset, marginOffset)
+            RecyclerViewItemBorder(marginOffset, marginOffset, marginOffset, marginOffset)
         )
         binding.recyclerView.adapter = imageAdapter
     }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentWidgetSlideBarViewBinding
@@ -12,8 +13,6 @@ import com.pengxh.kt.lib.utils.LocaleConstant
 import com.pengxh.kt.lite.adapter.NormalRecyclerAdapter
 import com.pengxh.kt.lite.adapter.ViewHolder
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.divider.RecyclerStickDecoration
-import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.getHanYuPinyin
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.widget.SlideBarView
@@ -21,7 +20,6 @@ import com.pengxh.kt.lite.widget.SlideBarView
 class SlideBarViewFragment : KotlinBaseFragment<FragmentWidgetSlideBarViewBinding>() {
 
     private val kTag = "SlideBarActivity"
-    private val stickDecoration by lazy { RecyclerStickDecoration() }
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -63,24 +61,16 @@ class SlideBarViewFragment : KotlinBaseFragment<FragmentWidgetSlideBarViewBindin
             override fun smoothScrollToPosition(
                 recyclerView: RecyclerView, state: RecyclerView.State, position: Int
             ) {
-                val scroller = stickDecoration.SmoothGroupTopScroller(recyclerView.context)
+                val scroller = object : LinearSmoothScroller(recyclerView.context) {
+                    override fun getVerticalSnapPreference(): Int {
+                        return SNAP_TO_START
+                    }
+                }
                 scroller.targetPosition = position
                 startSmoothScroll(scroller)
             }
         }
         binding.cityRecyclerView.layoutManager = layoutManager
-        stickDecoration.setContext(requireContext()).setTopGap(24.dp2px(requireContext()))
-            .setViewGroupListener(
-                object : RecyclerStickDecoration.ViewGroupListener {
-                    override fun groupTag(position: Int): Long {
-                        return cityBeans[position].initial[0].code.toLong()
-                    }
-
-                    override fun groupFirstLetter(position: Int): String {
-                        return cityBeans[position].initial
-                    }
-                }).build()
-        binding.cityRecyclerView.addItemDecoration(stickDecoration)
         binding.slideBarView.attachToRecyclerView(
             binding.cityRecyclerView, LocaleConstant.cities
         )

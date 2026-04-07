@@ -4,7 +4,6 @@ object LocaleConstant {
     val cities = arrayListOf(
         "安徽",
         "北京",
-        "重庆",
         "大连",
         "恩施",
         "福建",

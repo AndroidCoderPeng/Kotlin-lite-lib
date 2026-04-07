@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * 设置 [androidx.recyclerview.widget.RecyclerView] Item外边距，也可以代替设置上下左右分割线
  * */
-class RecyclerViewItemOffsets(
+class RecyclerViewItemBorder(
     private val left: Int, private val top: Int, private val right: Int, private val bottom: Int
 ) : RecyclerView.ItemDecoration() {
 
@@ -17,7 +17,6 @@ class RecyclerViewItemOffsets(
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        super.getItemOffsets(outRect, view, parent, state)
         outRect.left = left
         outRect.top = top
         outRect.right = right

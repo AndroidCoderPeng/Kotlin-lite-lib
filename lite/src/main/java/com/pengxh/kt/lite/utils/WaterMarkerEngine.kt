@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.text.TextPaint
-import com.pengxh.kt.lite.enums.WaterMarkPosition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -29,7 +28,7 @@ class WaterMarkerEngine(builder: Builder) {
         var textColor = Color.WHITE
         var textSize = 16f
         var textMargin = 10f
-        var position = WaterMarkPosition.RIGHT_BOTTOM
+        var position = 4
         lateinit var fileName: String
         lateinit var addedListener: OnWaterMarkerAddedListener
 
@@ -76,7 +75,7 @@ class WaterMarkerEngine(builder: Builder) {
         /**
          * 设置水印文字位置
          * */
-        fun setMarkerPosition(position: WaterMarkPosition): Builder {
+        fun setMarkerPosition(position: Int): Builder {
             this.position = position
             return this
         }
@@ -139,21 +138,21 @@ class WaterMarkerEngine(builder: Builder) {
             val bitmapHeight = copyBitmap.height
 
             when (position) {
-                WaterMarkPosition.LEFT_TOP -> {
+                1 -> {
                     canvas.drawText(marker, textMargin, textMargin, textPaint)
                 }
 
-                WaterMarkPosition.RIGHT_TOP -> {
+                2 -> {
                     canvas.drawText(
                         marker, bitmapWidth - textRect.width() - textMargin, textMargin, textPaint
                     )
                 }
 
-                WaterMarkPosition.LEFT_BOTTOM -> {
+                3 -> {
                     canvas.drawText(marker, textMargin, bitmapHeight - textMargin, textPaint)
                 }
 
-                WaterMarkPosition.RIGHT_BOTTOM -> {
+                4 -> {
                     canvas.drawText(
                         marker,
                         bitmapWidth - textRect.width() - textMargin, bitmapHeight - textMargin,
@@ -161,7 +160,7 @@ class WaterMarkerEngine(builder: Builder) {
                     )
                 }
 
-                WaterMarkPosition.CENTER -> {
+                0 -> {
                     canvas.drawText(
                         marker,
                         (bitmapWidth - textRect.width()) / 2f, bitmapHeight / 2f,

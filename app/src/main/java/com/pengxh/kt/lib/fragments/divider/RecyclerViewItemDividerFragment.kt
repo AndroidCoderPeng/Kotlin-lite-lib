@@ -37,7 +37,7 @@ class RecyclerViewItemDividerFragment : KotlinBaseFragment<FragmentRvItemDivider
         }
         binding.recyclerView.addItemDecoration(
             RecyclerViewItemDivider(
-                10f.dp2px(requireContext()), 10f.dp2px(requireContext()), Color.RED
+                10f.dp2px(requireContext()), 10f.dp2px(requireContext()), Color.DKGRAY
             )
         )
         binding.recyclerView.adapter = cityAdapter

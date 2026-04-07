@@ -15,7 +15,6 @@ import com.pengxh.kt.lib.databinding.FragmentUtilsWaterMarkerBinding
 import com.pengxh.kt.lib.utils.GlideLoadEngine
 import com.pengxh.kt.lib.view.BigImageActivity
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.enums.WaterMarkPosition
 import com.pengxh.kt.lite.extensions.createCompressImageDir
 import com.pengxh.kt.lite.extensions.dp2px
 import com.pengxh.kt.lite.extensions.navigatePageTo
@@ -104,11 +103,11 @@ class WaterMarkerEngineFragment : KotlinBaseFragment<FragmentUtilsWaterMarkerBin
             }
 
             val position = when (checkedValue) {
-                "左上" -> WaterMarkPosition.LEFT_TOP
-                "左下" -> WaterMarkPosition.LEFT_BOTTOM
-                "右上" -> WaterMarkPosition.RIGHT_TOP
-                "右下" -> WaterMarkPosition.RIGHT_BOTTOM
-                else -> WaterMarkPosition.CENTER
+                "左上" -> 1
+                "左下" -> 2
+                "右上" -> 3
+                "右下" -> 4
+                else -> 0
             }
 
 
