@@ -91,15 +91,24 @@ class HttpRequestKit(builder: Builder) {
         scope.launch(Dispatchers.Main + CoroutineExceptionHandler { _, throwable ->
             listener.onFailure(throwable)
         }) {
+            var response: okhttp3.Response? = null
             try {
-                val response = withContext(Dispatchers.IO) {
+                response = withContext(Dispatchers.IO) {
                     client.newCall(request).execute()
                 }
 
                 if (response.isSuccessful) {
-                    response.body?.string()?.let {
-                        listener.onSuccess(it)
-                    } ?: run {
+                    val responseBody = response.body
+                    if (responseBody != null) {
+                        try {
+                            val result = responseBody.string()
+                            listener.onSuccess(result)
+                        } catch (e: IOException) {
+                            listener.onFailure(e)
+                        } finally {
+                            responseBody.close()
+                        }
+                    } else {
                         listener.onFailure(IOException("Response body is null"))
                     }
                 } else {
@@ -108,6 +117,7 @@ class HttpRequestKit(builder: Builder) {
             } catch (e: Exception) {
                 listener.onFailure(e)
             } finally {
+                response?.close()
                 job.cancel()
             }
         }

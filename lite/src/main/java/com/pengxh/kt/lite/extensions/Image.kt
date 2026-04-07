@@ -18,8 +18,17 @@ fun Image.toBitmap(format: Int): Bitmap? {
         val buffer = planes[0].buffer
         val bytes = ByteArray(buffer.capacity())
         buffer.get(bytes)
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, null)
+        return try {
+            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     } else if (format == ImageFormat.YUV_420_888) {
+        if (planes.size < 3) {
+            return null
+        }
+
         val yBuffer = planes[0].buffer
         val uBuffer = planes[1].buffer
         val vBuffer = planes[2].buffer
@@ -34,11 +43,21 @@ fun Image.toBitmap(format: Int): Bitmap? {
         uBuffer.get(nv21, ySize + vSize, uSize)
 
         val yuvImage = YuvImage(nv21, ImageFormat.NV21, width, height, null)
-        val out = ByteArrayOutputStream()
-        yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 100, out)
+        val out = ByteArrayOutputStream().apply {
+            try {
+                yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 100, this)
+            } finally {
+                close()
+            }
+        }
 
         val imageBytes = out.toByteArray()
-        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return try {
+            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
     return null
 }

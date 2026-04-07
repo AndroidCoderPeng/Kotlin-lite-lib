@@ -113,18 +113,18 @@ fun Long.isEarlierThanStart(date: String?): Boolean {
 }
 
 private const val KB = 1024L
-private const val MB = 1024 * 1024L
-private const val GB = 1024 * 1024 * 1024L
-private val FILE_SIZE_DF = DecimalFormat("0.00").apply {
-    roundingMode = RoundingMode.HALF_UP
-}
-
+private const val MB = KB * KB
+private const val GB = MB * KB
 fun Long.formatFileSize(): String {
+    val df = DecimalFormat("0.00").apply {
+        roundingMode = RoundingMode.HALF_UP
+    }
+
     return when {
         this < 0 -> "Invalid size"
-        this < KB -> "${FILE_SIZE_DF.format(this)} B"
-        this < MB -> "${FILE_SIZE_DF.format(toDouble() / KB)} KB"
-        this < GB -> "${FILE_SIZE_DF.format(toDouble() / MB)} MB"
-        else -> "${FILE_SIZE_DF.format(toDouble() / GB)} GB"
+        this < KB -> "${df.format(this.toDouble())} B"
+        this < MB -> "${df.format(this.toDouble() / KB)} KB"
+        this < GB -> "${df.format(this.toDouble() / MB)} MB"
+        else -> "${df.format(this.toDouble() / GB)} GB"
     }
 }

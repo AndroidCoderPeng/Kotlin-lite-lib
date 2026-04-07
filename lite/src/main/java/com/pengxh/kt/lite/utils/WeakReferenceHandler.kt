@@ -10,7 +10,6 @@ class WeakReferenceHandler(callback: Callback) : Handler(Looper.getMainLooper())
     private var weakReference = WeakReference(callback)
 
     override fun handleMessage(msg: Message) {
-        super.handleMessage(msg)
         weakReference.get()?.handleMessage(msg)
     }
 }

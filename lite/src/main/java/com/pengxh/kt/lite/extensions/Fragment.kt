@@ -16,9 +16,11 @@ class FragmentBindingDelegate<VB : ViewBinding>(private val clazz: Class<VB>) :
     ReadOnlyProperty<Fragment, VB> {
 
     private var binding: VB? = null
+    private var observerAdded = false
     private val lifecycleObserver = object : DefaultLifecycleObserver {
         override fun onDestroy(owner: LifecycleOwner) {
             binding = null
+            observerAdded = false
         }
     }
 
@@ -26,8 +28,8 @@ class FragmentBindingDelegate<VB : ViewBinding>(private val clazz: Class<VB>) :
     override fun getValue(thisRef: Fragment, property: KProperty<*>): VB {
         if (binding == null) {
             try {
-                binding = clazz.getMethod("inflate", LayoutInflater::class.java)
-                    .invoke(null, thisRef.layoutInflater) as VB
+                val method = clazz.getMethod("inflate", LayoutInflater::class.java)
+                binding = method.invoke(null, thisRef.layoutInflater) as VB
             } catch (e: NoSuchMethodException) {
                 throw IllegalStateException("Failed to find inflate method for ${clazz.name}", e)
             } catch (e: IllegalAccessException) {
@@ -40,10 +42,13 @@ class FragmentBindingDelegate<VB : ViewBinding>(private val clazz: Class<VB>) :
                 )
             }
         }
-        if (thisRef.viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED)) {
-            thisRef.viewLifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
+
+        val currentState = thisRef.viewLifecycleOwner.lifecycle.currentState
+        if (currentState.isAtLeast(Lifecycle.State.INITIALIZED) && !observerAdded) {
             thisRef.viewLifecycleOwner.lifecycle.addObserver(lifecycleObserver)
+            observerAdded = true
         }
+
         return binding ?: throw IllegalStateException("Binding is not initialized")
     }
 }

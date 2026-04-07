@@ -10,18 +10,18 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.calculateSize
 import com.pengxh.kt.lite.extensions.deleteFile
 import com.pengxh.kt.lite.extensions.formatFileSize
-import com.pengxh.kt.lite.extensions.toBase64
 import com.pengxh.kt.lite.extensions.writeToFile
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.util.Base64
 import java.util.Date
 import java.util.Locale
 
 class FileExtensionFragment : KotlinBaseFragment<FragmentExtensionFileBinding>() {
 
     private lateinit var documentDir: File
-    private lateinit var imageFilePath: String
+    private lateinit var imageBytes: ByteArray
     private lateinit var base64File: File
     private lateinit var targetDir: File
 
@@ -41,11 +41,11 @@ class FileExtensionFragment : KotlinBaseFragment<FragmentExtensionFileBinding>()
             requireContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), ""
         )
 
-        val imageDir = File(
-            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), ""
+        val inputStream = requireContext().assets.open("ic_launcher-playstore.png")
+        imageBytes = inputStream.readBytes()
+        binding.originalImageView.setImageBitmap(
+            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         )
-        imageFilePath = "$imageDir${File.separator}加密.png"
-        binding.originalImageView.setImageBitmap(BitmapFactory.decodeFile(imageFilePath))
 
         base64File = createBase64File()
 
@@ -64,7 +64,7 @@ class FileExtensionFragment : KotlinBaseFragment<FragmentExtensionFileBinding>()
 
     override fun initEvent() {
         binding.base64Button.setOnClickListener {
-            val imageFile = File(imageFilePath).toBase64()
+            val imageFile = Base64.getEncoder().encodeToString(imageBytes)
             imageFile.writeToFile(base64File)
 
             binding.base64View.text = "Base64编码文件路径：${base64File.absolutePath}"

@@ -1,9 +1,9 @@
 package com.pengxh.kt.lib.view
 
 import android.os.Bundle
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.tabs.TabLayoutMediator
-import com.gyf.immersionbar.ImmersionBar
-import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.adapter.ViewPagerAdapter
 import com.pengxh.kt.lib.databinding.ActivityMainBinding
 import com.pengxh.kt.lib.fragments.AdapterPackageFragment
@@ -12,8 +12,6 @@ import com.pengxh.kt.lib.fragments.ExtensionsPackageFragment
 import com.pengxh.kt.lib.fragments.UtilsPackageFragment
 import com.pengxh.kt.lib.fragments.WidgetPackageFragment
 import com.pengxh.kt.lite.base.KotlinBaseActivity
-import com.pengxh.kt.lite.extensions.convertColor
-import com.pengxh.kt.lite.extensions.getStatusBarHeight
 
 class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
 
@@ -35,12 +33,11 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     }
 
     override fun setupTopBarLayout() {
-        ImmersionBar.with(this)
-            .statusBarDarkFont(false)
-            .statusBarColorInt(R.color.mainColor.convertColor(this))
-            .init()
-        binding.rootView.setPadding(0, getStatusBarHeight(), 0, 0)
-        binding.rootView.requestLayout()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootView) { view, insets ->
+            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            view.setPadding(0, statusBarHeight, 0, 0)
+            insets
+        }
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {

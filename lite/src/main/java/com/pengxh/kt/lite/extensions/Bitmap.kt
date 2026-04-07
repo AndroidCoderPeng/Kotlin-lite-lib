@@ -50,7 +50,7 @@ fun Bitmap.rotateImage(angle: Float): Bitmap {
 fun Bitmap.toBase64(): String {
     try {
         val outputStream = ByteArrayOutputStream()
-        compress(Bitmap.CompressFormat.JPEG, 100, outputStream) //压缩质量
+        compress(Bitmap.CompressFormat.JPEG, 100, outputStream) // 不压缩
         val bitmapBytes = outputStream.toByteArray()
         outputStream.flush()
         outputStream.close()

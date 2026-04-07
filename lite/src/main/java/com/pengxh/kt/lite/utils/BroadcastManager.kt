@@ -114,7 +114,7 @@ class BroadcastManager {
                 is Float -> intent.putExtra(key, value)
                 is Double -> intent.putExtra(key, value)
                 is Boolean -> intent.putExtra(key, value)
-                is java.io.Serializable -> intent.putExtra(key, value)
+                is Serializable -> intent.putExtra(key, value)
             }
         }
         context.sendBroadcast(intent)

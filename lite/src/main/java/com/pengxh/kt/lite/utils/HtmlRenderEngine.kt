@@ -9,9 +9,10 @@ import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.convertDrawable
+import com.pengxh.kt.lite.extensions.getScreenWidth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -79,25 +80,38 @@ class HtmlRenderEngine(builder: Builder) {
 
         scope.launch(Dispatchers.Main) {
             textView.movementMethod = LinkMovementMethod.getInstance()
-            //默认不处理图片先这样简单设置
+            // 先设置纯文本内容
             textView.text = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
+
             withContext(Dispatchers.IO) {
                 val imageGetter = Html.ImageGetter { source ->
                     val drawable = try {
-                        Glide.with(context).load(source).submit().get()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        R.mipmap.load_image_error.convertDrawable(context)!!
+                        Glide.with(context.applicationContext).load(source).submit().get()
+                    } catch (_: Exception) {
+                        ResourcesCompat.getDrawable(
+                            context.resources, R.mipmap.load_image_error, context.theme
+                        )
                     }
 
-                    var width = drawable.intrinsicWidth
-                    var height = drawable.intrinsicHeight
+                    if (drawable != null) {
+                        var width = drawable.intrinsicWidth
+                        var height = drawable.intrinsicHeight
 
-                    //对图片按比例缩放尺寸
-                    val scale = textView.width / width.toFloat()
-                    width = (scale * width).toInt()
-                    height = (scale * height).toInt()
-                    drawable.setBounds(0, 0, width, height)
+                        // 确保textView的宽度大于0再进行缩放计算
+                        val viewWidth = if (textView.width > 0)
+                            textView.width
+                        else
+                            context.getScreenWidth()
+
+                        //对图片按比例缩放尺寸
+                        if (width > 0) {
+                            val scale = viewWidth / width.toFloat()
+                            width = (scale * width).toInt()
+                            height = (scale * height).toInt()
+                        }
+                        drawable.setBounds(0, 0, width, height)
+                    }
+
                     //return
                     drawable
                 }
@@ -112,20 +126,24 @@ class HtmlRenderEngine(builder: Builder) {
                                 val images = output.getSpans(
                                     len - 1, len, ImageSpan::class.java
                                 )
-                                val imgSource = images[0].source ?: return
-                                output.setSpan(object : ClickableSpan() {
-                                    override fun onClick(widget: View) {
-                                        listener.imageSource(imgSource)
-                                    }
-                                }, len - 1, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                                if (images.isNotEmpty()) {
+                                    val imgSource = images[0].source ?: return
+                                    output.setSpan(object : ClickableSpan() {
+                                        override fun onClick(widget: View) {
+                                            listener.imageSource(imgSource)
+                                        }
+                                    }, len - 1, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                }
                             }
                         }
-                    })
+                    }
+                )
+
                 withContext(Dispatchers.Main) {
                     textView.text = htmlText
                 }
             }
-            job.cancel()
         }
     }
 

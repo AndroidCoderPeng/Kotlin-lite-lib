@@ -1,12 +1,12 @@
 package com.pengxh.kt.lite.widget.dialog
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import com.pengxh.kt.lite.databinding.DialogGlobeAlertBinding
 import com.pengxh.kt.lite.extensions.bindView
@@ -21,7 +21,7 @@ class GlobeAlertDialog(private val listener: OnDialogButtonClickListener) : Dial
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val window = dialog?.window
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         window?.decorView?.setBackgroundColor(Color.TRANSPARENT)
         val params = window?.attributes
         params?.width = ((context?.getScreenWidth()!! * 0.8f).toInt())

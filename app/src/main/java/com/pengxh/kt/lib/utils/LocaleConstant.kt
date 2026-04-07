@@ -24,6 +24,8 @@ object LocaleConstant {
         "浙江"
     )
 
+    const val TARGET_APK = "https://ucdl.25pp.com/fs01/union_pack/Wandoujia_4163877_web_seo_others_homepage.apk"
+
     //API测试接口地址
     const val TARGET_API = "https://api.52vmy.cn/api/wl/yan/kfc"
 

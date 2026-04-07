@@ -1,48 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/titleViewHeight"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/dp_10"
-        android:text="文件下载地址"
-        android:textColor="@color/mainColor"
-        android:textSize="@dimen/sp_16" />
+    android:orientation="vertical"
+    android:padding="@dimen/dp_10">
 
     <EditText
         android:id="@+id/downloadPathView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/titleViewHeight"
-        android:paddingHorizontal="@dimen/dp_5"
-        android:singleLine="true"
-        android:text="http://60.208.121.150:5001/static/apk/1.1.4.apk"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:padding="@dimen/dp_5"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_16" />
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progressBar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_5" />
+        android:layout_marginVertical="@dimen/dp_10"
+        app:trackCornerRadius="@dimen/dp_3"
+        app:trackThickness="@dimen/dp_10" />
 
     <Button
         android:id="@+id/startDownloadButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"
         android:text="开始下载" />
 
     <TextView
         android:id="@+id/filePathView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
         android:textColor="@color/mainColor"
         android:textSize="@dimen/sp_16" />
 </LinearLayout>

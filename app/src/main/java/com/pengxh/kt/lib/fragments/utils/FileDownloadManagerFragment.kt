@@ -1,9 +1,11 @@
 package com.pengxh.kt.lib.fragments.utils
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.pengxh.kt.lib.databinding.FragmentUtilsFileDownloadBinding
+import com.pengxh.kt.lib.utils.LocaleConstant
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.createDownloadFileDir
 import com.pengxh.kt.lite.utils.FileDownloadManager
@@ -12,6 +14,7 @@ import java.io.File
 class FileDownloadManagerFragment : KotlinBaseFragment<FragmentUtilsFileDownloadBinding>() {
 
     private val kTag = "FileDownloadManagerFragment"
+    private var total = 1L
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -25,7 +28,7 @@ class FileDownloadManagerFragment : KotlinBaseFragment<FragmentUtilsFileDownload
     }
 
     override fun initOnCreate(savedInstanceState: Bundle?) {
-
+        binding.downloadPathView.setText(LocaleConstant.TARGET_APK)
     }
 
     override fun observeRequestState() {
@@ -45,11 +48,14 @@ class FileDownloadManagerFragment : KotlinBaseFragment<FragmentUtilsFileDownload
                 .setFileSaveDirectory(requireContext().createDownloadFileDir())
                 .setOnFileDownloadListener(object : FileDownloadManager.OnFileDownloadListener {
                     override fun onDownloadStart(total: Long) {
-
+                        this@FileDownloadManagerFragment.total = total
                     }
 
-                    override fun onProgressChanged(progress: Float) {
-                        binding.progressBar.progress = (progress * 100).toInt()
+                    override fun onProgressChanged(progress: Int) {
+                        val value = (progress.toFloat() / total) * 100
+                        Log.d(kTag, "onProgressChanged: $progress - $value")
+
+                        binding.progressBar.progress = value.toInt()
                         binding.startDownloadButton.isEnabled = false
                     }
 

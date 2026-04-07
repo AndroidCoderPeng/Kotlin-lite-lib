@@ -1,5 +1,6 @@
 package com.pengxh.kt.lite.extensions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,7 +8,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
-import android.util.DisplayMetrics
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.pengxh.kt.lite.utils.LiteKitConstant
@@ -102,12 +102,13 @@ fun Context.getScreenWidth(): Int {
  * 获取屏幕高度，兼容Android 11+
  */
 fun Context.getScreenHeight(): Int {
-    return resources.displayMetrics.heightPixels + getStatusBarHeight()
+    return resources.displayMetrics.heightPixels
 }
 
 /**
- * 获取状态栏高度，兼容Android 11+
+ * 获取状态栏高度
  * */
+@SuppressLint("InternalInsetResource", "DiscouragedApi")
 fun Context.getStatusBarHeight(): Int {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -117,31 +118,15 @@ fun Context.getStatusBarHeight(): Int {
         val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars())
         return insets.top
     } else {
-        if (Build.MANUFACTURER.equals("xiaomi", ignoreCase = true)) {
+        try {
             val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
             return if (resourceId > 0) {
                 resources.getDimensionPixelSize(resourceId)
             } else {
                 0
             }
-        } else {
-            try {
-                val clazz = Class.forName("com.android.internal.R\$dimen")
-                val obj = clazz.newInstance()
-                val field = clazz.getField("status_bar_height")
-                val resIdValue = field[obj]?.toString()?.toIntOrNull()
-                if (resIdValue != null && resIdValue > 0) {
-                    return resources.getDimensionPixelSize(resIdValue)
-                }
-            } catch (e: ClassNotFoundException) {
-                e.printStackTrace()
-            } catch (e: IllegalAccessException) {
-                e.printStackTrace()
-            } catch (e: NoSuchFieldException) {
-                e.printStackTrace()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        } catch (e: Exception) {
+            e.printStackTrace()
             return 0
         }
     }
@@ -151,22 +136,7 @@ fun Context.getStatusBarHeight(): Int {
  * 获取屏幕密度比值
  */
 fun Context.getScreenDensity(): Float {
-    val windowManager = getSystemService(WindowManager::class.java)
-    val displayMetrics = DisplayMetrics()
-    val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        display
-    } else {
-        windowManager.defaultDisplay
-    }
-    if (display == null) {
-        return 1f
-    }
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        resources.displayMetrics.density
-    } else {
-        display.getMetrics(displayMetrics)
-        displayMetrics.density
-    }
+    return resources.displayMetrics.density
 }
 
 

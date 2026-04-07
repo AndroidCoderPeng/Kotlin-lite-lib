@@ -21,14 +21,14 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.UserDefinedDial
         binding.progressText.text = "0 %"
     }
 
-    fun setMaxProgress(maxProgress: Long) {
-        binding.progressBar.max = maxProgress.toInt()
+    fun setMaxProgress(max: Long) {
+        binding.progressBar.max = max.toInt()
     }
 
     private fun getMaxProgress() = binding.progressBar.max
 
-    fun updateProgress(progress: Float) {
-        binding.progressBar.progress = progress.toInt()
+    fun updateProgress(progress: Int) {
+        binding.progressBar.progress = progress
 
         val percent = (progress / getMaxProgress()) * 100
         binding.progressText.text = String.format("%.2f %%", percent)

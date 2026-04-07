@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentWidgetDialogBinding
+import com.pengxh.kt.lib.utils.LocaleConstant
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.createDownloadFileDir
@@ -155,7 +156,7 @@ class DialogFragment : KotlinBaseFragment<FragmentWidgetDialogBinding>() {
             val progressDialog = ProgressDialog(requireContext())
             progressDialog.show()
             FileDownloadManager.Builder()
-                .setDownloadFileSource("http://111.198.10.15:20110/apk/2025-01/b33739c02dba389072319b9d5aea95e0.apk")
+                .setDownloadFileSource(LocaleConstant.TARGET_APK)
                 .setFileSuffix("apk")
                 .setFileSaveDirectory(requireContext().createDownloadFileDir())
                 .setOnFileDownloadListener(object : FileDownloadManager.OnFileDownloadListener {
@@ -173,7 +174,7 @@ class DialogFragment : KotlinBaseFragment<FragmentWidgetDialogBinding>() {
                         progressDialog.dismiss()
                     }
 
-                    override fun onProgressChanged(progress: Float) {
+                    override fun onProgressChanged(progress: Int) {
                         progressDialog.updateProgress(progress)
                     }
                 }).build().start()

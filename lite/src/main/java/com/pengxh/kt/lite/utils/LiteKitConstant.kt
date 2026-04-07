@@ -4,11 +4,6 @@ import com.pengxh.kt.lite.R
 
 object LiteKitConstant {
     /**
-     * 广播接收者消息Key
-     */
-    const val BROADCAST_MESSAGE_KEY = "DataMessageKey"
-
-    /**
      * 查看大图Intent IndexKey
      */
     const val BIG_IMAGE_INTENT_INDEX_KEY = "IndexKey"

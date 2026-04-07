@@ -11,16 +11,22 @@ import androidx.core.graphics.drawable.toDrawable
 fun ImageView.switchBackground(blurBitmap: Bitmap?) {
     if (blurBitmap == null) return
 
-    val lastDrawable: Drawable = when (drawable) {
-        is TransitionDrawable -> (drawable as TransitionDrawable).getDrawable(1) ?: Color.TRANSPARENT.toDrawable()
-        is BitmapDrawable -> drawable
+    val lastDrawable: Drawable = when (val currentDrawable = drawable) {
+        is TransitionDrawable -> {
+            // 获取当前TransitionDrawable的前景drawable作为上一个背景
+            currentDrawable.getDrawable(1) ?: Color.TRANSPARENT.toDrawable()
+        }
+
+        is BitmapDrawable -> currentDrawable
         null -> Color.TRANSPARENT.toDrawable()
         else -> Color.TRANSPARENT.toDrawable()
     }
 
     val newDrawable = blurBitmap.toDrawable(resources)
 
-    val transitionDrawable = drawable as? TransitionDrawable ?: run {
+    val transitionDrawable = if (drawable is TransitionDrawable) {
+        drawable as TransitionDrawable
+    } else {
         TransitionDrawable(arrayOf(lastDrawable, newDrawable)).apply {
             setIds()
             isCrossFadeEnabled = true
@@ -28,8 +34,10 @@ fun ImageView.switchBackground(blurBitmap: Bitmap?) {
         }
     }
 
-    transitionDrawable.setDrawableByLayerId(transitionDrawable.getId(1), newDrawable)
-    transitionDrawable.startTransition(1000)
+    if (drawable === transitionDrawable) {
+        transitionDrawable.setDrawableByLayerId(transitionDrawable.getId(1), newDrawable)
+        transitionDrawable.startTransition(1000)
+    }
 }
 
 private fun TransitionDrawable.setIds() {

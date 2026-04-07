@@ -4,6 +4,7 @@ import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Call
@@ -80,6 +81,8 @@ class FileDownloadManager(builder: Builder) : CoroutineScope {
     private val suffix = builder.suffix
     private val directory = builder.directory
     private val listener = builder.downloadListener
+    private val isExecuting = AtomicBoolean(false)
+    private var currentCall: Call? = null
 
     /**
      * 开始下载
@@ -87,18 +90,22 @@ class FileDownloadManager(builder: Builder) : CoroutineScope {
     fun start() {
         val request = Request.Builder().get().url(url).build()
         val newCall = httpClient.newCall(request)
-        val isExecuting = AtomicBoolean(false)
+
+        // 保存当前call引用，以便后续取消
+        currentCall = newCall
 
         /**
          * 如果已被加入下载队列，则取消之前的，重新下载
          */
         if (isExecuting.getAndSet(true)) {
             newCall.cancel()
+            return
         }
 
         //异步下载文件
         newCall.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                isExecuting.set(false)
                 launch {
                     listener.onDownloadFailed(e)
                 }
@@ -106,47 +113,69 @@ class FileDownloadManager(builder: Builder) : CoroutineScope {
 
             override fun onResponse(call: Call, response: Response) {
                 launch(Dispatchers.IO) {
-                    val body = response.body
-                    if (body == null) {
-                        withContext(Dispatchers.Main) {
-                            listener.onDownloadFailed(IOException("Response body is null"))
-                        }
-                        throw IOException("Response body is null")
-                    } else {
-                        val inputStream = body.byteStream()
-                        val fileSize = body.contentLength()
-                        if (fileSize <= 0) {
+                    var body: okhttp3.ResponseBody? = null
+                    try {
+                        body = response.body
+                        if (body == null) {
+                            isExecuting.set(false)
                             withContext(Dispatchers.Main) {
-                                listener.onDownloadFailed(IllegalArgumentException("Invalid file size"))
+                                listener.onDownloadFailed(IOException("Response body is null"))
                             }
-                            throw IllegalArgumentException("Invalid file size")
-                        }
-                        withContext(Dispatchers.Main) {
-                            Log.d(kTag, "onDownloadStart: fileSize: $fileSize")
-                            listener.onDownloadStart(fileSize)
-                        }
-
-                        // 将文件大小转为单精度，便于计算百分比
-                        val tempSize = fileSize.toFloat()
-                        val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
-                        file.outputStream().use { fos ->
-                            val buffer = ByteArray(2048)
-                            var sum = 0L
-                            var read: Int
-                            while (inputStream.read(buffer).also { read = it } != -1) {
-                                fos.write(buffer, 0, read)
-                                sum += read
-                                val progress = sum / tempSize
+                            return@launch
+                        } else {
+                            val inputStream = body.byteStream()
+                            val fileSize = body.contentLength()
+                            if (fileSize <= 0) {
+                                isExecuting.set(false)
                                 withContext(Dispatchers.Main) {
-                                    Log.d(kTag, "onProgressChanged: download progress: $progress")
-                                    listener.onProgressChanged(progress)
+                                    listener.onDownloadFailed(IllegalArgumentException("Invalid file size"))
+                                }
+                                return@launch
+                            }
+                            withContext(Dispatchers.Main) {
+                                Log.d(kTag, "onDownloadStart: fileSize: $fileSize")
+                                listener.onDownloadStart(fileSize)
+                            }
+
+                            val file = File(directory, "${System.currentTimeMillis()}.${suffix}")
+                            file.outputStream().use { fos ->
+                                // 大缓冲区提高性能
+                                val buffer = ByteArray(8192)
+                                var sum = 0
+                                var read: Int
+                                while (inputStream.read(buffer).also { read = it } != -1) {
+                                    if (!isActive) break // 检查协程是否被取消
+
+                                    fos.write(buffer, 0, read)
+                                    sum += read
+
+                                    withContext(Dispatchers.Main) {
+                                        if (isExecuting.get()) { // 确保下载仍在进行
+                                            listener.onProgressChanged(sum)
+                                        }
+                                    }
                                 }
                             }
+
+                            // 只有当下载成功且未被取消时才触发完成回调
+                            if (isExecuting.get()) {
+                                withContext(Dispatchers.Main) {
+                                    Log.d(kTag, "onDownloadEnd: file ${file.absolutePath}")
+                                    listener.onDownloadEnd(file)
+                                }
+                            } else {
+                                // 如果下载被取消，删除临时文件
+                                file.delete()
+                            }
                         }
+                    } catch (e: Exception) {
+                        isExecuting.set(false)
                         withContext(Dispatchers.Main) {
-                            Log.d(kTag, "onDownloadEnd: file ${file.absolutePath}")
-                            listener.onDownloadEnd(file)
+                            listener.onDownloadFailed(e)
                         }
+                    } finally {
+                        isExecuting.set(false)
+                        body?.close() // 确保响应体被关闭
                     }
                 }
             }
@@ -154,12 +183,14 @@ class FileDownloadManager(builder: Builder) : CoroutineScope {
     }
 
     fun cancel() {
+        currentCall?.cancel()
+        isExecuting.set(false)
         job.cancel()
     }
 
     interface OnFileDownloadListener {
         fun onDownloadStart(total: Long)
-        fun onProgressChanged(progress: Float)
+        fun onProgressChanged(progress: Int)
         fun onDownloadEnd(file: File)
         fun onDownloadFailed(t: Throwable)
     }
