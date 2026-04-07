@@ -96,7 +96,7 @@ class OverlayCreatorFragment : KotlinBaseFragment<FragmentUtilsOverlayBinding>()
                 .setContext(requireContext())
                 .setOriginalBitmap(bitmap)
                 .setOverlay(lines)
-                .setPosition(Pair(0.5f, 1.0f))
+                .setPosition(Pair(0.75f, 0.75f))
                 .setOutputPath("${compressImageDir}/${System.currentTimeMillis()}.png")
                 .setOnStateChangedListener(object : OverlayCreator.OnStateChangedListener {
                     override fun onStart() {
