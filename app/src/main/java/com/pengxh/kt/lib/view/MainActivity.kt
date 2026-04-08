@@ -33,7 +33,7 @@ class MainActivity : KotlinBaseActivity<ActivityMainBinding>() {
     }
 
     override fun setupTopBarLayout() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.rootView) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.titleView) { view, insets ->
             val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
             view.setPadding(0, statusBarHeight, 0, 0)
             insets

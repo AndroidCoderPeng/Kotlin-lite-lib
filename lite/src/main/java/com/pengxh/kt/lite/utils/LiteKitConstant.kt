@@ -1,7 +1,5 @@
 package com.pengxh.kt.lite.utils
 
-import com.pengxh.kt.lite.R
-
 object LiteKitConstant {
     /**
      * 查看大图Intent IndexKey
@@ -18,16 +16,5 @@ object LiteKitConstant {
      */
     const val INTENT_PARAM_KEY = "IntentParamKey"
 
-    /**
-     * 最大录音时长5分钟
-     */
-    const val MAX_LENGTH = 1000 * 60 * 5
     const val HTTP_TIMEOUT = 15L
-
-    /**
-     * 录音动画图标
-     * */
-    val AUDIO_DRAWABLES = intArrayOf(
-        R.drawable.ic_audio_icon1, R.drawable.ic_audio_icon2, R.drawable.ic_audio_icon3
-    )
 }
