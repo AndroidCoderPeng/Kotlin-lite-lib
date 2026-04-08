@@ -8,13 +8,13 @@
         android:layout_width="@dimen/lib_dp_20"
         android:layout_height="@dimen/lib_dp_20"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/lib_dp_15"
+        android:layout_marginEnd="@dimen/lib_dp_10"
         android:background="@drawable/border_triangle" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="13dp"
         android:backgroundTint="#030B14"
         app:cardCornerRadius="@dimen/lib_dp_5">
 

@@ -26,7 +26,11 @@ class EasyPopupWindow(context: Context) : PopupWindow() {
         )
     }
 
-    fun set(menuItems: ArrayList<MenuItem>, windowClickListener: OnPopupWindowClickListener) {
+    fun set(menuItems: List<MenuItem>, windowClickListener: OnPopupWindowClickListener) {
+        if (menuItems.isEmpty()) {
+            return
+        }
+
         val listView = contentView.findViewById<ListView>(R.id.listView)
         val inflater = LayoutInflater.from(contentView.context)
         listView.adapter = object : BaseAdapter() {
@@ -55,13 +59,19 @@ class EasyPopupWindow(context: Context) : PopupWindow() {
                     view = convertView
                     holder = view.tag as PopupWindowHolder
                 }
-                holder.imageView.setBackgroundResource(menuItems[position].icon)
-                holder.titleView.text = menuItems[position].name
+
+                // 添加安全检查防止资源错误
+                if (position >= 0 && position < menuItems.size) {
+                    holder.imageView.setBackgroundResource(menuItems[position].icon)
+                    holder.titleView.text = menuItems[position].name
+                }
                 return view
             }
         }
         listView.setOnItemClickListener { _, _, position, _ ->
-            windowClickListener.onPopupItemClicked(position)
+            if (position >= 0 && position < menuItems.size) {
+                windowClickListener.onPopupItemClicked(position)
+            }
             dismiss()
         }
     }

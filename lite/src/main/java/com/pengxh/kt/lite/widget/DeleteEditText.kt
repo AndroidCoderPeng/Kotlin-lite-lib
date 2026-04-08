@@ -15,11 +15,11 @@ import com.pengxh.kt.lite.R
 import com.pengxh.kt.lite.extensions.convertDrawable
 
 
-class DeleteEditText(context: Context, attrs: AttributeSet) :
-    AppCompatEditText(context, attrs), OnFocusChangeListener, TextWatcher {
+class DeleteEditText(context: Context, attrs: AttributeSet) : AppCompatEditText(context, attrs),
+    OnFocusChangeListener, TextWatcher {
 
     private val kTag = "DeleteEditText"
-    private val paint = Paint()
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val bounds = Rect()
 
     /**
@@ -58,7 +58,7 @@ class DeleteEditText(context: Context, attrs: AttributeSet) :
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_UP) {
-            if (event.x > width - totalPaddingRight && event.x < width - paddingRight) {
+            if (compoundDrawables[2] != null && event.x > width - totalPaddingRight && event.x < width - paddingRight) {
                 setText("")
             }
         }

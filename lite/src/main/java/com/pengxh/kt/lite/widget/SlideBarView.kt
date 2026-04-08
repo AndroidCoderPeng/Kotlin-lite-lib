@@ -51,7 +51,7 @@ class SlideBarView(context: Context, attrs: AttributeSet) : View(context, attrs)
     private lateinit var textPaint: TextPaint
     private lateinit var textRect: Rect
 
-    private lateinit var recyclerView: RecyclerView
+    private var recyclerView: RecyclerView? = null
     private var popupWindow: PopupWindow
     private var centerTextView: TextView
 
@@ -82,11 +82,17 @@ class SlideBarView(context: Context, attrs: AttributeSet) : View(context, attrs)
     }
 
     private val showCenterTextRunnable = Runnable {
-        popupWindow.showAtLocation(recyclerView, Gravity.CENTER, 0, 0)
+        recyclerView?.let {
+            if (!popupWindow.isShowing) {
+                popupWindow.showAtLocation(it, Gravity.CENTER, 0, 0)
+            }
+        }
     }
 
     private val dismissCenterTextRunnable = Runnable {
-        popupWindow.dismiss()
+        if (popupWindow.isShowing) {
+            popupWindow.dismiss()
+        }
     }
 
     private fun initPaint() {
@@ -122,11 +128,13 @@ class SlideBarView(context: Context, attrs: AttributeSet) : View(context, attrs)
     fun getLetterPosition(letter: String): Int {
         var index = -1
         for (i in dataSet.indices) {
-            val firstLetter = dataSet[i].getHanYuPinyin().substring(0, 1)
-            if (letter == firstLetter) {
-                index = i
-                //当有相同的首字母之后就跳出循环
-                break
+            if (dataSet[i].isNotBlank() && dataSet[i].isNotEmpty()) {
+                val pinyin = dataSet[i].getHanYuPinyin()
+                if (pinyin.isNotEmpty() && letter == pinyin.substring(0, 1)) {
+                    index = i
+                    //当有相同的首字母之后就跳出循环
+                    break
+                }
             }
         }
         return index
@@ -249,12 +257,15 @@ class SlideBarView(context: Context, attrs: AttributeSet) : View(context, attrs)
                 val index = (y / letterHeight).toInt() //字母的索引
                 if (index != touchIndex) {
                     touchIndex = index.coerceAtMost(letterArray.size - 1)
+
                     //点击设置中间字母
-                    val letter = letterArray[touchIndex]
-                    centerTextView.text = letter
-                    onLetterIndexChangeListener?.onLetterIndexChange(letter)
-                    //显示Popup
-                    post(showCenterTextRunnable)
+                    if (touchIndex >= 0 && touchIndex < letterArray.size) {
+                        val letter = letterArray[touchIndex]
+                        centerTextView.text = letter
+                        onLetterIndexChangeListener?.onLetterIndexChange(letter)
+                        //显示Popup
+                        post(showCenterTextRunnable)
+                    }
                     invalidate()
                 }
                 showBackground = true

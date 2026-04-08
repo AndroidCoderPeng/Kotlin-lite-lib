@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentWidgetPackageBinding
-import com.pengxh.kt.lib.fragments.widget.AirDashBoardViewFragment
 import com.pengxh.kt.lib.fragments.widget.CircleProgressBarFragment
 import com.pengxh.kt.lib.fragments.widget.DeleteEditTextFragment
 import com.pengxh.kt.lib.fragments.widget.DialogFragment
@@ -25,7 +24,6 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
 
     private val itemTitles = arrayOf(
         "对话框",
-        "空气指数表盘",
         "圆形进度条",
         "带删除的输入框",
         "PopupWindow",
@@ -43,15 +41,14 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         }
         val fragment = when (position) {
             0 -> DialogFragment()
-            1 -> AirDashBoardViewFragment()
-            2 -> CircleProgressBarFragment()
-            3 -> DeleteEditTextFragment()
-            4 -> EasyPopupWindowFragment()
-            5 -> EmptyViewFragment()
-            6 -> KeyBoardViewFragment()
-            7 -> SlideBarViewFragment()
-            8 -> SteeringWheelViewFragment()
-            9 -> TitleBarViewFragment()
+            1 -> CircleProgressBarFragment()
+            2 -> DeleteEditTextFragment()
+            3 -> EasyPopupWindowFragment()
+            4 -> EmptyViewFragment()
+            5 -> KeyBoardViewFragment()
+            6 -> SlideBarViewFragment()
+            7 -> SteeringWheelViewFragment()
+            8 -> TitleBarViewFragment()
             else -> throw IllegalArgumentException("Invalid position")
         }
         fragmentPages.add(fragment)
