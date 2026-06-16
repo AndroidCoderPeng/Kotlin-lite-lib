@@ -64,6 +64,7 @@ class BitmapExtensionFragment : KotlinBaseFragment<FragmentExtensionBitmapBindin
     override fun initEvent() {
         binding.rotateButton.setOnClickListener {
             if (binding.angleView.text.isNullOrBlank()) {
+                binding.angleView.shakeIfEmpty()
                 return@setOnClickListener
             }
             val rotateImage =
