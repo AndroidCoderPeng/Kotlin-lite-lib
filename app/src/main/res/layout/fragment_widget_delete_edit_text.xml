@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.pengxh.kt.lite.widget.DeleteEditText
+    <com.pengxh.kt.lite.widget.DeletableEditText
         android:id="@+id/deleteEditText"
         android:layout_width="match_parent"
         android:layout_height="@dimen/titleViewHeight"
