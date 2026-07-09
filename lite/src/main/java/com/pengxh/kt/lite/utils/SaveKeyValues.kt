@@ -14,9 +14,8 @@ object SaveKeyValues {
         sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
     }
 
-    /**
-     * 存储
-     */
+    // ==================== put ====================
+    @Deprecated("请使用基本类型put")
     fun putValue(key: String, any: Any?) {
         if (key.isBlank()) {
             return
@@ -25,37 +24,100 @@ object SaveKeyValues {
             removeKey(key)
             return
         }
-        val editor = sp.edit()
         when (any) {
-            is String -> editor.putString(key, any)
-            is Int -> editor.putInt(key, any)
-            is Boolean -> editor.putBoolean(key, any)
-            is Float -> editor.putFloat(key, any)
-            is Long -> editor.putLong(key, any)
-            else -> editor.putString(key, any.toString())
+            is String -> putString(key, any)
+            is Int -> putInt(key, any)
+            is Boolean -> putBoolean(key, any)
+            is Float -> putFloat(key, any)
+            is Long -> putLong(key, any)
+            else -> putString(key, any.toString())
         }
+    }
+
+    fun putString(key: String, value: String) {
+        if (key.isBlank()) return
         try {
-            editor.apply()
+            sp.edit().putString(key, value).apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    /**
-     * 获取保存的数据
-     */
-    operator fun getValue(key: String, defaultObject: Any): Any? {
+    fun putInt(key: String, value: Int) {
+        if (key.isBlank()) return
+        try {
+            sp.edit().putInt(key, value).apply()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun putLong(key: String, value: Long) {
+        if (key.isBlank()) return
+        try {
+            sp.edit().putLong(key, value).apply()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun putFloat(key: String, value: Float) {
+        if (key.isBlank()) return
+        try {
+            sp.edit().putFloat(key, value).apply()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun putBoolean(key: String, value: Boolean) {
+        if (key.isBlank()) return
+        try {
+            sp.edit().putBoolean(key, value).apply()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // ==================== get ====================
+    @Deprecated("请使用基本类型get")
+    fun getValue(key: String, defaultObject: Any): Any? {
         if (key.isBlank()) {
             return null
         }
         return when (defaultObject) {
-            is String -> sp.getString(key, defaultObject)
-            is Int -> sp.getInt(key, defaultObject)
-            is Boolean -> sp.getBoolean(key, defaultObject)
-            is Float -> sp.getFloat(key, defaultObject)
-            is Long -> sp.getLong(key, defaultObject)
+            is String -> getString(key, defaultObject)
+            is Int -> getInt(key, defaultObject)
+            is Boolean -> getBoolean(key, defaultObject)
+            is Float -> getFloat(key, defaultObject)
+            is Long -> getLong(key, defaultObject)
             else -> defaultObject
         }
+    }
+
+    fun getString(key: String, defaultValue: String = ""): String {
+        if (key.isBlank()) return defaultValue
+        return sp.getString(key, defaultValue) ?: defaultValue
+    }
+
+    fun getInt(key: String, defaultValue: Int = 0): Int {
+        if (key.isBlank()) return defaultValue
+        return sp.getInt(key, defaultValue)
+    }
+
+    fun getLong(key: String, defaultValue: Long = 0L): Long {
+        if (key.isBlank()) return defaultValue
+        return sp.getLong(key, defaultValue)
+    }
+
+    fun getFloat(key: String, defaultValue: Float = 0f): Float {
+        if (key.isBlank()) return defaultValue
+        return sp.getFloat(key, defaultValue)
+    }
+
+    fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
+        if (key.isBlank()) return defaultValue
+        return sp.getBoolean(key, defaultValue)
     }
 
     /**

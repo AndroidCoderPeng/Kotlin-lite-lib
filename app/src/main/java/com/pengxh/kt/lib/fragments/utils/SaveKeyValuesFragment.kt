@@ -29,19 +29,12 @@ class SaveKeyValuesFragment : KotlinBaseFragment<FragmentUtilsSaveKeyValuesBindi
     }
 
     override fun initEvent() {
-        /**
-         * 存取数据一定要注意类型统一，否则会报错——[ClassCastException]
-         *
-         * 如存String
-         * 取Int
-         * ——java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Integer
-         * */
         binding.saveValueButton.setOnClickListener {
-            SaveKeyValues.putValue("SaveKeyValuesFragment", binding.inputSpView.text.toString())
+            SaveKeyValues.putString("SaveKeyValuesFragment", binding.inputSpView.text.toString())
         }
 
         binding.getValueButton.setOnClickListener {
-            val value = SaveKeyValues.getValue("SaveKeyValuesFragment", "") as String
+            val value = SaveKeyValues.getString("SaveKeyValuesFragment", "")
             binding.showSpView.text = value
         }
     }
