@@ -2,6 +2,7 @@ package com.pengxh.kt.lite.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 object SaveKeyValues {
     private lateinit var sp: SharedPreferences
@@ -37,7 +38,7 @@ object SaveKeyValues {
     fun putString(key: String, value: String) {
         if (key.isBlank()) return
         try {
-            sp.edit().putString(key, value).apply()
+            sp.edit { putString(key, value) }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -46,7 +47,7 @@ object SaveKeyValues {
     fun putInt(key: String, value: Int) {
         if (key.isBlank()) return
         try {
-            sp.edit().putInt(key, value).apply()
+            sp.edit { putInt(key, value) }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -55,7 +56,7 @@ object SaveKeyValues {
     fun putLong(key: String, value: Long) {
         if (key.isBlank()) return
         try {
-            sp.edit().putLong(key, value).apply()
+            sp.edit { putLong(key, value) }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -64,7 +65,7 @@ object SaveKeyValues {
     fun putFloat(key: String, value: Float) {
         if (key.isBlank()) return
         try {
-            sp.edit().putFloat(key, value).apply()
+            sp.edit { putFloat(key, value) }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -73,7 +74,7 @@ object SaveKeyValues {
     fun putBoolean(key: String, value: Boolean) {
         if (key.isBlank()) return
         try {
-            sp.edit().putBoolean(key, value).apply()
+            sp.edit { putBoolean(key, value) }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -124,11 +125,9 @@ object SaveKeyValues {
      * 移除某个key和value
      */
     fun removeKey(key: String) {
-        if (key.isBlank()) {
-            return
-        }
+        if (key.isBlank()) return
         try {
-            sp.edit().remove(key).apply()
+            sp.edit { remove(key) }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -139,7 +138,7 @@ object SaveKeyValues {
      */
     fun clearAll() {
         try {
-            sp.edit().clear().apply()
+            sp.edit { clear() }
         } catch (e: Exception) {
             e.printStackTrace()
         }
