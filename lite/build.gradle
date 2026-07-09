@@ -1,15 +1,7 @@
-//import java.text.SimpleDateFormat
-
 plugins {
     id('com.android.library')
     id('org.jetbrains.kotlin.android')
 }
-
-//static def getBuildDate() {
-//    def date = new Date()
-//    def dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-//    return dateFormat.format(date)
-//}
 
 android {
     namespace 'com.pengxh.kt.lite'
@@ -57,12 +49,6 @@ android {
         buildConfig true
         viewBinding true
     }
-
-//    libraryVariants.configureEach {
-//        outputs.configureEach {
-//            outputFileName = "lite-lib-ktx_${getBuildDate()}_${defaultConfig.versionName}.aar"
-//        }
-//    }
 }
 
 dependencies {
