@@ -1,6 +1,7 @@
 plugins {
     id('com.android.library')
     id('org.jetbrains.kotlin.android')
+    id('maven-publish')  // JitPack 发布必需
 }
 
 android {
@@ -49,6 +50,8 @@ android {
         buildConfig true
         viewBinding true
     }
+
+    publishing { singleVariant("release") }
 }
 
 dependencies {
