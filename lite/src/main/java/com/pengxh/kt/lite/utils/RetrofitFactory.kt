@@ -1,7 +1,6 @@
 package com.pengxh.kt.lite.utils
 
 import android.util.Log
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -38,7 +37,6 @@ object RetrofitFactory {
             .baseUrl(httpConfig)
             .addConverterFactory(ScalarsConverterFactory.create())          //字符串转换器
             .addConverterFactory(GsonConverterFactory.create())             //Gson转换器
-            .addCallAdapterFactory(CoroutineCallAdapterFactory.invoke())    //协程请求适配器
             .client(httpClient)
             .build()
             .create(T::class.java)

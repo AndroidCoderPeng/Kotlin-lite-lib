@@ -10,7 +10,8 @@ object RetrofitServiceManager {
         createRetrofit<RetrofitService>(httpConfig)
     }
 
+    // 调用时转成String
     suspend fun getNewsByPage(channel: String, start: Int): String {
-        return api.getNewsByPage(channel, start, 10, "32736cbe845d7a70")
+        return api.getNewsByPage(channel, start, 10, "32736cbe845d7a70").string()
     }
 }
