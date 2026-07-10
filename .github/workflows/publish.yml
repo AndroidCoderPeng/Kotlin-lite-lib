@@ -1,0 +1,41 @@
+# 这个Workflow的名字，会在GitHub的Actions页面显示
+name: Publish to GitHub Packages
+
+# 触发条件：只有当推送了「以v开头的tag」时才运行（比如你打v2.0.0的tag就触发）
+on:
+  push:
+    tags:
+      - 'v*'
+
+# 权限配置：必须加，不然会报403错误，GitHub官方要求的
+permissions:
+  contents: read    # 允许读取你的仓库代码
+  packages: write   # 允许往你的GitHub Packages里写包
+
+jobs:
+  publish:
+    # 用GitHub提供的Ubuntu系统跑任务，预装了JDK、Gradle，环境非常稳
+    runs-on: ubuntu-latest
+
+    steps:
+      # 步骤1：拉取你的仓库代码到云端环境
+      - uses: actions/checkout@v4
+
+      # 步骤2：配置JDK 17（向下兼容编译Java11代码，GitHub官方维护的Action，绝对稳）
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 步骤3：给gradlew加执行权限（Linux系统必须，不然会报“没权限运行gradlew”的错误）
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 步骤4：核心！运行发布命令，把库发到GitHub Packages
+      - name: Publish library
+        run: ./gradlew :lite:publish
+        env:
+          # 这个GITHUB_TOKEN是GitHub自动生成的，不用你手动配置任何Secret！
+          # 它会自动用你当前推送tag的账号权限，完全不用管
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
