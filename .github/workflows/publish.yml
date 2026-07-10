@@ -21,7 +21,7 @@ jobs:
       # 步骤1：拉取你的仓库代码到云端环境
       - uses: actions/checkout@v4
 
-      # 步骤2：配置JDK 17（向下兼容编译Java11代码，GitHub官方维护的Action，绝对稳）
+      # 步骤2：配置JDK 17（向下兼容编译Java11代码，GitHub官方维护的Action）
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:

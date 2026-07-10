@@ -1,7 +1,6 @@
 plugins {
     id('com.android.library')
     id('org.jetbrains.kotlin.android')
-    id('maven-publish')  // JitPack 发布必需
 }
 
 android {
@@ -44,42 +43,6 @@ android {
     buildFeatures {
         buildConfig true
         viewBinding true
-    }
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar() // 附带源码包，用的时候方便查实现
-        }
-    }
-}
-
-// 定义要发布的内容，GitHub Actions 靠这个识别构件
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-                groupId = 'io.github.AndroidCoderPeng'
-                artifactId = 'kotlin-lite-lib'
-                version = project.VERSION_NAME
-                // 补充基础 POM 信息，后续切 Maven Central 也能复用
-                pom {
-                    name = 'Kotlin Lite Lib'
-                    description = 'Android Kotlin Lite Utility Library'
-                    url = 'https://github.com/AndroidCoderPeng/Kotlin-lite-lib'
-                }
-            }
-        }
-        repositories {
-            maven {
-                name = 'GitHubPackages'
-                url = 'https://maven.pkg.github.com/AndroidCoderPeng/Kotlin-lite-lib'
-                credentials {
-                    username = System.getenv('GITHUB_ACTOR')
-                    password = System.getenv('GITHUB_TOKEN')
-                }
-            }
-        }
     }
 }
 
