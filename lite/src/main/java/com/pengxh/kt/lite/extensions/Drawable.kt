@@ -29,7 +29,7 @@ fun Drawable.toBlurBitmap(context: Context, radius: Float): Bitmap {
     val height = (originalBitmap.height * BITMAP_SCALE).roundToInt()
     val inputBitmap = originalBitmap.scale(width, height, false)
 
-    val outputBitmap = inputBitmap.copy(inputBitmap.config ?: Bitmap.Config.ARGB_8888, true)
+    val outputBitmap = inputBitmap.copy(inputBitmap.config, true)
 
     // 初始化 RenderScript
     val rs = RenderScript.create(context)

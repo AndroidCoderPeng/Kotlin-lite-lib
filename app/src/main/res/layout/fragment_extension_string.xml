@@ -15,27 +15,6 @@
             android:layout_height="@dimen/titleViewHeight"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="汉语转拼音首字母"
-                android:textColor="@color/mainColor"
-                android:textSize="@dimen/sp_16" />
-
-            <Button
-                android:id="@+id/chineseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="chinese" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/titleViewHeight"
-            android:orientation="horizontal">
-
             <EditText
                 android:id="@+id/chineseView"
                 android:layout_width="0dp"
@@ -157,29 +136,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="时间是否已过"
-                android:textColor="@color/mainColor"
-                android:textSize="@dimen/sp_16" />
-
-            <TextView
-                android:id="@+id/earlierResultView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/mainColor"
-                android:textSize="@dimen/sp_16" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/titleViewHeight"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:text="时间差"
                 android:textColor="@color/mainColor"
                 android:textSize="@dimen/sp_16" />
@@ -212,27 +168,6 @@
             android:gravity="center_vertical"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_16" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/titleViewHeight"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="时间去掉时分秒"
-                android:textColor="@color/mainColor"
-                android:textSize="@dimen/sp_16" />
-
-            <Button
-                android:id="@+id/deleteHourMinuteSecondsButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="time" />
-        </LinearLayout>
 
         <TextView
             android:id="@+id/currentTimeView"

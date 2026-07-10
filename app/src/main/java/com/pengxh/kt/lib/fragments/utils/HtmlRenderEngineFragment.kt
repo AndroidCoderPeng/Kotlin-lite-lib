@@ -8,9 +8,7 @@ import com.google.gson.reflect.TypeToken
 import com.pengxh.kt.lib.databinding.FragmentUtilsHtmlRenderBinding
 import com.pengxh.kt.lib.model.NewsListModel
 import com.pengxh.kt.lib.utils.LocaleConstant
-import com.pengxh.kt.lib.view.BigImageActivity
 import com.pengxh.kt.lite.base.KotlinBaseFragment
-import com.pengxh.kt.lite.extensions.navigatePageTo
 import com.pengxh.kt.lite.extensions.show
 import com.pengxh.kt.lite.utils.HtmlRenderEngine
 import com.pengxh.kt.lite.utils.HttpRequestKit
@@ -61,9 +59,10 @@ class HtmlRenderEngineFragment : KotlinBaseFragment<FragmentUtilsHtmlRenderBindi
             .setTargetView(binding.htmlTextView)
             .setOnGetImageSourceListener(object : HtmlRenderEngine.OnGetImageSourceListener {
                 override fun imageSource(url: String) {
-                    val urls = ArrayList<String>()
-                    urls.add(url)
-                    requireContext().navigatePageTo<BigImageActivity>(0, urls)
+                    // TODO 查看一系列大图
+//                    val urls = ArrayList<String>()
+//                    urls.add(url)
+//                    requireContext().navigatePageTo<BigImageActivity>(0, urls)
                 }
             }).build().load()
     }

@@ -2,7 +2,6 @@ package com.pengxh.kt.lite.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.content.edit
 
 object SaveKeyValues {
     private lateinit var sp: SharedPreferences
@@ -38,7 +37,7 @@ object SaveKeyValues {
     fun putString(key: String, value: String) {
         if (key.isBlank()) return
         try {
-            sp.edit { putString(key, value) }
+            sp.edit().putString(key, value).apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -47,7 +46,7 @@ object SaveKeyValues {
     fun putInt(key: String, value: Int) {
         if (key.isBlank()) return
         try {
-            sp.edit { putInt(key, value) }
+            sp.edit().putInt(key, value).apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -56,7 +55,7 @@ object SaveKeyValues {
     fun putLong(key: String, value: Long) {
         if (key.isBlank()) return
         try {
-            sp.edit { putLong(key, value) }
+            sp.edit().putLong(key, value).apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -65,7 +64,7 @@ object SaveKeyValues {
     fun putFloat(key: String, value: Float) {
         if (key.isBlank()) return
         try {
-            sp.edit { putFloat(key, value) }
+            sp.edit().putFloat(key, value).apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -74,7 +73,7 @@ object SaveKeyValues {
     fun putBoolean(key: String, value: Boolean) {
         if (key.isBlank()) return
         try {
-            sp.edit { putBoolean(key, value) }
+            sp.edit().putBoolean(key, value).apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -127,7 +126,7 @@ object SaveKeyValues {
     fun removeKey(key: String) {
         if (key.isBlank()) return
         try {
-            sp.edit { remove(key) }
+            sp.edit().remove(key).apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -138,7 +137,7 @@ object SaveKeyValues {
      */
     fun clearAll() {
         try {
-            sp.edit { clear() }
+            sp.edit().clear().apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }

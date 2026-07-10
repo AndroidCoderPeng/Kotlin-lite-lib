@@ -3,11 +3,6 @@ package com.pengxh.kt.lite.extensions
 import android.content.Context
 import android.widget.Toast
 import com.google.gson.Gson
-import net.sourceforge.pinyin4j.PinyinHelper
-import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
-import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -16,32 +11,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.abs
-
-/**
- * 获取汉语拼音首字母
- * 如：汉语 ===> HY
- */
-fun String.getHanYuPinyin(): String {
-    val pinyinStr = StringBuilder()
-    val newChar = toCharArray()
-    val defaultFormat = HanyuPinyinOutputFormat()
-    defaultFormat.caseType = HanyuPinyinCaseType.UPPERCASE
-    defaultFormat.toneType = HanyuPinyinToneType.WITHOUT_TONE
-    for (c in newChar) {
-        if (c.code > 128) {
-            try {
-                pinyinStr.append(
-                    PinyinHelper.toHanyuPinyinStringArray(c, defaultFormat)[0][0]
-                )
-            } catch (e: BadHanyuPinyinOutputFormatCombination) {
-                e.printStackTrace()
-            }
-        } else {
-            pinyinStr.append(c)
-        }
-    }
-    return pinyinStr.toString()
-}
 
 /**
  * 手动换行
@@ -78,21 +47,12 @@ fun String.wrapLine(length: Int): String {
 fun String.dateToTimestamp(): Long {
     try {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-        val date = dateFormat.parse(this)!!
-        return date.time
+        val date = dateFormat.parse(this)
+        return date?.time ?: 0
     } catch (e: ParseException) {
         e.printStackTrace()
     }
     return 0
-}
-
-/**
- * 判断是否已过时
- * */
-fun String.isEarlierThenCurrent(): Boolean {
-    val t1 = dateToTimestamp()
-    val t2 = System.currentTimeMillis()
-    return (t1 - t2) < 0
 }
 
 /**
@@ -107,21 +67,6 @@ fun String.diffCurrentTime(): Int {
     val diff = abs(System.currentTimeMillis() - date.time)
     return (diff / (3600000)).toInt()
 }
-
-/**
- * yyyy-MM-dd HH:mm:ss 转 yyyy-MM-dd
- * */
-fun String.formatToYearMonthDay(): String {
-    if (isBlank()) {
-        return this
-    }
-    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-    val date = simpleDateFormat.parse(this)!!
-
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-    return dateFormat.format(date)
-}
-
 
 /**
  * 判断输入的是否是数字
@@ -195,10 +140,8 @@ fun String.show(context: Context) {
     Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
 }
 
-val gson by lazy { Gson() }
-
 inline fun <reified T> unpackingResponse(response: String): T {
-    return gson.fromJson(response, T::class.java)
+    return Gson().fromJson(response, T::class.java)
 }
 
 inline fun <reified T> String.unpacking(): T {

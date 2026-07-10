@@ -5,31 +5,5 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/lib_dp_10">
-
-        <ImageView
-            android:id="@+id/leftBackView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/lib_dp_10"
-            android:src="@drawable/ic_title_left" />
-
-        <TextView
-            android:id="@+id/indexView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/lib_sp_16" />
-    </RelativeLayout>
 </FrameLayout>

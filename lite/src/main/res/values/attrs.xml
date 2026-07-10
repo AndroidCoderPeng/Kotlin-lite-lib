@@ -1,40 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CircleProgressBar">
-        <attr name="cpb_ring_radius" format="dimension" />
-        <attr name="cpb_ring_stroke" format="dimension" />
-        <!--进度条底色-->
-        <attr name="cpb_background" format="color" />
-        <!--进度条前景色-->
-        <attr name="cpb_foreground" format="color" />
-        <!--文字-->
-        <attr name="cpb_text" format="string" />
-        <attr name="cpb_text_size" format="dimension" />
-        <attr name="cpb_text_color" format="color" />
-        <attr name="cpb_hide_text" format="boolean" />
-    </declare-styleable>
-
-    <declare-styleable name="SlideBarView">
-        <attr name="slide_width" format="dimension" />
-        <attr name="slide_textSize" format="dimension" />
-        <attr name="slide_textColor" format="color" />
-    </declare-styleable>
-
     <declare-styleable name="SteeringWheelView">
         <attr name="ctrl_diameter" format="dimension" />
-    </declare-styleable>
-
-    <declare-styleable name="TitleBarView">
-        <!--标题栏左右两边图片属性-->
-        <attr name="tbv_left_image" format="reference" />
-        <attr name="tbv_show_left_image" format="boolean" />
-        <attr name="tbv_right_image" format="reference" />
-        <attr name="tbv_show_right_image" format="boolean" />
-
-        <!--标题栏中间文字属性-->
-        <attr name="tbv_text" format="string" />
-        <attr name="tbv_text_color" format="color" />
-        <attr name="tbv_smaller_title" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="EmptyView">

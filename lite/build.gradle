@@ -6,20 +6,19 @@ plugins {
 
 android {
     namespace 'com.pengxh.kt.lite'
-    compileSdk 36
+    compileSdk 34
+
+    lint {
+        // 禁用“有新版本可用”的Lint提示
+        disable 'NewerVersionAvailable'
+
+        // 禁用依赖版本过时的提示
+//        disable 'GradleDependency'
+    }
 
     defaultConfig {
         minSdk 26
-        versionName '1.1.7'
-        ndkVersion '21.4.7075529'
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-        }
-        externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++14"
-            }
-        }
+        versionName '1.1.8'
         consumerProguardFiles('consumer-rules.pro')
     }
 
@@ -35,15 +34,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    externalNativeBuild {
-        cmake {
-            path "src/main/cpp/CMakeLists.txt"
-            version "3.22.1"
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(8)
         }
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
     }
 
     buildFeatures {
@@ -82,6 +76,4 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     //Socket
     implementation 'io.netty:netty-all:4.1.23.Final'
-    //汉字转拼音（多音字无法完美转换）
-    implementation 'com.belerweb:pinyin4j:2.5.0'
 }

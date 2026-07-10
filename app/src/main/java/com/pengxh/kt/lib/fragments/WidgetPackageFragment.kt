@@ -9,29 +9,23 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentWidgetPackageBinding
-import com.pengxh.kt.lib.fragments.widget.CircleProgressBarFragment
 import com.pengxh.kt.lib.fragments.widget.DeleteEditTextFragment
 import com.pengxh.kt.lib.fragments.widget.DialogFragment
 import com.pengxh.kt.lib.fragments.widget.EasyPopupWindowFragment
 import com.pengxh.kt.lib.fragments.widget.EmptyViewFragment
 import com.pengxh.kt.lib.fragments.widget.KeyBoardViewFragment
-import com.pengxh.kt.lib.fragments.widget.SlideBarViewFragment
 import com.pengxh.kt.lib.fragments.widget.SteeringWheelViewFragment
-import com.pengxh.kt.lib.fragments.widget.TitleBarViewFragment
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 
 class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>() {
 
     private val itemTitles = arrayOf(
         "对话框",
-        "圆形进度条",
         "带删除的输入框",
         "PopupWindow",
         "空白页面",
         "数字键盘",
-        "联系人侧边栏",
-        "方向控制盘",
-        "顶部标题栏"
+        "方向控制盘"
     )
     private val fragmentPages = mutableListOf<Fragment>()
 
@@ -41,14 +35,11 @@ class WidgetPackageFragment : KotlinBaseFragment<FragmentWidgetPackageBinding>()
         }
         val fragment = when (position) {
             0 -> DialogFragment()
-            1 -> CircleProgressBarFragment()
-            2 -> DeleteEditTextFragment()
-            3 -> EasyPopupWindowFragment()
-            4 -> EmptyViewFragment()
-            5 -> KeyBoardViewFragment()
-            6 -> SlideBarViewFragment()
-            7 -> SteeringWheelViewFragment()
-            8 -> TitleBarViewFragment()
+            1 -> DeleteEditTextFragment()
+            2 -> EasyPopupWindowFragment()
+            3 -> EmptyViewFragment()
+            4 -> KeyBoardViewFragment()
+            5 -> SteeringWheelViewFragment()
             else -> throw IllegalArgumentException("Invalid position")
         }
         fragmentPages.add(fragment)

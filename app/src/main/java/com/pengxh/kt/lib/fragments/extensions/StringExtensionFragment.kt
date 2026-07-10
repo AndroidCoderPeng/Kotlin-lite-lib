@@ -8,10 +8,7 @@ import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.createLogFile
 import com.pengxh.kt.lite.extensions.dateToTimestamp
 import com.pengxh.kt.lite.extensions.diffCurrentTime
-import com.pengxh.kt.lite.extensions.formatToYearMonthDay
-import com.pengxh.kt.lite.extensions.getHanYuPinyin
 import com.pengxh.kt.lite.extensions.isChinese
-import com.pengxh.kt.lite.extensions.isEarlierThenCurrent
 import com.pengxh.kt.lite.extensions.isEmail
 import com.pengxh.kt.lite.extensions.isLetterAndDigit
 import com.pengxh.kt.lite.extensions.isNumber
@@ -43,9 +40,6 @@ class StringExtensionFragment : KotlinBaseFragment<FragmentExtensionStringBindin
     override fun initOnCreate(savedInstanceState: Bundle?) {
         binding.timeView.text = System.currentTimeMillis().timestampToCompleteDate()
 
-        binding.earlierResultView.text =
-            "${binding.timeView.text.toString().isEarlierThenCurrent()}"
-
         binding.timePickerView.setIs24HourView(true)
 
         binding.currentTimeView.text = System.currentTimeMillis().timestampToCompleteDate()
@@ -58,10 +52,6 @@ class StringExtensionFragment : KotlinBaseFragment<FragmentExtensionStringBindin
     }
 
     override fun initEvent() {
-        binding.chineseButton.setOnClickListener {
-            binding.chineseResultView.text = binding.chineseView.text.toString().getHanYuPinyin()
-        }
-
         binding.breakLineButton.setOnClickListener {
             binding.breakLineResultView.text = binding.breakLineView.text.toString().wrapLine(24)
         }
@@ -88,11 +78,6 @@ class StringExtensionFragment : KotlinBaseFragment<FragmentExtensionStringBindin
             }
             val s = "$date $time"
             binding.diffTimeView.text = "时间差：${s.diffCurrentTime()}小时"
-        }
-
-        binding.deleteHourMinuteSecondsButton.setOnClickListener {
-            binding.currentDateView.text =
-                binding.currentTimeView.text.toString().formatToYearMonthDay()
         }
 
         binding.judgeNumberButton.setOnClickListener {

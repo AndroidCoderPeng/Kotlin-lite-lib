@@ -12,7 +12,6 @@ import androidx.core.app.ActivityCompat
 import com.pengxh.kt.lib.R
 import com.pengxh.kt.lib.databinding.FragmentExtensionContextBinding
 import com.pengxh.kt.lib.example.ActivityExtensionExample
-import com.pengxh.kt.lib.view.BigImageActivity
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.extensions.convertColor
 import com.pengxh.kt.lite.extensions.createAudioFile
@@ -121,7 +120,7 @@ class ContextExtensionFragment : KotlinBaseFragment<FragmentExtensionContextBind
         }
 
         binding.showBigImageIntentButton.setOnClickListener {
-            requireContext().navigatePageTo<BigImageActivity>(0, imageArray)
+            // TODO 查看单张大图
         }
 
         binding.readAssertsButton.setOnClickListener {
