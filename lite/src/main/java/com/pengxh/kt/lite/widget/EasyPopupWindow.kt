@@ -1,6 +1,7 @@
 package com.pengxh.kt.lite.widget
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,24 +10,24 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.core.graphics.drawable.toDrawable
 import com.pengxh.kt.lite.R
-import com.pengxh.kt.lite.extensions.getScreenWidth
 
-class EasyPopupWindow(context: Context) : PopupWindow() {
+class EasyPopupWindow(context: Context, popupWidth: Int) : PopupWindow() {
 
     init {
-        width = ((context.getScreenWidth() * 0.4).toInt())
+        width = popupWidth
         height = ViewGroup.LayoutParams.WRAP_CONTENT
-        isOutsideTouchable = true
         isFocusable = true
-        animationStyle = R.style.EasyPopupAnimation
-        setBackgroundDrawable(null)
-        contentView = LayoutInflater.from(context).inflate(
-            R.layout.popup_menu_option, null, false
-        )
+        isOutsideTouchable = true
+        setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        contentView = LayoutInflater.from(context).inflate(R.layout.popup_menu_option, null)
     }
 
-    fun set(menuItems: List<MenuItem>, windowClickListener: OnPopupWindowClickListener) {
+    fun set(
+        menuItems: List<MenuItem>,
+        onPopupItemClicked: (popup: EasyPopupWindow, position: Int) -> Unit
+    ) {
         if (menuItems.isEmpty()) {
             return
         }
@@ -70,14 +71,9 @@ class EasyPopupWindow(context: Context) : PopupWindow() {
         }
         listView.setOnItemClickListener { _, _, position, _ ->
             if (position >= 0 && position < menuItems.size) {
-                windowClickListener.onPopupItemClicked(position)
+                onPopupItemClicked(this, position)
             }
-            dismiss()
         }
-    }
-
-    interface OnPopupWindowClickListener {
-        fun onPopupItemClicked(position: Int)
     }
 
     private class PopupWindowHolder {

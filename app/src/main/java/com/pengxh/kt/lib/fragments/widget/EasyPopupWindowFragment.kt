@@ -2,8 +2,11 @@ package com.pengxh.kt.lib.fragments.widget
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import com.pengxh.kt.lib.databinding.FragmentWidgetEasyPopupWindowBinding
 import com.pengxh.kt.lite.base.KotlinBaseFragment
 import com.pengxh.kt.lite.widget.EasyPopupWindow
@@ -11,7 +14,7 @@ import com.pengxh.kt.lite.widget.EasyPopupWindow
 class EasyPopupWindowFragment : KotlinBaseFragment<FragmentWidgetEasyPopupWindowBinding>() {
 
     private val kTag = "EasyPopupWindowFragment"
-    private val easyPopupWindow by lazy { EasyPopupWindow(requireContext()) }
+    private var easyPopupWindow: EasyPopupWindow? = null
 
     override fun initViewBinding(
         inflater: LayoutInflater,
@@ -30,11 +33,23 @@ class EasyPopupWindowFragment : KotlinBaseFragment<FragmentWidgetEasyPopupWindow
         menuItems.add(EasyPopupWindow.MenuItem(android.R.drawable.ic_menu_compass, "第二个选项"))
         menuItems.add(EasyPopupWindow.MenuItem(android.R.drawable.ic_menu_compass, "第三个选项"))
 
-        easyPopupWindow.set(menuItems, object : EasyPopupWindow.OnPopupWindowClickListener {
-            override fun onPopupItemClicked(position: Int) {
-                Log.d(kTag, "onPopupItemClicked => ${menuItems[position].name}")
+        val screenWidth = requireContext().resources.displayMetrics.widthPixels
+        val popupWidth = (screenWidth * 0.5f).toInt()
+        easyPopupWindow = EasyPopupWindow(requireContext(), popupWidth)
+        easyPopupWindow?.set(menuItems) { popup, position ->
+            Log.d(kTag, "onPopupItemClicked => ${menuItems[position].name}")
+            easyPopupWindow?.let { popup ->
+
             }
-        })
+
+            popup.contentView.animate()
+                .scaleY(0f)
+                .alpha(0f)
+                .setDuration(300)
+                .setInterpolator(AccelerateInterpolator())
+                .withEndAction { popup.dismiss() }
+                .start()
+        }
     }
 
     override fun observeRequestState() {
@@ -43,7 +58,24 @@ class EasyPopupWindowFragment : KotlinBaseFragment<FragmentWidgetEasyPopupWindow
 
     override fun initEvent() {
         binding.showPopupButton.setOnClickListener {
-            easyPopupWindow.showAsDropDown(it, 0, 0)
+            val screenWidth = requireContext().resources.displayMetrics.widthPixels
+            easyPopupWindow?.let { popup ->
+                popup.contentView.scaleY = 0f
+                popup.contentView.pivotY = 0f
+                popup.contentView.alpha = 0f
+
+                val xoff = (screenWidth - popup.width) / 2
+                popup.showAsDropDown(it, xoff, 0, Gravity.CENTER_HORIZONTAL)
+
+                popup.contentView.post {
+                    popup.contentView.animate()
+                        .scaleY(1f)
+                        .alpha(1f)
+                        .setDuration(250)
+                        .setInterpolator(DecelerateInterpolator())
+                        .start()
+                }
+            }
         }
     }
 }
